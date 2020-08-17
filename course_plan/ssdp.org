@@ -1,0 +1,98 @@
+#+TITLE:       Scientific Software Development with Python
+#+AUTHOR:      Simon Pfreunschuh (Teacher), Donal Murtagh (Examiner)
+#+EMAIL:       simon.pfreundschuh@chalmers.se
+#+OPTIONS: toc:nil
+#+LaTeX_HEADER: \usepackage{natbib}
+#+LaTeX_HEADER: \usepackage{siunitx}
+#+LaTeX_HEADER: \usepackage{subcaption}
+#+LaTeX_HEADER: \usepackage{todonotes}
+#+LaTeX_HEADER: \DeclareMathOperator\arctanh{arctanh}
+
+Scientific Software Development in Python is a graduate course covering the
+topics **software development, project management and scientific computing**
+aiming to provide participants with the necessary knowledge to write
+high-quality, portable and efficient scientific software as part of a larger
+team or on their own.
+
+* Course plan
+
+The course consists of two parts:
+ 1. Lecture series (2.5 ECTS):
+    The lecture series will take part during autumn term 2020 (September - December) and
+    cover the following topics.
+
+    - Software development:
+      - Project planning and management
+      - Organizing collaboration
+      - DevOps with Python and GitHub: Version control, continuous integration,
+        testing
+    - General programming principles:
+      - Object oriented design
+      - Computing models and architectures
+    - The Python programming language
+      - Python language basics
+      - Standard library
+      - Package management
+      - Testing and documentation of python packages
+    - Scientific computing:
+      - Parallel and distributed programming
+      - Out-of-core programming
+      - Visualization
+      - Distributed and cloud computing
+
+ 2. Programming project (5 ECTS): The project part of the course will consist of
+    a programming project that participants will collaborate on in groups of at
+    least two. Participants are encouraged to choose a their project according
+    to their research interests. The project comprises three phases:
+    - Planning phase: Participants will together define the scope and
+      use cases of the project.
+    - Implementation phase: Participants will work on implementing the project. There
+      will be regular progress meeting and code reviews.
+    - Final phase: Each participant will present her results and insights in a seminar.
+
+ During the project there will be regular retrospectives to reflect on project 
+ progress and lessons learned.
+
+* Intended learning outcome      
+  
+  After the course, participants will be able to:
+  - Write, package and deploy high-quality Python software
+  - Know how and when to apply different computing techniques
+  - Contribute to (open source) software projects
+
+* Time plan
+** Lectures
+*** Part 1: Software development and programming principles
+   - Week 1: Introductory lecture
+     - Aims of software development
+   - Week 2: Project management and planning
+     - DevOps and continuous integration
+     - Agile software development
+   - Week 3: Programming principles
+     - Procedural vs. object oriented programming
+     - Basics of object oriented design
+   - Week 4: 1st retrospective:
+       - Progress report from project groups
+       - Leaning and open challenges
+*** Part 2: The Python programming language
+   - Week 5: Overview of the Python programming language
+     - Python programming principles
+     - Language features
+   - Week 6: The Python standard library
+   - Week 7: Python programming recipes
+   - Week 8: 2nd retrospective:
+       - Progress report from project groups
+       - Learnings and open challenges
+
+*** Part 3: Scientific programming with Python
+   - Week 9: Parallel programming with Python:
+       - The Python Interpreter Lock
+       - Python co-routines
+  - Week 10: Distributed programming with Python
+    - IPyParallel
+    - MPI
+    - Out of core programming
+  - Week 11 (Optional): Scientific visualizations with Python
+  - Week 12: 2nd retrospective:
+      - Progress report from project groups
+      - Learnings and open challenges
