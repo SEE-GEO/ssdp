@@ -1,5 +1,5 @@
 #+TITLE:       Scientific Software Development with Python
-#+AUTHOR:      Simon Pfreunschuh (Teacher), Donal Murtagh (Examiner)
+#+AUTHOR:      Simon Pfreunschuh (Course responsible), Donal Murtagh (Examiner)
 #+EMAIL:       simon.pfreundschuh@chalmers.se
 #+OPTIONS: toc:nil
 #+LaTeX_HEADER: \usepackage{natbib}
@@ -9,9 +9,9 @@
 #+LaTeX_HEADER: \DeclareMathOperator\arctanh{arctanh}
 
 Scientific Software Development in Python is a graduate course covering the
-topics **software development, project management and scientific computing**
-aiming to provide participants with the necessary knowledge to write
-high-quality, portable and efficient scientific software as part of a larger
+topics **software development, project management and scientific computing**. It
+aims to provide participants with the necessary knowledge to develop
+high-quality, reusable and efficient scientific software as part of a larger
 team or on their own.
 
 * Course plan
@@ -45,7 +45,7 @@ The course consists of two parts:
     least two. Participants are encouraged to choose a their project according
     to their research interests. The project comprises three phases:
     - Planning phase: Participants will together define the scope and
-      use cases of the project.
+      use cases for the project.
     - Implementation phase: Participants will work on implementing the project. There
       will be regular progress meeting and code reviews.
     - Final phase: Each participant will present her results and insights in a seminar.
@@ -78,21 +78,37 @@ The course consists of two parts:
    - Week 5: Overview of the Python programming language
      - Python programming principles
      - Language features
+     - The Python package system
    - Week 6: The Python standard library
    - Week 7: Python programming recipes
    - Week 8: 2nd retrospective:
-       - Progress report from project groups
-       - Learnings and open challenges
+     - Progress report from project groups
+     - Learnings and open challenges
 
 *** Part 3: Scientific programming with Python
    - Week 9: Parallel programming with Python:
-       - The Python Interpreter Lock
-       - Python co-routines
-  - Week 10: Distributed programming with Python
-    - IPyParallel
-    - MPI
-    - Out of core programming
-  - Week 11 (Optional): Scientific visualizations with Python
-  - Week 12: 2nd retrospective:
-      - Progress report from project groups
-      - Learnings and open challenges
+     - The Python Interpreter Lock
+     - Python co-routines
+   - Week 10: Distributed programming with Python
+     - IPyParallel
+     - MPI
+     - Out of core programming
+   - Week 11 (Optional): Scientific visualizations with Python
+   - Week 12: 3rd retrospective:
+     - Progress report from project groups
+     - Learnings and open challenges
+** Projects
+** Week 1-4: Planning phase
+   - Definition of project scope
+   - Setup of the development environment
+   - Outlining a project plan and first prototyping
+   - Last week: Retrospective and refactoring
+     - Defining aim and scope of 1st implementation phase
+** Week 5-8: 1st Implementation phase
+   - Implementation of the project code
+   - Last week: Retrospective and refactoring
+     - Defining aim and scope of 2nd implementation phase
+** Week 9-12: 2nd Implementation phase
+   - Further work on project code
+   - Last week: Retrospective and refactoring
+   - Presentations from project members.

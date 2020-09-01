@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+
+
+    
+
+
+
+
+
+
+
+    
+
+
+
+    
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Getting started &#8212; ssdp 0.0.1 documentation</title>
+    <link rel="stylesheet" href="_static/smpl.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Compendium" href="compendium.html" /> 
+  </head><body>
+      <div class="navigation_bar" role="navigation" aria-label="main navigation">
+          <div class="logo_wrapper" ><div style="margin: auto;
+            text-align: center;
+            position: relative;">
+
+<div style="color: #FFFFFF;
+            margin: 0;
+            @import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@;0,800;&display=swap');
+            font-size: 300%;
+            font-weight:800;
+            letter-spacing: 0.0em;
+            font-family: 'Open Sans', sans-serif;
+            " >
+    ssdp </div>
+
+</div></div>
+          <div class="navigation_bar_wrapper">
+              <ul><li><a href="index.html"> Home</a></li><li><a href="lectures.html"> Lectures</a></li><li><a href="compendium.html"> Compendium</a></li></ul>
+          <div class="clearer"></div>
+          </div>
+      </div>
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="getting-started">
+<h1>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h1>
+<p>The course targets Python version 3.6. This page describes how to make
+sure that you have the right Python version installed on your Linux system.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Since I am myself only using Linux, I do not know how exactly this work
+on another OS although most of the steps are probably similar.</p>
+</div>
+<div class="section" id="checking-your-python-version">
+<h2>Checking your Python version<a class="headerlink" href="#checking-your-python-version" title="Permalink to this headline">¶</a></h2>
+<p>To check your Python version, open a terminal and run the following command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ python --version
+</pre></div>
+</div>
+<p>If the printed version is larger than 3.6, your good to go. Otherwise please
+go to <a class="reference external" href="www.python.org/download">python.org</a> and install a newer version
+of Python. Another popular way to install Python is via a distribution such
+as <a class="reference external" href="www.anaconda.com/products/individual">Anaconda</a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Your system may have two or more versions of Python installed. If this is the
+case, then  Python3 may be  available through the <code class="code docutils literal notranslate"><span class="pre">python3</span></code> command.</p>
+</div>
+</div>
+<div class="section" id="pip">
+<h2>pip<a class="headerlink" href="#pip" title="Permalink to this headline">¶</a></h2>
+<p>pip is the package installer for Python. pip takes of installing new
+Python packages and manages their dependencies. With pip all that is
+required to install any package from the <a class="reference external" href="pypi.org">Python Package Index</a>
+is to run the following commands from the command line:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install &lt;package_name&gt;
+</pre></div>
+</div>
+<p>pip is itself a Python package and it is therefore important that
+the pip command you are using belongs to the version of Python that
+you intend to use. You can check this by running <code class="code docutils literal notranslate"><span class="pre">pip</span> <span class="pre">--version</span></code>
+or by invoking pip as follows:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python -m pip install &lt;package_name&gt;
+</pre></div>
+</div>
+<p>If you don’t have pip installed, you can install it from the <a class="reference external" href="https://pip.pypa.io/en/stable/installing/">Python Package
+Authority</a>. Also here keep in mind
+to use the right Python version to install it.</p>
+<p>Since pip is the official package manager for Python, it will be used for all
+installation instructions given in the course. If you use a Python distribution
+like Anaconda, then the distribution likely provides its own way of installing
+packages but installing them with pip should still work.</p>
+</div>
+<div class="section" id="ipython">
+<h2>IPython<a class="headerlink" href="#ipython" title="Permalink to this headline">¶</a></h2>
+<p>IPython is an interactive computing framework for Python. The IPython shell
+is an extended Python interpreter, which makes it easy to try out Python
+snippets interactively and on the fly. I encourage you to use it to during
+the lectures to follow the code examples.</p>
+<p>To install IPython using pip run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install ipython
+</pre></div>
+</div>
+<p>To start the IPython shell simply run <code class="code docutils literal notranslate"><span class="pre">ipython</span></code> from the command line.
+After the prompt appeared you can start entering Python code.</p>
+</div>
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+
+  </body>
+</html>

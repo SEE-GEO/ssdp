@@ -1,0 +1,822 @@
+
+#+TITLE: Scientific Software Development with Python
+#+SUBTITLE: Python Basics
+#+Author: @@html:</br> <b>Simon Pfreundschuh</b> </br> Deparment of Space, Earth and Environment@@
+#+OPTIONS: H:2 toc:nil num:nil
+#+REVEAL_THEME: chalmers
+#+REVEAL_TRANS: fast
+#+REVEAL_EXTRA_CSS: ./local.css
+#+LaTeX_HEADER: \institute{Department of Space, Earth and Environment}
+#+LaTeX_HEADER: \setbeamerfont{title}{family=\sffamily, series=\bfseries, size=\LARGE}
+#+LATEX_HEADER: \usepackage[style=authoryear]{biblatex}
+#+LATEX_HEADER: \usepackage{siunitx}
+#+LaTeX_HEADER: \usetheme{chalmers}
+#+LATEX_HEADER: \usepackage{subcaption}
+#+LATEX_HEADER: \usemintedstyle{monokai}
+#+LATEX_HEADER: \definecolor{light}{HTML}{CCCCCC}
+#+LATEX_HEADER: \definecolor{dark}{HTML}{252525}
+#+LATEX_HEADER: \addbibresource{literature.bib}
+
+* Introduction
+
+* The Organisation of Python code 
+** Overview
+   \includegraphics[width=\textwidth]{figures/python_structure.pdf}
+** Packages
+   - A collection of Python modules that can be distributed
+   - Can be made available online via a package index (=pypi.org=)
+   - Typical usage:
+      #+attr_latex: :options bgcolor=light
+      #+BEGIN_SRC bash
+      pip install <package_name>
+      #+END_SRC
+
+** Modules
+
+   - Act as namespaces that bundle classes and functions
+   - typical usage:
+
+      #+attr_latex: :options bgcolor=dark
+      #+BEGIN_SRC Python
+      # Import statments tell Python to load a module
+      import module
+      import module as m
+      from module import function, Class
+
+      # Functions and classes defined in the module can
+      # be accessed through its attributes.
+      module.function()
+      m.function()
+      #+END_SRC
+
+** Functions
+   - Defines a sequence of operations to be executed
+     on a set of user-provided input variables.
+   - Examples:
+      #+attr_latex: :options bgcolor=dark
+      #+BEGIN_SRC Python
+      def say_something(what):
+          print(what)
+      
+      say_something("hello") # Prints "hello"
+      #+END_SRC
+
+** Classes
+   
+   - Defines a set of properties (data) and associated behavior (functions)
+   - Methods are special functions that are associated with objects
+     of the class.
+
+   - typical usage:
+      #+attr_latex: :options bgcolor=dark
+      #+BEGIN_SRC Python
+      class A:
+          def __init__(self):
+               self.what = "hello"
+
+          def say(self):
+               print(self.what)
+            
+
+      object = A()  # Calls __init__ method.
+      object.say()  # Prints "hello:
+      #+END_SRC
+
+** Statements
+
+   - Examples:
+      #+attr_latex: :options bgcolor=dark
+      #+BEGIN_SRC Python
+      a = 1
+      b = 2
+     
+      if a == b:
+          print("a equals b.")
+      else:
+          print("a does not equal b.")
+      #+END_SRC
+
+** Code structure
+   - By default statements are limited to a single line in Python
+   - Multiple statements are grouped together into a compound statement
+     by indenting them:
+      #+attr_latex: :options bgcolor=dark
+      #+BEGIN_SRC Python
+      # Function that contains a single statement
+      def foo(): print("foo")
+
+      # Function that contains multiple statements.
+      def bar():   
+          print("bar")
+          print("bar")
+      #+END_SRC
+   - Other ways to spread statements over multiple lines:
+     - Enclose with parenthesis, e.g. function parameters
+     - Line continuation: =\=
+     
+* Syntax basics
+** Variables
+   - Variables are defined through assignment statements:
+      #+attr_latex: :options bgcolor=dark
+      #+BEGIN_SRC Python
+      a = 1
+      #+END_SRC
+   - Variables hold references to objects. This is important when working
+     with /mutable/ objects:
+      #+attr_latex: :options bgcolor=dark
+      #+BEGIN_SRC Python
+      a = [1, 2]
+      b = a
+      b.append(3)
+      print(a) # Prints [1, 2, 3]
+      #+END_SRC
+\begin{alertblock}{}
+Think of Python variables as labels rather than containers.
+\end{alertblock}
+
+** Variables
+   - Valid variable names:
+     - Begin with letter or underscore (=_=)
+     - Followed by letter, number or underscore
+   - Variable names should be lowercase with words separated
+     by underscore
+   - Exception: Constants should be all caps
+
+      #+attr_latex: :options bgcolor=dark
+      #+BEGIN_SRC Python
+      SOME_CONSTANT = 42
+      some_variable = 1
+      #+END_SRC
+
+     
+* Basic types and operators
+** Numeric literals
+   - Numeric literals are raw numbers that appear in Python code.
+
+      #+attr_latex: :options bgcolor=dark
+      #+BEGIN_SRC Python
+ 
+      # Integral numbers
+      a = 0b10000 #binary literal
+      b = 0o20    #octal literal
+      c = 16      #decimal literal 
+      d = 0x10    #hexadecimal literal
+      print (a == b == c == d) # Prints True
+      e = 1e6
+      f = 1_000_000
+      print (e == f) # Prints True
+
+      # Complex numbers
+      g = 1j
+      #+END_SRC
+
+** Numeric operators
+
+
+   | Operation                 | Operator | Example  | Meaning                                   |
+   |---------------------------+----------+----------+-------------------------------------------|
+   | Addition                  | ~+~      | ~a + b~  | $a + b$                                   |
+   | Subtraction               | ~-~      | ~a - b~  | $a - b$                                   |
+   | Multiplications           | ~*~      | ~a * b~  | $a \cdot b$                               |
+   | Division (floating point) | ~/~      | ~a / b~  | $\frac{a}{b}$                             |
+   | Division (integer)        | ~//~     | ~a // b~ | $\lfloor \frac{a}{b} \rfloor$             |
+   | Modulus                   | ~%~      | ~a % b~  | $a - \lfloor \frac{a}{b} \rfloor \cdot b$ |
+   | Exponent                  | ~**~     | ~a ** b~ | $a^b$                                     |
+
+ - All of these operators have compound versions which combine the operator
+   with an assignment statement:
+      #+attr_latex: :options bgcolor=dark
+      #+BEGIN_SRC Python
+      a += b # Same as a = a + b
+      a -= b # Same as a = a - b
+      ...
+      #+END_SRC
+
+** Logical operators
+
+   | Operation   | Operator | Example  |
+   |-------------+----------+----------|
+   | Logical and | ~and~    | ~a == b~ |
+   | Logical  or | ~or~     | ~a != b~ |
+   | Logical not | ~not~    | ~a > b~  |
+
+   - The two boolean literals are =True= and =False=.
+   - Logical operator have the lowest precedence of all operators. Parentheses
+     are therefore usually not required but can make the code more readable.
+      #+attr_latex: :options bgcolor=dark
+      #+BEGIN_SRC Python
+      a < b and b > c # Same as: (a < b) and (b > c)
+      #+END_SRC
+ 
+** Comparison operators
+
+
+   | Operation                | Operator | Example  |
+   |--------------------------+----------+----------|
+   | Equal                    | ~==~     | ~a == b~ |
+   | Not equal                | ~!+~     | ~a != b~ |
+   | Greater than             | ~>~      | ~a > b~  |
+   | Less than                | ~<~      | ~a < b~  |
+   | Greater than or equal to | ~>=~     | ~a >= b~ |
+   | Less than or equal to    | ~<=~     | ~a <= b~ |
+
+ - Comparison operators can also be chained:
+      #+attr_latex: :options bgcolor=dark
+      #+BEGIN_SRC Python
+      a == b == c   # Same as:(a == b) and (b == c)
+      a < b < c < d # Same as (a < b) and (b < c) ...
+      #+END_SRC
+
+** Identity operators
+   - Each separate object in a program has a unique identity
+   - The identity of two objects can be compared using
+     the =is= and =is not= operators:
+
+      #+attr_latex: :options bgcolor=dark
+      #+BEGIN_SRC Python
+      a = [] # Creates an empty list with name a
+      b = [] # Creates an empty list with name b
+      print(a is b) # Prints False
+      print(a == b) # Prints True
+      c = b
+      print(b is c) # Prints True
+      #+END_SRC
+
+\begin{alertblock}{}
+ Use \texttt{is} only to check whether two variable point
+ to \textit{the same object} not when you want to compare
+ two objects.
+\end{alertblock}
+
+** Strings
+   - String literals can be delimited using either single or double quotes:
+      #+attr_latex: :options bgcolor=dark
+      #+BEGIN_SRC Python
+      a = "a 'string'"
+      b = 'another "string"'
+      #+END_SRC
+      
+   - Multi-line strings are delimited using three ='= or ="=
+      #+attr_latex: :options bgcolor=dark
+      #+BEGIN_SRC Python
+      a = """a veeeeeeeeeeeeeeery
+               veeeeeeeeeeeeeeery
+               long
+               string"""
+      #+END_SRC
+
+   - A wide range of common string operations is available via
+     methods of the string class (c.f. [[https://docs.python.org/3/library/stdtypes.html#string-methods][official docs)]]
+     
+** Printing strings
+   - f-Strings ($\geq$ Python 3.6):
+      #+attr_latex: :options bgcolor=dark
+      #+BEGIN_SRC Python
+      answer = 42
+      text = f"The answer is {answer}."
+      print(text) # Prints: The answer is 42.
+      x = 1e-3
+      text = f"Advanced formatting: {x:07.4f}"
+      print(text) # Prints: Advanced formatting: 00.0010
+      #+END_SRC
+   - The =format= method:
+      #+attr_latex: :options bgcolor=dark
+      #+BEGIN_SRC Python
+      text = "The answer is {}.".format(42)
+      #+END_SRC
+   - See [[https://docs.python.org/3/library/string.html?highlight=string#module-string][docs]]  for full details.
+
+** Lists
+
+      #+attr_latex: :options bgcolor=dark
+      #+BEGIN_SRC Python
+      # Lists are defined using brackets.
+      a_list = [1, 2, "three"]
+      empty_list = []
+      
+      # Indexing is 0-based.
+      print(a_list[2]) # Prints: three
+
+      # Negative indices are counted backwards
+      # from the end
+      print(a_list[-1]) # Prints: three
+
+      # len returns length of the list
+      print(len(a_list)) # Prints 3
+      #+END_SRC
+
+** Lists (Cont'd)
+
+      #+attr_latex: :options bgcolor=dark
+      #+BEGIN_SRC Python
+      # Reverses list
+      [1, 1, 2, 3, 4].reverse()
+
+      # Remove first occurence of 1
+      [1, 1, 2, 3, 4].remove(1)
+
+      # Checks presence of element in list
+      1 in [1, 2, 3, 4]
+      #+END_SRC
+
+** Slicing
+   - A slice is an expression of the form
+     - =start:end=
+     - or =start:end:step=
+   - Slicing can be used to extract parts of lists:
+
+    #+attr_latex: :options bgcolor=dark
+    #+BEGIN_SRC Python
+    a_list = [1, 2, 3, 4]
+
+    print(a_list[:])   # Prints: [1, 2, 3, 4]
+
+    print(a_list[2:])  # Prints: [3, 4]
+    print(a_list[1:3]) # Prints: [2, 3]
+    print(a_list[:2])  # Prints: [1, 2]
+      
+    print(a_list[::2])  # Prints: [1, 3]
+    print(a_list[1::2]) # Prints: [2, 4]
+    print(a_list[-1:1:2]) # Prints: [4]
+    #+END_SRC
+
+
+** If statements
+*** General form:
+
+    #+attr_latex: :options bgcolor=dark
+    #+BEGIN_SRC Python
+    if condition:
+        statement
+    #+END_SRC
+
+   - Can be followed by multiple =elif=
+     and/or a single =else= block.
+   - Conditions are evaluated sequentially from left 
+     to right:
+    #+attr_latex: :options bgcolor=dark
+    #+BEGIN_SRC Python
+    empty_list = []
+    # This raises no error although the list is empty
+    if (len(empty_list) > 0) and empty_list[0]:
+        print(empty_list)
+    #+END_SRC
+     
+** For loops  
+*** General form:
+
+    #+attr_latex: :options bgcolor=dark
+    #+BEGIN_SRC Python
+  for variable in iterable:
+      statement
+  #+END_SRC
+
+    where =iterable= can be any object that /can be iterated over/[fn:1].
+[fn:1] We'll see later what this means exactly      
+
+*** Examples of iterables:
+    - lists
+    - tuples
+    - strings
+    - generators, e.g. =range(n)=
+
+
+** For loop examples
+    #+attr_latex: :options bgcolor=dark
+    #+BEGIN_SRC Python
+    # Prints 1, 2, 3, 4
+    for i in [1, 2, 3, 4]:
+        print(i)
+
+    # Prints h e l l o
+    for c in "hello":
+        print(i)
+
+    # Prints 0 h 1 e 2 l 3 l 4 o
+    for i, c in enumerate("hello"):
+        print(i, c)
+
+    # Same as above.
+    for i, c in zip([1, 2, 3, 4], "hello"):
+        print(i, c)
+
+    #+END_SRC
+
+** List comprehensions
+   - List comprehensions allow combining for-loop
+     and if statements to generate a list:
+     
+    #+attr_latex: :options bgcolor=dark
+    #+BEGIN_SRC Python
+    numbers = [1, 2, 3, 4]
+    squares = [i ** 2 for i in numbers]
+    print(squares) # Prints: 1, 4, 9, 16
+
+    even_squares = [i ** 2 for i in numbers if i % 2 == 0]
+    print(even_squares) # Prints: 4, 16
+    #+END_SRC
+
+** Generator expression
+   - Like a list comprehension but enclosed with parentheses =(...)=
+     instead of brackets =[...]=.
+   - Generators are lazy: Computation is deferred until elements are requested
+
+    #+attr_latex: :options bgcolor=dark
+    #+BEGIN_SRC Python
+    numbers = [1, 2, 3, 4]
+    # Prints 1 2 3 4
+    say_numbers = [print(i) for i in numbers)] 
+
+    # Prints nothing
+    say_numbers_lazy = (print(i) for i in numbers) 
+    # Prints 1 2 3 4
+    for i in say_numbers_lazy:
+        pass
+    #+END_SRC
+
+** Exercise: Bunny Lab Levels 1 and 2
+   - Solve levels 1 and 2 of the Bunny Lab
+   - Time: 3 min + 3 min discussion in breakout rooms
+
+** Tuples
+   - A sequence of objects separated by =,= and optionally enclosed
+     with parentheses
+    #+attr_latex: :options bgcolor=dark
+    #+BEGIN_SRC Python
+    t = (1, 2, 3)
+    #+END_SRC
+   - Tuples are immutable:
+    #+attr_latex: :options bgcolor=dark
+    #+BEGIN_SRC Python
+    # Raises exception
+    t[0] = 2
+    #+END_SRC
+   - But mutable objects inside tuples can change:
+    #+attr_latex: :options bgcolor=dark
+    #+BEGIN_SRC Python
+    t = ([], [], [])
+    t[0].append(1)
+    # Prints ([1], [], [])
+    print(t)
+    #+END_SRC
+
+** Converting between tuples and lists
+   - Use explicit constructors =list= and =tuple= to convert
+     between them:
+    #+attr_latex: :options bgcolor=dark
+    #+BEGIN_SRC Python
+    t = (1, 2, 3)
+    l = list(t)
+    l += [4]
+    t = tuple(l)
+    # Prints (1, 2, 3, 4)
+    print(t)
+    #+END_SRC
+
+** Unpacking
+   - Python has special syntax for /unpacking/ and iterable
+     into multiple variables:
+
+    #+attr_latex: :options bgcolor=dark
+    #+BEGIN_SRC Python
+    a, b, c = ["a", "b", "c"]
+    #+END_SRC
+
+   - These can even be nested:
+    #+attr_latex: :options bgcolor=dark
+    #+BEGIN_SRC Python
+    a, (b, c) = ["a", ["b", "c"]]
+    #+END_SRC
+
+   - Using starred expressions iterables can be split up
+     in specific elements and remaining sequences:
+    #+attr_latex: :options bgcolor=dark
+    #+BEGIN_SRC Python
+    first, body*, last = "a long string"
+
+    print(first)         # Prints: a
+    print("".join(body)) # Prints:  long strin
+    print(last)          # Prints: g
+    #+END_SRC
+
+** Unpacking
+   \begin{alertblock}{}
+   Overusing unpacking expressions can hurt readability.
+   \end{alertblock}
+   - Don't overdo it: Limit unpacking to three variables
+
+** Dictionaries
+   - Dictionaries can be used to store key-value pairs:
+    #+attr_latex: :options bgcolor=dark
+    #+BEGIN_SRC Python
+    a_dictionary = {"key": "value"}
+    # Same as above
+    a_dictionary = dict([("key", "value")])
+    #+END_SRC
+   - Values can be retrieved:
+    #+attr_latex: :options bgcolor=dark
+    #+BEGIN_SRC Python
+    print(a_dictionary["key"])
+    #+END_SRC
+   - Values can be adderd:
+    #+attr_latex: :options bgcolor=dark
+    #+BEGIN_SRC Python
+    a_dictionary["another_key"] = "another_value"
+    # Same as above
+    a_dictionary.update(("another_key", "another_value"))
+    #+END_SRC
+
+** Dictionaries
+   - Looping over elements:
+    #+attr_latex: :options bgcolor=dark
+    #+BEGIN_SRC Python
+    keys = [1, 2, 3, 4]
+    values = ["one", "two", "three", "four"]
+    dictionary = dict(zip(keys, values))
+
+    # Prints: 1 one 2 two ...
+    for key in dictionary:
+        print(key, dictionary[key])
+
+    # Prints: 1 one 2 two ...
+    for key, value in dictionary.items():
+        print(key, value)
+
+    # Prints: one two ...
+    for value in dictionary.value():
+        print(value)
+    #+BEGIN_SRC
+
+** Dictionaries
+   - Trying to retrieve a key that is not present in a dictionary
+     raise an exception
+   - Can use =in= operator to check if key is present in dictionary
+   - Better approach: Use =get(...)== method to safely access elements in dict
+     - Synopsis: =get(key, default=value)=
+     - Returns =value= if key is not found in dictionary.
+     
+   #+attr_latex: :options bgcolor=dark
+   #+BEGIN_SRC Python
+   if key in dictionary:
+       print(dictionary[key])
+
+   print(dictionary.get(key, default="Key not found!"))
+   #+END_SRC
+
+** Exercise: Bunny Lab Level 3
+   - Solve levels 3
+   - Time: 2 min + 2 min discussion in breakout rooms
+
+* Functions
+** Functions
+   - Functions are defined using the =def= keyword as
+     follows:
+      #+attr_latex: :options bgcolor=dark
+      #+BEGIN_SRC Python
+      def say_something(what):
+          print(what)
+      #+END_SRC
+   - A function is called by its name followed by the required
+     arguments in parentheses:
+      #+attr_latex: :options bgcolor=dark
+      #+BEGIN_SRC Python
+      say_something("hello") # Prints "hello"
+      #+END_SRC
+
+** Functions
+   - Functions are also objects:
+      #+attr_latex: :options bgcolor=dark
+      #+BEGIN_SRC Python
+      # Prints cryptic things
+      print(say_something)           
+      # Prints the function name
+      print(say_something.__name__)
+      # Prints the function's doc string
+      print(say_something.__doc__)
+      #+END_SRC
+
+   - Functions can be passed as arguments to other functions:
+      #+attr_latex: :options bgcolor=dark
+      #+BEGIN_SRC Python
+      def say_hello(): print("hello")
+
+      def do_something(what): what()
+
+      do_something(say_hello) # Prints "hello"
+      #+END_SRC
+
+** Lambda expressions
+   - The =lambda= keyword defines an anonymous function consisting
+     of a single statement
+
+   - Synopsis: 
+      #+attr_latex: :options bgcolor=dark
+      #+BEGIN_SRC Python
+     lambda param_1, param_2, ...: statement
+      #+END_SRC
+   - The lambda function returns the evaluated =statement=
+
+
+      #+attr_latex: :options bgcolor=dark
+      #+BEGIN_SRC Python
+      def do_something(what): what()
+
+      do_something(lambda: print("hi)) # Prints "hi"
+      #+END_SRC
+
+** Positional and keyword arguments
+   Python has two ways of passing arguments[fn:1] to functions:
+   1. As positional arguments:
+      #+attr_latex: :options bgcolor=dark
+      #+BEGIN_SRC Python
+      def say_something(this, that):
+          print(this)
+          print(that)
+      
+      # All function calls print: this that
+      say_something("this", "that")
+      #+END_SRC
+[fn:1] The terms parameters and arguments can be used interchangeably
+
+** Positional and keyword arguments
+   Python has two ways of passing arguments to functions:
+   2. As keyword arguments:
+      #+attr_latex: :options bgcolor=dark
+       #+BEGIN_SRC Python
+       def say_something(this="this", that="that"):
+           print(this)
+           print(that)
+      
+       # All functions print: this that
+       say_something()
+       say_something("this")
+       say_something("this", "that")
+       say_something(this="this")
+       say_something(that="that")
+       say_something(this="this", that="that")
+       #+END_SRC
+
+** Positional and keyword arguments
+   - Positional and keyword arguments can of course be mixed:
+      #+attr_latex: :options bgcolor=dark
+       #+BEGIN_SRC Python
+       def say_something(what, this="this", that="that"):
+           print(what)
+           print(this)
+           print(that)
+       #+END_SRC
+   - The caller may also give positional arguments in keyword form:
+      #+attr_latex: :options bgcolor=dark
+       #+BEGIN_SRC Python
+       say_something(what="what")
+       #+END_SRC
+   - Positional arguments must always precede keyword arguments:
+      #+attr_latex: :options bgcolor=dark
+       #+BEGIN_SRC Python
+       # This will raise an exception
+       say_something(this="this", that="that", "what")
+       #+END_SRC
+
+** Variadic functions
+   - Variadic functions are functions that take a variable
+     number of arguments
+   - Positional variadic arguments are declared using a starred expression[fn:1]:
+      #+attr_latex: :options bgcolor=dark
+       #+BEGIN_SRC Python
+       def say_something(*args): print(args)
+       # Prints: ["this", "that"]
+       say_something("this", "that")
+       #+END_SRC
+   - The arguments provided by the caller are available as =list= inside
+     the function.
+[fn:1] Note similarity to parameter unpacking
+
+** Variadic functions
+   - Keyword variadic arguments are declared using a double star expression:
+      #+attr_latex: :options bgcolor=dark
+       #+BEGIN_SRC Python
+       def say_something(**kwargs): print(kwargs)
+       # Prints: {"this": "this", "that": "that"]
+       say_something(this="this", that="that")
+       #+END_SRC
+   - The arguments provided by the caller are available as =dict= inside
+     the function.
+
+** Expanding parameter lists and dicts
+   - Note how the star and double-star expressions above pack the
+     arguments provided by the caller into lists and dicts, respectively.
+   - The reverse work as well:
+      #+attr_latex: :options bgcolor=dark
+       #+BEGIN_SRC Python
+       def say_something(this, that): print(this, that)
+
+       # Prints: "this" "that"
+       args = ["this", "that"]
+       say_something(*args)
+
+       # Prints: "this" "that"
+       kwargs = {"this": "this", "that": "that"}
+       say_something(**kwargs)
+       #+END_SRC
+* Classes
+** Classes and objects
+  - Classes allow tying behavior to the data it depends on.
+  - Objects of a class are class are referred to as its instances
+  - The data associated with a class are called /attributes/
+  - The function associated with it are called /class methods/
+    
+    #+attr_latex: :options bgcolor=dark, fontsize=\footnotesize
+      #+BEGIN_SRC Python
+      class Dog:
+          def__init__(self, name):
+              self.name
+
+          def say_hi(self, who):
+              print(f"Hi {who}, my name is {self.name}")
+          
+      dog = Dog("Charlie")
+      
+      # Prints: Charlie
+      print(dog.name)
+
+      # Prints: Hi fren, my name is Charlie.
+      dog.say_hi("fren")
+      #+END_SRC
+
+** The =self= argument
+  - All class methods take =self= as first argument
+  - =self= refers to the class instance the method is called
+    on:
+
+    #+attr_latex: :options bgcolor=dark
+      #+BEGIN_SRC Python
+      dog.say_hi("fren")
+
+      # This is the same as
+      Dog.say_hi(dog, "fren")
+      #+END_SRC
+
+** Magic methods
+   - /Magic/ or /dunder/ (from double underscore) methods are methods whose names
+     begin and end with two underscores
+   - These functions often implement special functionality in
+     Python
+   - Examples: =__init__=, =__add__=, =__getitem__=, ...
+
+** Magic methods
+    #+attr_latex: :options bgcolor=dark
+      #+BEGIN_SRC Python
+      class Dog:
+          def__init__(self, name):
+              self.name
+
+          def __add__(self, other):
+              return Dog(self.name + " " + other.name)
+          
+      dog_1 = Dog("Charlie")
+      dog_2 = Dog("Donut")
+      dog_3 = dog_1 + dog_2
+      
+      # Prints: Hi fren, my name is Charlie Donut.
+      dog_3.say_hi("fren")
+      #+END_SRC
+
+* Style and documentation
+** Documentation
+   - Every module, class, (exported) function and (public) method
+     should be described by a /docstring/.
+    #+attr_latex: :options bgcolor=dark, fontsize=\tiny
+      #+BEGIN_SRC Python
+      class Dog:
+         """
+         The Dog class represents pet dogs.
+
+         Attributes:
+              name (str): The dog's name
+         """
+          def __init__(self, name):
+              """
+              Create dog instance.
+              
+              Args:
+                  name (str): The dog's name
+              """
+              self.name
+      #+END_SRC
+
+   - Note: Every object's docstring can be accessed from within Python
+     via its =__doc__= attribute
+
+** Coding style
+   - PEP 8[fn:1] provides a coding style guide for Python code:
+     - Spaces instead of tabs
+     - Line width: 79 characters
+     - Imports a top of file
+   - Adhere to it, if you don't have a good reason not to.
+
+\begin{alertblock}{}
+Configure you editor or IDE to format your code according to PEP8. This
+way you can stop worrying about coding style and focus on actual programming.
+\end{alertblock}
+
+[fn:1]https://www.python.org/dev/peps/pep-0008/
