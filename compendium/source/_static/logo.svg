@@ -223,7 +223,7 @@
              transform="matrix(1,0,0,-1,100.227,74.297)"
              id="path5810"
              d="M -4.375e-4,1.25e-4 H 12.038625"
-             style="fill:#cccccc;stroke:#cccccc;stroke-width:0.398;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-opacity:1;fill-opacity:1" />
+             style="fill:#cccccc;fill-opacity:1;stroke:#cccccc;stroke-width:0.398;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-opacity:1" />
           <g
              id="g1450"
              style="fill:#ffffff;fill-opacity:1;stroke:#ffffff">

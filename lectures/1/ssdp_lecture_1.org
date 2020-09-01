@@ -1,8 +1,8 @@
 
 #+TITLE: Scientific Software Development with Python
 #+SUBTITLE: Python Basics
-#+Author: @@html:</br> <b>Simon Pfreundschuh</b> </br> Deparment of Space, Earth and Environment@@
-#+OPTIONS: H:2 toc:nil num:nil
+#+AUTHOR: Simon Pfreundschuh
+#+OPTIONS: H:2 toc:nil
 #+REVEAL_THEME: chalmers
 #+REVEAL_TRANS: fast
 #+REVEAL_EXTRA_CSS: ./local.css
@@ -14,17 +14,38 @@
 #+LATEX_HEADER: \usepackage{subcaption}
 #+LATEX_HEADER: \usemintedstyle{monokai}
 #+LATEX_HEADER: \definecolor{light}{HTML}{CCCCCC}
-#+LATEX_HEADER: \definecolor{dark}{HTML}{252525}
+#+LATEX_HEADER: \definecolor{dark}{HTML}{353535}
 #+LATEX_HEADER: \addbibresource{literature.bib}
+#+BEAMER_HEADER: \AtBeginSection[]{\begin{frame}<beamer>\frametitle{Agenda}\tableofcontents[currentsection]\end{frame}}
 
 * Introduction
+** Purpose
+*** Learning outcomes
+   1. Moving beyond /just/ programming:
+     - Software planning and design
+     - Collaboration with others
+     - Ensuring correctness and reproducibility
+     - Computing concepts
+   2. Software project as an opportunity to improve your research
+     process
+     
+** Disclaimer
+*** Disclaimer
+   - This is the first time I am giving a course, so there
+     will be errors
+   - All course material is on github and you are very welcome
+     to contribute anything from corrections to additional topics
+   - Software development is a craft and needs practice. Don't
+    expect too much
+     from just listening in on the lectures.
 
 * The Organisation of Python code 
 ** Overview
    \includegraphics[width=\textwidth]{figures/python_structure.pdf}
 ** Packages
+*** Package
    - A collection of Python modules that can be distributed
-   - Can be made available online via a package index (=pypi.org=)
+   - Can be made available online via a package index ([PyPI.org][https://pypi.org]])
    - Typical usage:
       #+attr_latex: :options bgcolor=light
       #+BEGIN_SRC bash
@@ -33,8 +54,9 @@
 
 ** Modules
 
+*** Modules
    - Act as namespaces that bundle classes and functions
-   - typical usage:
+   - Typical usage:
 
       #+attr_latex: :options bgcolor=dark
       #+BEGIN_SRC Python
@@ -50,12 +72,14 @@
       #+END_SRC
 
 ** Functions
-   - Defines a sequence of operations to be executed
+*** Functions
+   - Define a sequence of operations to be executed
      on a set of user-provided input variables.
-   - Examples:
+   - Example:
       #+attr_latex: :options bgcolor=dark
       #+BEGIN_SRC Python
       def say_something(what):
+          """ Prints given output to screen. """
           print(what)
       
       say_something("hello") # Prints "hello"
@@ -63,58 +87,75 @@
 
 ** Classes
    
+*** Classes
    - Defines a set of properties (data) and associated behavior (functions)
    - Methods are special functions that are associated with objects
      of the class.
-
-   - typical usage:
+   - Example:
       #+attr_latex: :options bgcolor=dark
       #+BEGIN_SRC Python
       class A:
+      """ A class example. """
           def __init__(self):
+          """ Create A object. """
                self.what = "hello"
 
-          def say(self):
-               print(self.what)
-            
-
-      object = A()  # Calls __init__ method.
-      object.say()  # Prints "hello:
+          ...
       #+END_SRC
+
+* Syntax basics
 
 ** Statements
 
+   - A statement is an instruction that can be interpreted
+     by the Python interpreter.
    - Examples:
       #+attr_latex: :options bgcolor=dark
       #+BEGIN_SRC Python
+      # Import statement
+      import numpy as np
+
+      # Expression statement
+      f()
+
+      # Assignment statement
       a = 1
-      b = 2
-     
-      if a == b:
-          print("a equals b.")
-      else:
-          print("a does not equal b.")
+      
+      ...
       #+END_SRC
 
-** Code structure
-   - By default statements are limited to a single line in Python
-   - Multiple statements are grouped together into a compound statement
-     by indenting them:
+
+** Statements
+
+   - Simple statements are limited to a single line
+   - To extend a statement over multiple lines you can
+     - Enclose the statement in parentheses (preferred)
+     - Use line continuation: =\=
+
       #+attr_latex: :options bgcolor=dark
       #+BEGIN_SRC Python
-      # Function that contains a single statement
-      def foo(): print("foo")
-
-      # Function that contains multiple statements.
-      def bar():   
-          print("bar")
-          print("bar")
+      a = (1 +
+           1)
+      b = 1 \
+          + 1
       #+END_SRC
-   - Other ways to spread statements over multiple lines:
-     - Enclose with parenthesis, e.g. function parameters
-     - Line continuation: =\=
-     
-* Syntax basics
+
+** Compound statements
+
+   - Compound statements are statements that contain
+     one or mutiple other statements
+   - The nested statements are grouped together by identical indentation
+     (typically 4 spaces) and follow a colon:
+      #+attr_latex: :options bgcolor=dark
+      #+BEGIN_SRC Python
+      if (True):
+          print("Hi")
+          print("there")
+
+      # Same as
+      if (True): print ("Hi\nthere")
+      #+END_SRC
+
 ** Variables
    - Variables are defined through assignment statements:
       #+attr_latex: :options bgcolor=dark
@@ -284,7 +325,7 @@ Think of Python variables as labels rather than containers.
       #+BEGIN_SRC Python
       text = "The answer is {}.".format(42)
       #+END_SRC
-   - See [[https://docs.python.org/3/library/string.html?highlight=string#module-string][docs]]  for full details.
+   - See [[https://docs.python.org/3/library/string.html?highlight=string#module-string][docs]]  for full details on string methods.
 
 ** Lists
 
@@ -361,7 +402,9 @@ Think of Python variables as labels rather than containers.
     if (len(empty_list) > 0) and empty_list[0]:
         print(empty_list)
     #+END_SRC
-     
+** Exercise: Bunny Lab Level 1
+   - Time: 2 min + 2 min discussion in breakout rooms
+
 ** For loops  
 *** General form:
 
