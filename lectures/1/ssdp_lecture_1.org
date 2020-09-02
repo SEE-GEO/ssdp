@@ -39,13 +39,66 @@
     expect too much
      from just listening in on the lectures.
 
+** Python
+*** Background
+    - interpreted, high-level and general-purpose programming language[fn:1]
+    - Created by Guide von Rossum in the 90s
+    - Developed by Python Software Foundation
+
+*** Advantages for scientific applications
+    - Free and open source implementations available
+    - Widely available
+    - Easy to debug
+    - Very readable code
+    - High productivity, extensive standard library (batteries included)
+
+[fn:1] https://en.wikipedia.org/wiki/Python_(programming_language)
+
+** Python
+*** Disadvantages for scientific applications
+    - Slow for certain applications
+    - Weak typing can cause errors
+\vfill
+\begin{alertblock}{Python Version}
+    Don't use Python 2, it's dead (end of life was in January 2020).
+    \textbf{Python 3 is all there is.}
+\end{alertblock}
+
+** Using Python
+*** The IPython shell
+    - Start it using
+      #+attr_latex: :options bgcolor=light
+      #+BEGIN_SRC bash
+      $ ipython
+      #+END_SRC
+      - Can be used to interactively execute Python code
+      - Useful built-in functions: =type(...)=, =help=, =...?=
+
+\begin{alertblock}{}
+  I encourage you to try and follow along with the lecture and
+  execute some of the examples in IPython.
+\end{alertblock}
+
+** Using Python
+*** Editors and IDEs
+    - Advice: Take some time to setup your development environment,
+      it's worth it.
+    - Features to look for:
+      - Automatic PEP 8[fn:2] formatting
+      - Code completion
+      - Syntax checking
+      - Interactive shell
+    - Personal setup: Spacemacs with Python and syntax-checking layer.
+
+[fn:2] Python enhancement proposal (PEP) 8 is the official Python style guide.
+
 * The Organisation of Python code 
 ** Overview
    \includegraphics[width=\textwidth]{figures/python_structure.pdf}
 ** Packages
 *** Package
    - A collection of Python modules that can be distributed
-   - Can be made available online via a package index ([PyPI.org][https://pypi.org]])
+   - Can be made available online via a package index ([[https://pypi.orgPyPI.org][pypi.org]])
    - Typical usage:
       #+attr_latex: :options bgcolor=light
       #+BEGIN_SRC bash
@@ -88,7 +141,7 @@
 ** Classes
    
 *** Classes
-   - Defines a set of properties (data) and associated behavior (functions)
+   - Define a set of properties (data) and associated behavior (functions)
    - Methods are special functions that are associated with objects
      of the class.
    - Example:
@@ -106,7 +159,6 @@
 * Syntax basics
 
 ** Statements
-
    - A statement is an instruction that can be interpreted
      by the Python interpreter.
    - Examples:
@@ -126,7 +178,7 @@
 
 
 ** Statements
-
+*** Simple statements
    - Simple statements are limited to a single line
    - To extend a statement over multiple lines you can
      - Enclose the statement in parentheses (preferred)
@@ -142,6 +194,7 @@
 
 ** Compound statements
 
+*** Compound statements
    - Compound statements are statements that contain
      one or mutiple other statements
    - The nested statements are grouped together by identical indentation
@@ -155,6 +208,44 @@
       # Same as
       if (True): print ("Hi\nthere")
       #+END_SRC
+
+** Statement keywords
+   
+   - The following table gives an overview over keywords that introduce
+     simple statements in Python[fn:4]:
+
+   | Keyword    | Purpose                                        |
+   |------------+------------------------------------------------|
+   | =assert=   | Abort if condition is not met.                 |
+   | =pass=     | NOOP, placeholder                              |
+   | =del=      | Force deletion of object                       |
+   | =return=   | In function: Return value from function        |
+   | =raise=    | Signals error                                  |
+   | =break=    | In loop: Abort loop                            |
+   | =continue= | In loop: Skip to next iteration                |
+   | =global=   | Use variable from global scope                 |
+   | =nonlocal= | Use variable in enclosing but non-global scope |
+
+   #+TBLFM: $1=continue=Exponent
+
+[fn:4] We'll see what most of them mean later on.
+
+** Statement keywords (cont'd)
+   
+   - The following table gives an overview over keywords that introduce
+     compound statements in Python[fn:4]:
+
+   | Keyword                | Purpose                                         |
+   |------------------------+-------------------------------------------------|
+   | =if, elif, else=       | If statement                                    |
+   | =while=                | While loop                                      |
+   | =for=                  | For loop                                        |
+   | =try, except, finally= | Try, catch error, cleanup                       |
+   | =with=                 | Context manager                                 |
+   | =def=                  | Function definition                             |
+   | =class=                | Class definition                                |
+   | =async=                | Coroutine                                      |
+
 
 ** Variables
    - Variables are defined through assignment statements:
@@ -188,8 +279,28 @@ Think of Python variables as labels rather than containers.
       SOME_CONSTANT = 42
       some_variable = 1
       #+END_SRC
+   - Objects are automatically deleted when they aren't reference
+     by any variable (garbage collection) [fn:3]
 
-     
+[fn:3] This is why it is important to avoid cyclic references     
+
+
+** Variables
+   - All Python object have a type that defines how they
+     behave
+   - The type can be inferred using the built-in =type= function:
+
+      #+attr_latex: :options bgcolor=dark
+      #+BEGIN_SRC Python
+      a_string = "hello"
+
+      # Prints: str
+      print(type(a_string))
+
+      # Prints documentation for variable type.
+      help(type(a_string))
+      #+END_SRC
+
 * Basic types and operators
 ** Numeric literals
    - Numeric literals are raw numbers that appear in Python code.
@@ -203,6 +314,7 @@ Think of Python variables as labels rather than containers.
       c = 16      #decimal literal 
       d = 0x10    #hexadecimal literal
       print (a == b == c == d) # Prints True
+
       e = 1e6
       f = 1_000_000
       print (e == f) # Prints True
@@ -268,7 +380,7 @@ Think of Python variables as labels rather than containers.
       a < b < c < d # Same as (a < b) and (b < c) ...
       #+END_SRC
 
-** Identity operators
+** Identity operator
    - Each separate object in a program has a unique identity
    - The identity of two objects can be compared using
      the =is= and =is not= operators:
@@ -307,8 +419,20 @@ Think of Python variables as labels rather than containers.
       #+END_SRC
 
    - A wide range of common string operations is available via
-     methods of the string class (c.f. [[https://docs.python.org/3/library/stdtypes.html#string-methods][official docs)]]
+     methods of the str class
      
+** Strings
+*** Raw strings:
+    - A raw string is a string literal that is prefixed with =r=
+    - In normal strings, certain escape sequences starting with =\= (backslash)
+    are replaced with special characters.
+    - In raw strings, this is not the case
+      #+attr_latex: :options bgcolor=dark
+      #+BEGIN_SRC Python
+      print("\n") # Prints newline
+      print(r"\n") # Prints \n
+      #+END_SRC
+
 ** Printing strings
    - f-Strings ($\geq$ Python 3.6):
       #+attr_latex: :options bgcolor=dark
@@ -350,14 +474,21 @@ Think of Python variables as labels rather than containers.
 
       #+attr_latex: :options bgcolor=dark
       #+BEGIN_SRC Python
-      # Reverses list
-      [1, 1, 2, 3, 4].reverse()
+      # Reverse list
+      a_list = [1, 1, 2, 3]
+      a_list.reverse()
+      print(a_list) # Prints: [3, 2, 1, 1]
 
-      # Remove first occurence of 1
-      [1, 1, 2, 3, 4].remove(1)
+      # Remove element from list
+      del a_list[0]
+      print(a_list) # Prints: [2, 1, 1]
 
-      # Checks presence of element in list
-      1 in [1, 2, 3, 4]
+      # Remove first occurence from list
+      a_list.remove(1)
+      print(a_list) # Prints: [2, 1]
+
+      # Check presence of element in list
+      print(1 in a_list) # Prints: True
       #+END_SRC
 
 ** Slicing
@@ -402,8 +533,15 @@ Think of Python variables as labels rather than containers.
     if (len(empty_list) > 0) and empty_list[0]:
         print(empty_list)
     #+END_SRC
+
 ** Exercise: Bunny Lab Level 1
-   - Time: 2 min + 2 min discussion in breakout rooms
+
+*** Instructions
+   - Go to [[https://github.com/simonpf/bunny_lab][github.com/simonpf/bunny\_lab]]
+   - Scroll down
+   - Click on Colab badge
+*** Time
+   - Time: 3 min + 2 min discussion in breakout rooms
 
 ** For loops  
 *** General form:
@@ -446,18 +584,18 @@ Think of Python variables as labels rather than containers.
     #+END_SRC
 
 ** List comprehensions
-   - List comprehensions allow combining for-loop
+   - List comprehensions allow combining for-loops
      and if statements to generate a list:
      
-    #+attr_latex: :options bgcolor=dark
-    #+BEGIN_SRC Python
-    numbers = [1, 2, 3, 4]
-    squares = [i ** 2 for i in numbers]
-    print(squares) # Prints: 1, 4, 9, 16
+#+attr_latex: :options bgcolor=dark
+#+BEGIN_SRC Python
+numbers = [1, 2, 3, 4]
+squares = [i ** 2 for i in numbers]
+print(squares) # Prints: 1, 4, 9, 16
 
-    even_squares = [i ** 2 for i in numbers if i % 2 == 0]
-    print(even_squares) # Prints: 4, 16
-    #+END_SRC
+even_squares = [i ** 2 for i in numbers if i % 2 == 0]
+print(even_squares) # Prints: 4, 16
+#+END_SRC
 
 ** Generator expression
    - Like a list comprehension but enclosed with parentheses =(...)=
@@ -467,19 +605,19 @@ Think of Python variables as labels rather than containers.
     #+attr_latex: :options bgcolor=dark
     #+BEGIN_SRC Python
     numbers = [1, 2, 3, 4]
-    # Prints 1 2 3 4
+    # Prints: 1 2 3 4
     say_numbers = [print(i) for i in numbers)] 
 
-    # Prints nothing
+    # Prints nothing, yet.
     say_numbers_lazy = (print(i) for i in numbers) 
-    # Prints 1 2 3 4
+    # Prints: 1 2 3 4
     for i in say_numbers_lazy:
         pass
     #+END_SRC
 
-** Exercise: Bunny Lab Levels 1 and 2
-   - Solve levels 1 and 2 of the Bunny Lab
-   - Time: 3 min + 3 min discussion in breakout rooms
+** Exercise: Bunny Lab Level 2
+   - Solve level 2 of the Bunny Lab
+   - Time: 3 min + 2 min discussion in breakout rooms
 
 ** Tuples
    - A sequence of objects separated by =,= and optionally enclosed
@@ -508,16 +646,20 @@ Think of Python variables as labels rather than containers.
      between them:
     #+attr_latex: :options bgcolor=dark
     #+BEGIN_SRC Python
-    t = (1, 2, 3)
-    l = list(t)
-    l += [4]
-    t = tuple(l)
+    a_tuple = (1, 2, 3)
+    # Convert tuple to list
+    a_list = list(a_tuple)
+    # Append 4 to list
+    a_list += [4]
+    # Convert back to tuple
+    a_tuple = tuple(a_list)
+
     # Prints (1, 2, 3, 4)
-    print(t)
+    print(a_tuple)
     #+END_SRC
 
 ** Unpacking
-   - Python has special syntax for /unpacking/ and iterable
+   - Python has special syntax for /unpacking/ an iterable
      into multiple variables:
 
     #+attr_latex: :options bgcolor=dark
@@ -525,14 +667,14 @@ Think of Python variables as labels rather than containers.
     a, b, c = ["a", "b", "c"]
     #+END_SRC
 
-   - These can even be nested:
+   - These can be nested:
     #+attr_latex: :options bgcolor=dark
     #+BEGIN_SRC Python
     a, (b, c) = ["a", ["b", "c"]]
     #+END_SRC
 
-   - Using starred expressions iterables can be split up
-     in specific elements and remaining sequences:
+   - Iterables can even be split up in specific elements and remaining sequences
+     using =*=
     #+attr_latex: :options bgcolor=dark
     #+BEGIN_SRC Python
     first, body*, last = "a long string"
@@ -546,7 +688,9 @@ Think of Python variables as labels rather than containers.
    \begin{alertblock}{}
    Overusing unpacking expressions can hurt readability.
    \end{alertblock}
-   - Don't overdo it: Limit unpacking to three variables
+   - Don't overdo it: Limit unpacking to three variables[fn:5]
+
+[fn:5] Slatkin, Brett. Effective Python
 
 ** Dictionaries
    - Dictionaries can be used to store key-value pairs:
@@ -559,10 +703,11 @@ Think of Python variables as labels rather than containers.
    - Values can be retrieved:
     #+attr_latex: :options bgcolor=dark
     #+BEGIN_SRC Python
+    # Prints: value
     print(a_dictionary["key"])
     #+END_SRC
-   - Values can be adderd:
-    #+attr_latex: :options bgcolor=dark
+   - Values can be inserted into the dictionary:
+    #+attr_latex: :options bgcolor=dark, fontsize=\footnotesize
     #+BEGIN_SRC Python
     a_dictionary["another_key"] = "another_value"
     # Same as above
@@ -571,7 +716,7 @@ Think of Python variables as labels rather than containers.
 
 ** Dictionaries
    - Looping over elements:
-    #+attr_latex: :options bgcolor=dark
+    #+attr_latex: :options bgcolor=dark, fontsize=\footnotesize
     #+BEGIN_SRC Python
     keys = [1, 2, 3, 4]
     values = ["one", "two", "three", "four"]
@@ -588,13 +733,13 @@ Think of Python variables as labels rather than containers.
     # Prints: one two ...
     for value in dictionary.value():
         print(value)
-    #+BEGIN_SRC
+    #+END_SRC
 
 ** Dictionaries
    - Trying to retrieve a key that is not present in a dictionary
      raise an exception
    - Can use =in= operator to check if key is present in dictionary
-   - Better approach: Use =get(...)== method to safely access elements in dict
+   - Better approach: Use =get(...)= method to safely access elements in dict
      - Synopsis: =get(key, default=value)=
      - Returns =value= if key is not found in dictionary.
      
@@ -602,17 +747,20 @@ Think of Python variables as labels rather than containers.
    #+BEGIN_SRC Python
    if key in dictionary:
        print(dictionary[key])
+   else:
+       print("Key not found!")
 
+   # Same as above
    print(dictionary.get(key, default="Key not found!"))
    #+END_SRC
 
 ** Exercise: Bunny Lab Level 3
-   - Solve levels 3
-   - Time: 2 min + 2 min discussion in breakout rooms
+   - Solve level 3
+   - Time: 3 min + 2 min discussion in breakout rooms
 
 * Functions
 ** Functions
-   - Functions are defined using the =def= keyword as
+   - Functions are defined using the =def= keyword
      follows:
       #+attr_latex: :options bgcolor=dark
       #+BEGIN_SRC Python
@@ -648,6 +796,21 @@ Think of Python variables as labels rather than containers.
       do_something(say_hello) # Prints "hello"
       #+END_SRC
 
+** Functions
+   - Function parameters are passed by reference!
+
+      #+attr_latex: :options bgcolor=dark
+      #+BEGIN_SRC Python
+      def manipulate_list(input):
+          input.reverse()
+
+      a_list = [1, 2, 3]
+      manupulate_list(a_list)
+      
+      # Prints: [3, 2, 1]
+      print(a_list)
+      #+END_SRC
+
 ** Lambda expressions
    - The =lambda= keyword defines an anonymous function consisting
      of a single statement
@@ -664,11 +827,12 @@ Think of Python variables as labels rather than containers.
       #+BEGIN_SRC Python
       def do_something(what): what()
 
-      do_something(lambda: print("hi)) # Prints "hi"
+      # Prints "hi"
+      do_something(lambda: print("hi"))
       #+END_SRC
 
 ** Positional and keyword arguments
-   Python has two ways of passing arguments[fn:1] to functions:
+   Python has two ways of passing arguments[fn:6] to functions:
    1. As positional arguments:
       #+attr_latex: :options bgcolor=dark
       #+BEGIN_SRC Python
@@ -679,7 +843,8 @@ Think of Python variables as labels rather than containers.
       # All function calls print: this that
       say_something("this", "that")
       #+END_SRC
-[fn:1] The terms parameters and arguments can be used interchangeably
+[fn:6] The terms parameters and arguments can be used interchangeably
+
 
 ** Positional and keyword arguments
    Python has two ways of passing arguments to functions:
@@ -700,7 +865,7 @@ Think of Python variables as labels rather than containers.
        #+END_SRC
 
 ** Positional and keyword arguments
-   - Positional and keyword arguments can of course be mixed:
+   - Positional and keyword arguments can be mixed:
       #+attr_latex: :options bgcolor=dark
        #+BEGIN_SRC Python
        def say_something(what, this="this", that="that"):
@@ -708,7 +873,7 @@ Think of Python variables as labels rather than containers.
            print(this)
            print(that)
        #+END_SRC
-   - The caller may also give positional arguments in keyword form:
+   - The caller /may/ (but shouldn't) also give positional arguments in keyword form,
       #+attr_latex: :options bgcolor=dark
        #+BEGIN_SRC Python
        say_something(what="what")
@@ -723,7 +888,7 @@ Think of Python variables as labels rather than containers.
 ** Variadic functions
    - Variadic functions are functions that take a variable
      number of arguments
-   - Positional variadic arguments are declared using a starred expression[fn:1]:
+   - Positional variadic arguments are declared using a starred expression[fn:7]:
       #+attr_latex: :options bgcolor=dark
        #+BEGIN_SRC Python
        def say_something(*args): print(args)
@@ -732,7 +897,7 @@ Think of Python variables as labels rather than containers.
        #+END_SRC
    - The arguments provided by the caller are available as =list= inside
      the function.
-[fn:1] Note similarity to parameter unpacking
+[fn:7] Note similarity to parameter unpacking
 
 ** Variadic functions
    - Keyword variadic arguments are declared using a double star expression:
@@ -748,7 +913,7 @@ Think of Python variables as labels rather than containers.
 ** Expanding parameter lists and dicts
    - Note how the star and double-star expressions above pack the
      arguments provided by the caller into lists and dicts, respectively.
-   - The reverse work as well:
+   - It also works the other way around:
       #+attr_latex: :options bgcolor=dark
        #+BEGIN_SRC Python
        def say_something(this, that): print(this, that)
@@ -761,22 +926,27 @@ Think of Python variables as labels rather than containers.
        kwargs = {"this": "this", "that": "that"}
        say_something(**kwargs)
        #+END_SRC
+
+** Exercise: Bunny Lab Level 4
+   - Time: 3 min + 2 min discussion in breakout rooms
+
 * Classes
 ** Classes and objects
-  - Classes allow tying behavior to the data it depends on.
+  - Classes allow tying specific behavior to the data it depends on.
   - Objects of a class are class are referred to as its instances
   - The data associated with a class are called /attributes/
   - The function associated with it are called /class methods/
     
-    #+attr_latex: :options bgcolor=dark, fontsize=\footnotesize
+    #+attr_latex: :options bgcolor=dark, fontsize=\tiny
       #+BEGIN_SRC Python
       class Dog:
-          def__init__(self, name):
+          def __init__(self, name):
               self.name
 
           def say_hi(self, who):
               print(f"Hi {who}, my name is {self.name}")
           
+      # Calls __init__ method.
       dog = Dog("Charlie")
       
       # Prints: Charlie
@@ -788,8 +958,13 @@ Think of Python variables as labels rather than containers.
 
 ** The =self= argument
   - All class methods take =self= as first argument
-  - =self= refers to the class instance the method is called
-    on:
+  - The =self= arguments refers to the class instance the
+    method is called on.
+  - It is implicitly provided when an object's method is
+    called using =.= notation
+  - It can also be provided explicitly when the method is
+    called via the class name (second example)
+    
 
     #+attr_latex: :options bgcolor=dark
       #+BEGIN_SRC Python
@@ -823,6 +998,10 @@ Think of Python variables as labels rather than containers.
       # Prints: Hi fren, my name is Charlie Donut.
       dog_3.say_hi("fren")
       #+END_SRC
+
+** Exercise: Bunny Lab Level 5
+   - Time: 3 min + 2 min discussion in breakout rooms
+
 
 * Style and documentation
 ** Documentation
@@ -863,3 +1042,14 @@ way you can stop worrying about coding style and focus on actual programming.
 \end{alertblock}
 
 [fn:1]https://www.python.org/dev/peps/pep-0008/
+
+* Summary
+** Summary
+
+ - The concepts presented in this lecture should be enough to understand
+   most Python programs
+ - However, there is much more: Keep an open mind, read other peoples code,
+   you will learn new things all the time.
+ - Bunny lab:
+   - Written using only standard library code, no external dependencies
+   - Python code /can and should/ tell a story
