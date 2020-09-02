@@ -495,6 +495,7 @@ Think of Python variables as labels rather than containers.
    - A slice is an expression of the form
      - =start:end=
      - or =start:end:step=
+   - Slicing always copies a list
    - Slicing can be used to extract parts of lists:
 
     #+attr_latex: :options bgcolor=dark
@@ -535,9 +536,9 @@ Think of Python variables as labels rather than containers.
     #+END_SRC
 
 ** Exercise: Bunny Lab Level 1
-
+   
 *** Instructions
-   - Go to [[https://github.com/simonpf/bunny_lab][github.com/simonpf/bunny\_lab]]
+   - Go to [[https://github.com/simonpf/bunny_lab][=github.com/simonpf/bunny_lab=]]
    - Scroll down
    - Click on Colab badge
 *** Time
@@ -941,7 +942,7 @@ print(even_squares) # Prints: 4, 16
       #+BEGIN_SRC Python
       class Dog:
           def __init__(self, name):
-              self.name
+              self.name = name
 
           def say_hi(self, who):
               print(f"Hi {who}, my name is {self.name}")
@@ -986,7 +987,7 @@ print(even_squares) # Prints: 4, 16
       #+BEGIN_SRC Python
       class Dog:
           def__init__(self, name):
-              self.name
+              self.name = name
 
           def __add__(self, other):
               return Dog(self.name + " " + other.name)
@@ -1023,7 +1024,7 @@ print(even_squares) # Prints: 4, 16
               Args:
                   name (str): The dog's name
               """
-              self.name
+              self.name = name
       #+END_SRC
 
    - Note: Every object's docstring can be accessed from within Python

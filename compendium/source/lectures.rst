@@ -7,7 +7,7 @@ the course lectures in PDF format.
 +------------+----------------+--------------------+
 | Date       | Topic          |      Link          |
 +============+================+====================+
-| 2020-09-02 | Python Basics  | Lecture1           |
+| 2020-09-02 | Python Basics  | ssdp_lecture_1_    |
 +------------+----------------+--------------------+
 
-.. _Lecture1: https://github.com/SEE-MOF/ssdp/raw/main/lectures/1/ssdp_lecture_1.pdf>`
+.. _ssdp_lecture_1: https://github.com/SEE-MOF/ssdp/raw/main/lectures/1/ssdp_lecture_1.pdf
