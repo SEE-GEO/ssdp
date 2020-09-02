@@ -774,6 +774,9 @@ print(even_squares) # Prints: 4, 16
       #+BEGIN_SRC Python
       say_something("hello") # Prints "hello"
       #+END_SRC
+   - A =return= statement in a function causes the execution to leave the function
+     and return the specified value as result
+   - If no =return= statement is present, the function implicitly returns =None=
 
 ** Functions
    - Functions are also objects:
