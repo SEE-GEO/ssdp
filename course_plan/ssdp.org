@@ -63,39 +63,28 @@ The course consists of two parts:
 * Time plan
 ** Lectures
 *** Part 1: Software development and programming principles
-   - Week 1: Introductory lecture
-     - Aims of software development
-   - Week 2: Project management and planning
-     - DevOps and continuous integration
-     - Agile software development
-   - Week 3: Programming principles
-     - Procedural vs. object oriented programming
-     - Basics of object oriented design
+   - Week 1: Python crash course
+   - Week 2: Project management and version control
+   - Week 3: Testing, documentation and deployment
    - Week 4: 1st retrospective:
-       - Progress report from project groups
+       - Presentation of project plans
        - Leaning and open challenges
+
 *** Part 2: The Python programming language
-   - Week 5: Overview of the Python programming language
-     - Python programming principles
-     - Language features
-     - The Python package system
+   - Week 5: Object oriented programming with Python
+   - Week 6: Design patterns with Python
    - Week 6: The Python standard library
-   - Week 7: Python programming recipes
+   - Week 7: Advanced Python concepts
    - Week 8: 2nd retrospective:
-     - Progress report from project groups
+     - Progress report from 1st sprint
      - Learnings and open challenges
 
 *** Part 3: Scientific programming with Python
-   - Week 9: Parallel programming with Python:
-     - The Python Interpreter Lock
-     - Python co-routines
-   - Week 10: Distributed programming with Python
-     - IPyParallel
-     - MPI
-     - Out of core programming
-   - Week 11 (Optional): Scientific visualizations with Python
+   - Week 9: High-performance computing with Python
+   - Week 10: Big data processing with Python
+   - Week 11: Scientific visualizations with Python
    - Week 12: 3rd retrospective:
-     - Progress report from project groups
+     - Progress from 2nd sprint
      - Learnings and open challenges
 ** Projects
 ** Week 1-4: Planning phase

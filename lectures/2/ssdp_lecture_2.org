@@ -1,0 +1,186 @@
+#+TITLE: Scientific Software Development with Python
+#+SUBTITLE: Basic project management and version control
+#+AUTHOR: Simon Pfreundschuh
+#+OPTIONS: H:2 toc:nil
+#+REVEAL_THEME: chalmers
+#+REVEAL_TRANS: fast
+#+REVEAL_EXTRA_CSS: ./local.css
+#+LaTeX_HEADER: \institute{Department of Space, Earth and Environment}
+#+LaTeX_HEADER: \setbeamerfont{title}{family=\sffamily, series=\bfseries, size=\LARGE}
+#+LATEX_HEADER: \usepackage[style=authoryear]{biblatex}
+#+LATEX_HEADER: \usepackage{siunitx}
+#+LaTeX_HEADER: \usetheme{chalmers}
+#+LATEX_HEADER: \usepackage{subcaption}
+#+LATEX_HEADER: \usepackage{amssymb}
+#+LATEX_HEADER: \usemintedstyle{monokai}
+#+LATEX_HEADER: \usepackage{pifont}
+#+LATEX_HEADER: \definecolor{light}{HTML}{CCCCCC}
+#+LATEX_HEADER: \definecolor{dark}{HTML}{353535}
+#+LATEX_HEADER: \newcommand{\greencheck}{{\color{green}\ding{51}}}
+#+LATEX_HEADER: \newcommand{\redcross}{{\color{red}\ding{55}}}
+#+LATEX_HEADER: \newcommand{\question}{{\color{yellow}\textbf{???}}}
+#+LATEX_HEADER: \addbibresource{literature.bib}
+#+BEAMER_HEADER: \AtBeginSection[]{\begin{frame}<beamer>\frametitle{Agenda}\tableofcontents[currentsection]\end{frame}}
+
+* Course overview
+** Functions of software
+*** The three fundamental functions of software[fn:1]:
+   1. Performing its given task
+   2. Affording change
+   3. Communicate to its readers
+
+[fn:1] Adapted from /Martin, Robert C. Agile software development: principles, patterns, and practices/.
+** Dimensions of software development
+\centering
+\includegraphics[width=0.6\textwidth]{figures/dimensions_of_software_development}
+
+[fn:2] Version control, testing and deployment
+** Dimensions of software development
+\centering
+\includegraphics[width=0.6\textwidth]{figures/dimensions_of_software_development_parts}
+
+* Agile software development
+
+** Background
+*** 90s and Early 00s:
+
+   - /Heavyweight development processes/ prevalent in the software industry:
+     - Detailed documentation and planning
+     - Sequential process
+
+   - Problems:
+     - Unsuited for complex/explorative projects
+     - Can't incorporate change
+
+*** Emergence of agile practices:       
+    - 90s: Development of programming and design practices to address problems of
+      heavyweight processes
+    - 2001: Agile manifesto
+
+** The agile manifesto
+*** Values   
+    1. Individuals and interactions over processes and tools
+    2. Working software over comprehensive documentation
+    3. Customer collaboration over contract negotiation
+    4. Responding to change of following a plan
+
+** The agile manifesto
+*** Principles   
+    1. Customer satisfaction highest priority
+    2. Welcome changing requirements 
+    3. Deliver working software frequently
+    4. Business people and developers must work together daily throughout the project
+    5. Build projects around motivated individuals
+    6. Face-to-face conversation to convey information
+
+** The agile manifesto
+*** Principles --- in science
+    1. Customer satisfaction highest priority (\greencheck)
+    2. Welcome changing requirements \greencheck
+    3. Deliver working software frequently \greencheck
+    4. Business people and developers must work together daily throughout the project \redcross
+    5. Build projects around motivated individuals \greencheck
+    6. Face-to-face conversation to convey information (\greencheck)
+
+** The agile manifesto
+*** Principles
+    7. [@7] Working software is the primary measure of progress
+    8. Sustainable working pace
+    9. Technical excellence and good design 
+    10. Simplicity: Maximizing the amount of work not done
+    11. The best results emerge from self-organizing teams
+    12. Regular reflection on how to become more effective 
+
+** The agile manifesto
+*** Principles --- in science
+    7. [@7] Working software is the primary measure of progress \greencheck
+    8. Sustainable working pace \question
+    9. Technical excellence and good design \question
+    10. Simplicity: Maximizing the amount of work not done \greencheck
+    11. The best results emerge from self-organizing teams \greencheck
+    12. Regular reflection on how to become more effective \question
+
+** Development process
+*** Iterative development
+    - Release early and often
+    - A single iteration is typically referred to as a sprint
+    - A sprint consists of three phases:
+      - Planning
+      - Implementation
+      - Reflection
+
+** Project planning
+*** Acknowledge uncertainty
+    - We can't know all details from the start
+    - Requirements are likely going to change
+
+*** Keep it simple
+    - Focus on functionality from user perspective (features)
+    - Omit implementation details
+
+** User stories and backlog
+*** User story
+    - informal, natural language description of a feature
+    - Represents a requirement
+
+*** Backlog
+    - Collection of user stories that define the project
+    - Task pool for next development iteration
+    - Can be extended throughout the project
+
+** Sprints
+*** Sprint planning
+    - Defines the work to be done in a sprint by selecting
+      user stories from the backlog
+    - The team decides how the stories should be implemented
+    - Amount of work based on /velocity/ estimates from previous
+      iteration
+    - Defines how increment should be delivered
+
+\begin{alertblock}{Artifact}
+The sprint planning should produce a tangible \textit{sprint goal} that the team
+whole team works towards.
+\end{alertblock}
+
+** Sprints
+
+*** During the sprint
+    - The team self-organizes its work to reach the sprint goal
+    - Short but regular meetings to optimize the probability to
+      reach the sprint goal
+    - Each team member explains[fn:3]:
+      1. What did I do since the last meeting that helped the team
+        meet the sprint goal?
+      2. What will I do now to help the team reach the sprint goal?
+      3. Do I see any impediments that may prevent the development
+        team from reaching the sprint goal?
+
+[fn:3] Adapted from https://www.scrumguides.org/docs/scrumguide/v2016/2016-Scrum-Guide-US.pdf
+
+** Sprints
+
+*** After the sprint
+**** Sprint review:
+     - Which user stories have been implemented?
+     - What problems occured?
+     - What is the current state of the backlog?
+     - How to proceed?
+       - Input for next sprint planning
+**** Retrospective
+     - The team reflects on its development process
+     - The team identifies ways to:
+       - Make work more effective and enjoyable
+       - Increase product quality
+     - The team decides which improvements it wants to
+       implement in the next iteration
+
+** Project management --- Conclusions
+
+   - This was just a general presentation of basic agile project
+     management
+
+* Version control
+
+** Basic git w
+
+* Project development with GitHub
