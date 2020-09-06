@@ -4,6 +4,33 @@ Lectures
 Course structure
 ----------------
 
+The course aims to give an overview of all topics and techniques relevant
+to writing high-quality scientific software. Conceptually, the topics covered
+in the course can be grouped as illustrated in the figure below.
+
+.. image:: ../../lectures/2/figures/dimensions_of_software_development.svg
+           :width: 300
+           :align: center
+
+Part 1
+``````
+
+Part 1 of the course covers the topics *Project planning & management* and
+*Version control, testing and deployment*. This first part aims lay the foundation
+for the organization of the students' project work.
+
+Part 2
+``````
+
+The second part of the course focuses on the design and implementation of software
+with Python and thus covers the topics *Software design* and *Python programming*.
+It presents advanced programming and design concepts. It will accompany
+the first implementation sprint of the project work.
+
+Part 3
+``````
+The topic of the third part of the course is *Scientific computing*. It will try
+to address the challenges that students encounter during the project work.
 
 Overview
 --------
