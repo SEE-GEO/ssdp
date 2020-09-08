@@ -179,8 +179,481 @@ whole team works towards.
    - This was just a general presentation of basic agile project
      management
 
-* Version control
+* Version control with git
+** Initial setup
+*** Your identity
+      #+attr_latex: :options bgcolor=light
+      #+BEGIN_SRC bash
+      $ git config --global user.name "your_name"
+      $ git config --global user.email your_email@chalmers.se
+      #+END_SRC
 
-** Basic git w
+*** Your editor
+      #+attr_latex: :options bgcolor=light
+      #+BEGIN_SRC bash
+      $ git config --global core.editor vim # or emacs, nano, ...
+      #+END_SRC
+
+*** Default branch name
+      - Change default branch name to main[fn:4]:
+      #+attr_latex: :options bgcolor=light
+      #+BEGIN_SRC bash
+      $ git config --global init.defaultBranch main
+      #+END_SRC
+
+[fn:4] https://tools.ietf.org/id/draft-knodel-terminology-00.html
+
+** Principles
+   :PROPERTIES:
+   :BEAMER_opt: t
+   :END:
+
+   \includegraphics[width=\textwidth]{figures/git_principle.pdf}
+
+*** Principles
+  - git tracks development as a sequence of changes
+  - A single sequence of changes is called a \textbf{branch}
+
+** Principles
+   :PROPERTIES:
+   :BEAMER_opt: t
+   :END:
+
+   \includegraphics[width=\textwidth]{figures/git_principle.pdf}
+
+*** Principles
+  - the current state of your directory is defined by
+    which branch is \textbf{checked out} (grey rectangle)
+  - The currently checked out files are referred to as the \textbf{working tree}
+
+** Creating an empty repository
+   :PROPERTIES:
+   :BEAMER_opt: t
+   :END:
+
+   \includegraphics[width=\textwidth]{figures/git_empty.pdf}
+
+  #+attr_latex: :options bgcolor=light
+  #+BEGIN_SRC bash
+  $ git init
+  #+END_SRC
+  - Creates empty repository with a single branch =main=
+
+
+** Adding changes to the repository
+   :PROPERTIES:
+   :BEAMER_opt: t
+   :END:
+
+   \includegraphics[width=\textwidth]{figures/git_empty.pdf}
+
+  1. =git add= marks changed or new files for the next commit
+  
+  2. =git commit= adds the changes from the staged files as an atomic change
+    to the repository[fn:5]
+
+[fn:5] Explicit staging can be skipped by using =git commit= followed by
+   a list of file names.
+
+** Adding changes to the repository
+   :PROPERTIES:
+   :BEAMER_opt: t
+   :END:
+
+   \includegraphics[width=\textwidth]{figures/git_first_commit.pdf}
+
+  #+attr_latex: :options bgcolor=light, fontsize=\footnotesize
+  #+BEGIN_SRC bash
+  $ git commit                   # Commit to branch
+  $ git add README.md LICENSE.md # Stage files for commit
+  #+END_SRC
+or 
+  #+attr_latex: :options bgcolor=light, fontsize=\footnotesize
+  #+BEGIN_SRC bash
+  $ git commit README.md LICENSE.md
+  #+END_SRC
+
+
+
+** Adding some files
+   :PROPERTIES:
+   :BEAMER_opt: t
+   :END:
+
+   \includegraphics[width=\textwidth]{figures/git_first_commit.pdf}
+
+   - Use =git log= to list the most recent changes in branch
+   - Commits are identified by their checksum (the long, seemingly random
+     number on the second line)
+
+  #+attr_latex: :options bgcolor=light, fontsize=\scriptsize
+  #+BEGIN_SRC bash
+  $ git log
+  commit 21959efd7528a00fab48062473f0409acd74e113 (HEAD -> main)
+  Author: Simon Pfreundschuh <simon.pfreundschuh@chalmers.se>
+  Date:   Mon Sep 7 21:09:44 2020 +0200
+
+      Added README and LICENSE files.
+  #+END_SRC
+
+** Branching
+   :PROPERTIES:
+   :BEAMER_opt: t
+   :END:
+
+   \includegraphics[width=\textwidth]{figures/git_branch_1.pdf}
+
+** Branching
+   :PROPERTIES:
+   :BEAMER_opt: t
+   :END:
+
+   \includegraphics[width=\textwidth]{figures/git_branch_new_1.pdf}
+
+  - Branching allows experimenting with new features at the same
+    time as keeping a snapshot of the currently working code
+  - Use =git branch= to create a new branch:
+    #+attr_latex: :options bgcolor=light, fontsize=\scriptsize
+    #+BEGIN_SRC bash
+    $ git branch new_feature
+    #+END_SRC
+
+
+
+** Branching
+   :PROPERTIES:
+   :BEAMER_opt: t
+   :END:
+
+   \includegraphics[width=\textwidth]{figures/git_branch_new_1.pdf}
+
+
+   - However, currently we are still on the =main= branch[fn:6]
+   - All git commands that we execute affect the branch
+     /that is currently checked out/, i.e. =main=.
+
+[fn:6] Indicated by grey rectangle in figure. Use =git status=
+    to verify.
+
+** Branching
+   :PROPERTIES:
+   :BEAMER_opt: t
+   :END:
+
+   \includegraphics[width=\textwidth]{figures/git_branch_new_2.pdf}
+
+
+   - To switch to the new branch we need to /check it out/[fn:7]:
+  
+  #+attr_latex: :options bgcolor=light, fontsize=\scriptsize
+  #+BEGIN_SRC bash
+  $ git checkout new_feature
+  #+END_SRC
+
+  - Since the development in both branches is identical, the working
+    directory doesn't change.
+
+[fn:7] Alternatively, use =git checkout -b <branch_name>= to
+    create new branch and checkout directly.
+
+** Branching
+   :PROPERTIES:
+   :BEAMER_opt: t
+   :END:
+
+   \includegraphics[width=\textwidth]{figures/git_branch_new_3.pdf}
+
+
+   - We can now add the new feature to the branch 
+  
+** Merging
+   :PROPERTIES:
+   :BEAMER_opt: t
+   :END:
+
+   \includegraphics[width=\textwidth]{figures/git_branch_new_3.pdf}
+
+   - Integrating changes from another branch is called merging
+   - To merge the changes in =new_feature= into =main=:
+
+** Merging
+   :PROPERTIES:
+   :BEAMER_opt: t
+   :END:
+
+   \includegraphics[width=\textwidth]{figures/git_branch_new_3_co.pdf}
+
+   - Integrating changes from another branch is called merging
+   - To merge the changes in =new_feature= into =main=:
+     1. Checkout main
+        #+attr_latex: :options bgcolor=light, fontsize=\scriptsize
+        #+BEGIN_SRC bash
+        $ git checkout main
+        #+END_SRC
+
+** Merging
+   :PROPERTIES:
+   :BEAMER_opt: t
+   :END:
+
+   \includegraphics[width=\textwidth]{figures/git_branch_fast_forward.pdf}
+
+   - Integrating changes from another branch is called merging
+   - To merge the changes in =new_feature= into =main=:
+     1. Checkout main
+        #+attr_latex: :options bgcolor=light, fontsize=\scriptsize
+        #+BEGIN_SRC bash
+        $ git checkout main
+        #+END_SRC
+     2. Merge:
+        #+attr_latex: :options bgcolor=light, fontsize=\scriptsize
+        #+BEGIN_SRC bash
+        $ git merge new_feature
+        #+END_SRC
+
+** Merging
+   :PROPERTIES:
+   :BEAMER_opt: t
+   :END:
+
+   \includegraphics[width=\textwidth]{figures/git_branch_fast_forward.pdf}
+
+*** Fast forwarding
+    - The special case where the branch to merge is simply ahead of the
+      other branch is called \textbf{fast forwarding}.
+    - Fast forwarding is trivial
+
+** Merging
+   :PROPERTIES:
+   :BEAMER_opt: t
+   :END:
+
+   \includegraphics[width=\textwidth]{figures/git_branch_new_5.pdf}
+
+*** Diverging branches
+   - However, typically the branches will /diverge/
+   - In this case a merge operation is required, which itself
+     is commited to repository
+
+** Merging
+   :PROPERTIES:
+   :BEAMER_opt: t
+   :END:
+
+   \includegraphics[width=\textwidth]{figures/git_branch_merge.pdf}
+
+*** Diverging branches
+   - However, typically the branches will /diverge/
+   - In this case a merge operation is required, which itself
+     is commited to repository
+   - If the changes to merge affect identical lines in the same files,
+     a conflict occurs, which has to be resolved manually.
+
+** Working with remotes
+   :PROPERTIES:
+   :BEAMER_opt: t
+   :END:
+   
+   \includegraphics[width=\textwidth]{figures/git_remote_0.pdf}
+
+*** Remotes
+    - Distributed version control system: Every repository can be synchronized
+      with multiple other repositories in different locations.
+    - A separate repository setup to track the same development is called
+      a \textbf{remote}
+
+** Working with remotes
+   :PROPERTIES:
+   :BEAMER_opt: t
+   :END:
+   
+   \includegraphics[width=\textwidth]{figures/git_remote_add.pdf}
+
+*** Adding a remote
+
+    #+attr_latex: :options bgcolor=light, fontsize=\scriptsize
+    #+BEGIN_SRC bash
+    $ git remote --add <remote_name> https://github.com/see-mof/ssdp
+    #+END_SRC
+    - If the remote is a newly created repository it is still
+      empty.
+
+** Working with remotes
+   :PROPERTIES:
+   :BEAMER_opt: t
+   :END:
+   
+   \includegraphics[width=\textwidth]{figures/git_remote_1.pdf}
+
+*** Publishing local development
+  - The =-u= option tells =git=, which remote branch =main= should track
+    #+attr_latex: :options bgcolor=light, fontsize=\scriptsize
+    #+BEGIN_SRC bash
+    $ git push -u <remote_name> <branch> # here: git push -u origin main
+    #+END_SRC
+  - This becomes the default location for future pushes:
+    #+attr_latex: :options bgcolor=light, fontsize=\scriptsize
+    #+BEGIN_SRC bash
+    $ git push # Same as: git push origin/main
+    #+END_SRC
+
+** Working with remotes
+   :PROPERTIES:
+   :BEAMER_opt: t
+   :END:
+   
+   \includegraphics[width=\textwidth]{figures/git_remote_1.pdf}
+
+*** Cloning a repository
+  - This is the same state you would have reached if you would have
+    cloned a remote repository:
+    #+attr_latex: :options bgcolor=light, fontsize=\scriptsize
+    #+BEGIN_SRC bash
+    $ git clone https://github.com/see-mof/ssdp
+    #+END_SRC
+
+** Working with remotes
+   :PROPERTIES:
+   :BEAMER_opt: t
+   :END:
+   
+   \includegraphics[width=\textwidth]{figures/git_remote_2.pdf}
+
+*** Multiple remotes
+    - However, it is typical to have multiple remotes[fn:8]:
+    #+attr_latex: :options bgcolor=light, fontsize=\scriptsize
+    #+BEGIN_SRC bash
+    $ git add remote fork https://github.com/simonpf/ssdp
+    $ git push fork
+    #+END_SRC
+[fn:8] For example a personal fork of a public repository.
+
+** Updating your local repository
+   :PROPERTIES:
+   :BEAMER_opt: t
+   :END:
+   
+   \includegraphics[width=\textwidth]{figures/git_remote_update_0.pdf}
+
+*** Fetching changes from remote
+    - =git= keeps local copy of remote branches
+    - The are denoted as =<remote_name>/<branch_name>=
+    - =git fetch= updates the local copy of the remote branch:
+
+    #+attr_latex: :options bgcolor=light, fontsize=\scriptsize
+    #+BEGIN_SRC bash
+    $ git fetch origin main
+    #+END_SRC
+
+** Updating your local repository
+   :PROPERTIES:
+   :BEAMER_opt: t
+   :END:
+   
+   \includegraphics[width=\textwidth]{figures/git_remote_update.pdf}
+
+*** Fetching changes from remote
+    - =git= keeps local copy of remote branches
+    - The are denoted as =<remote_name>/<branch_name>=
+    - =git fetch= updates the local copy of the remote branch:
+
+    #+attr_latex: :options bgcolor=light, fontsize=\scriptsize
+    #+BEGIN_SRC bash
+    $ git fetch origin main
+    #+END_SRC
+
+** Updating your local repository
+   :PROPERTIES:
+   :BEAMER_opt: t
+   :END:
+   
+   \includegraphics[width=\textwidth]{figures/git_remote_1.pdf}
+
+*** Merging the local branch
+    - To update the local branch =main=, merge the local copy of the remote branch
+
+    #+attr_latex: :options bgcolor=light, fontsize=\scriptsize
+    #+BEGIN_SRC bash
+    $ git merge origin/main
+    #+END_SRC
+
+** Updating your local repository
+   :PROPERTIES:
+   :BEAMER_opt: t
+   :END:
+   
+   \includegraphics[width=\textwidth]{figures/git_remote_1.pdf}
+
+*** Pulling changes from remote
+    - =git pull= combines the =fetch= and =merge= commands:
+    #+attr_latex: :options bgcolor=light, fontsize=\scriptsize
+    #+BEGIN_SRC bash
+    $ git pull origin main
+    #+END_SRC
+    or
+    #+attr_latex: :options bgcolor=light, fontsize=\scriptsize
+    #+BEGIN_SRC bash
+    $ git pull # sufficient, if local branch tracks remote
+    #+END_SRC
+
+** Distributed development workflow
+   :PROPERTIES:
+   :BEAMER_opt: t
+   :END:
+   
+   \includegraphics[width=\textwidth]{figures/git_wf_begin.pdf}
+
+*** Contributing to a public repository
+    1. Clone public repository
+
+** Distributed development workflow
+   :PROPERTIES:
+   :BEAMER_opt: t
+   :END:
+   
+   \includegraphics[width=\textwidth]{figures/git_wf_new_feature.pdf}
+
+*** Contributing to a public repository
+    1. Clone public repository
+    2. Add feature in new branch
+
+** Distributed development workflow
+   :PROPERTIES:
+   :BEAMER_opt: t
+   :END:
+   
+   \includegraphics[width=\textwidth]{figures/git_wf_push.pdf}
+
+*** Contributing to a public repository
+    1. Clone public repository
+    2. Add feature in new branch
+    3. Push new branch to personal fork of public repository
+
+** Distributed development workflow
+   :PROPERTIES:
+   :BEAMER_opt: t
+   :END:
+   
+   \includegraphics[width=\textwidth]{figures/git_wf_pr.pdf}
+
+*** Contributing to a public repository
+    1. Clone public repository
+    2. Add feature in new branch
+    3. Push new branch to personal fork of public repository
+    4. Make pull request (PR) from fork
+
+** Distributed development workflow
+   :PROPERTIES:
+   :BEAMER_opt: t
+   :END:
+   
+   \includegraphics[width=\textwidth]{figures/git_wf_final.pdf}
+
+*** Contributing to a public repository
+    1. Clone public repository
+    2. Add feature in new branch
+    3. Push new branch to personal fork of public repository
+    4. Make pull request (PR) from fork
+    5. Update local =main= branch
 
 * Project development with GitHub
