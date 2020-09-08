@@ -1,0 +1,35 @@
+#+TITLE:       git task sheet
+#+AUTHOR:      Simon Pfreunschuh
+#+EMAIL:       simon.pfreundschuh@chalmers.se
+#+OPTIONS: toc:nil
+#+LaTeX_HEADER: \usepackage{natbib}
+#+LaTeX_HEADER: \usepackage{siunitx}
+#+LaTeX_HEADER: \usepackage{subcaption}
+#+LaTeX_HEADER: \usepackage{todonotes}
+#+LaTeX_HEADER: \DeclareMathOperator\arctanh{arctanh}
+
+
+* Initializing a repository and adding a remote
+  - Create an empty folder at a location of your choice
+  - Navigate to the folder
+  - Create an empty git repository
+  - Add =https://github.com/simonpf/ssdp= as a remote
+  - Pull
+
+* Adding a feature to the repository    
+  - Create and checkout a new branch
+  - Add your name to the =STUDENT_LIST.MD= file
+  - Try to push your changes to the remote. Why
+    doesn't it work?
+
+* Creating your personal fork
+  - Fork the repository =github.com/simonpf/ssdp=
+  - Add the fork as a remote to your local repository
+  - Push the changes to your fork
+
+* Make a pull request
+  - Go to the repository page of your fork
+  - Make a pull request
+  - If necessary, merge changes from other students
+  - Wait for approval
+

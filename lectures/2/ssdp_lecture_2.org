@@ -1,5 +1,5 @@
 #+TITLE: Scientific Software Development with Python
-#+SUBTITLE: Basic project management and version control
+#+SUBTITLE: Project management and version control
 #+AUTHOR: Simon Pfreundschuh
 #+OPTIONS: H:2 toc:nil
 #+REVEAL_THEME: chalmers
@@ -14,7 +14,7 @@
 #+LATEX_HEADER: \usepackage{amssymb}
 #+LATEX_HEADER: \usemintedstyle{monokai}
 #+LATEX_HEADER: \usepackage{pifont}
-#+LATEX_HEADER: \definecolor{light}{HTML}{CCCCCC}
+#+LATEX_HEADER: \definecolor{light}{HTML}{BBBBBB}
 #+LATEX_HEADER: \definecolor{dark}{HTML}{353535}
 #+LATEX_HEADER: \newcommand{\greencheck}{{\color{green}\ding{51}}}
 #+LATEX_HEADER: \newcommand{\redcross}{{\color{red}\ding{55}}}
@@ -34,19 +34,28 @@
 \centering
 \includegraphics[width=0.6\textwidth]{figures/dimensions_of_software_development}
 
-[fn:2] Version control, testing and deployment
 ** Dimensions of software development
 \centering
 \includegraphics[width=0.6\textwidth]{figures/dimensions_of_software_development_parts}
 
 * Agile software development
 
+** Introductory discussion
+
+   1. Discussion in breakout rooms (5 min):
+      - Presents yourself to your colleagues
+      - Discuss following questions:
+        - How big are the projects that your are involved in?
+        - How are these projects managed?
+   2. Presentation of results from breakout rooms (< 1 min / room)
+      - Select a speaker to summarize results.
+
 ** Background
 *** 90s and Early 00s:
 
    - /Heavyweight development processes/ prevalent in the software industry:
      - Detailed documentation and planning
-     - Sequential process
+     - Sequential process with big, heavy releases
 
    - Problems:
      - Unsuited for complex/explorative projects
@@ -55,16 +64,17 @@
 *** Emergence of agile practices:       
     - 90s: Development of programming and design practices to address problems of
       heavyweight processes
-    - 2001: Agile manifesto
+    - 00: Generalization of agile practices to a management framework.
 
-** The agile manifesto
+
+** The agile manifesto (2001)
 *** Values   
     1. Individuals and interactions over processes and tools
     2. Working software over comprehensive documentation
     3. Customer collaboration over contract negotiation
-    4. Responding to change of following a plan
+    4. Responding to change over following a plan
 
-** The agile manifesto
+** The agile manifesto (2001)
 *** Principles   
     1. Customer satisfaction highest priority
     2. Welcome changing requirements 
@@ -73,7 +83,7 @@
     5. Build projects around motivated individuals
     6. Face-to-face conversation to convey information
 
-** The agile manifesto
+** The agile manifesto (2001)
 *** Principles --- in science
     1. Customer satisfaction highest priority (\greencheck)
     2. Welcome changing requirements \greencheck
@@ -82,7 +92,7 @@
     5. Build projects around motivated individuals \greencheck
     6. Face-to-face conversation to convey information (\greencheck)
 
-** The agile manifesto
+** The agile manifesto (2001)
 *** Principles
     7. [@7] Working software is the primary measure of progress
     8. Sustainable working pace
@@ -91,7 +101,7 @@
     11. The best results emerge from self-organizing teams
     12. Regular reflection on how to become more effective 
 
-** The agile manifesto
+** The agile manifesto (2001)
 *** Principles --- in science
     7. [@7] Working software is the primary measure of progress \greencheck
     8. Sustainable working pace \question
@@ -100,25 +110,64 @@
     11. The best results emerge from self-organizing teams \greencheck
     12. Regular reflection on how to become more effective \question
 
-** Development process
+
+** The agile manifesto (2001)
+
+*** Agile principles, summarized
+    - Self-organizing, cross-functional teams
+    - Early delivery, evolutionary development
+    - Flexible response to change
+    
+  \begin{alertblock}{}
+   There is considerable overlap between agile principles and research.
+   \textbf{This makes many agile approaches applicable also for our work.}
+   \end{alertblock}
+   
+** So, what does it mean?
+   :PROPERTIES:
+   :BEAMER_opt: t
+   :END:
+
+   \centering
+   \includegraphics[width=0.5\textwidth]{figures/dimensions_of_software_development_agile_0}
+
+   - Organizational-conceptual level: Agile management practices
+   - Organizational-technical: Agile development techniques
+
+** So, what does it mean?
+   :PROPERTIES:
+   :BEAMER_opt: t
+   :END:
+
+   \centering
+   \includegraphics[width=0.5\textwidth]{figures/dimensions_of_software_development_agile}
+
+   - Organizational-conceptual level: ???[fn:2]
+   - Organizational-technical: Agile techniques are de facto standard
+
+[fn:2] I personally don't know. If you have empirical evidence, contact me.
+
+** Agile project management
 *** Iterative development
     - Release early and often
-    - A single iteration is typically referred to as a sprint
+    - Work is performed in /sprints/.
     - A sprint consists of three phases:
-      - Planning
-      - Implementation
-      - Reflection
+      1. Planning
+      2. Implementation
+      3. Reflection
 
-** Project planning
-*** Acknowledge uncertainty
-    - We can't know all details from the start
-    - Requirements are likely going to change
+** Agile project management
+*** Project planning
+     - Acknowledge uncertainty:
+       - Not all details from the start
+       - Requirements are likely going to change during the process
+     - Keep it simple:
+       - Focus on functionality from user perspective (\textbf{features})
+       - Omit implementation details
+     - Be flexible:
+       - The project plan may change during the project
 
-*** Keep it simple
-    - Focus on functionality from user perspective (features)
-    - Omit implementation details
-
-** User stories and backlog
+**  Agile project management
 *** User story
     - informal, natural language description of a feature
     - Represents a requirement
@@ -127,6 +176,11 @@
     - Collection of user stories that define the project
     - Task pool for next development iteration
     - Can be extended throughout the project
+
+  \begin{alertblock}{}
+ The backlog defines the project scope. It is the essential
+  planning tool of agile project management. 
+  \end{alertblock}
 
 ** Sprints
 *** Sprint planning
@@ -137,9 +191,9 @@
       iteration
     - Defines how increment should be delivered
 
-\begin{alertblock}{Artifact}
-The sprint planning should produce a tangible \textit{sprint goal} that the team
-whole team works towards.
+\begin{alertblock}{}
+Result of the sprint planning should be a tangible \textbf{sprint goal}, which
+ the team commits to as a whole.
 \end{alertblock}
 
 ** Sprints
@@ -148,7 +202,7 @@ whole team works towards.
     - The team self-organizes its work to reach the sprint goal
     - Short but regular meetings to optimize the probability to
       reach the sprint goal
-    - Each team member explains[fn:3]:
+    - During meeting, each team member explains[fn:3]:
       1. What did I do since the last meeting that helped the team
         meet the sprint goal?
       2. What will I do now to help the team reach the sprint goal?
@@ -160,13 +214,13 @@ whole team works towards.
 ** Sprints
 
 *** After the sprint
-**** Sprint review:
+  1. Sprint review:
      - Which user stories have been implemented?
      - What problems occured?
      - What is the current state of the backlog?
      - How to proceed?
        - Input for next sprint planning
-**** Retrospective
+  2. Retrospective
      - The team reflects on its development process
      - The team identifies ways to:
        - Make work more effective and enjoyable
@@ -174,29 +228,63 @@ whole team works towards.
      - The team decides which improvements it wants to
        implement in the next iteration
 
-** Project management --- Conclusions
+** Your project work
+   
+  - Project work will be done in four sprints
+  - After each sprint, all teams will present their
+    progress (retrospectives in schedule)[fn:3]
 
-   - This was just a general presentation of basic agile project
-     management
+\begin{alertblock}{}
+  The purpose of the retrospectives is to learn from each other. Share your
+  experiences. Focus on your learnings and problems.
+\end{alertblock}
+
+[fn:3] Detailed instructions will be provided.
 
 * Version control with git
+** Background
+*** git
+   - Created by Linus Torvalds for the development of
+     the Linux kernel
+   - Distributed version-control system:
+     - Keeps track of changes in source code
+     - Allows synchronizing changes with repositories in arbitrary locations
+
+   - Usage:
+      #+attr_latex: :options bgcolor=light, style=fruity
+      #+BEGIN_SRC bash
+      $ git <command> <args>
+      #+END_SRC
+
+** Background
+*** GitHub
+   - One of several hosting services for git repositories
+   - Additional features:
+     - Simple web hosting
+     - Communication platform
+     - Issue tracking
+
+\begin{alertblock}{}
+  If you don't have an account, get one at \texttt{https://github.com}.
+\end{alertblock}
+   
 ** Initial setup
 *** Your identity
-      #+attr_latex: :options bgcolor=light
+      #+attr_latex: :options bgcolor=light, fontsize=\scriptsize
       #+BEGIN_SRC bash
       $ git config --global user.name "your_name"
       $ git config --global user.email your_email@chalmers.se
       #+END_SRC
 
 *** Your editor
-      #+attr_latex: :options bgcolor=light
+      #+attr_latex: :options bgcolor=light, fontsize=\scriptsize
       #+BEGIN_SRC bash
       $ git config --global core.editor vim # or emacs, nano, ...
       #+END_SRC
 
 *** Default branch name
       - Change default branch name to main[fn:4]:
-      #+attr_latex: :options bgcolor=light
+      #+attr_latex: :options bgcolor=light, fontsize=\scriptsize
       #+BEGIN_SRC bash
       $ git config --global init.defaultBranch main
       #+END_SRC
@@ -226,6 +314,32 @@ whole team works towards.
     which branch is \textbf{checked out} (grey rectangle)
   - The currently checked out files are referred to as the \textbf{working tree}
 
+** The most important git command
+
+  #+attr_latex: :options bgcolor=light, fontsize=\scriptsize
+  #+BEGIN_SRC bash
+  $ git status
+  #+END_SRC
+  - Prints all relevant information about the current repository:
+  #+attr_latex: :options bgcolor=light, fontsize=\scriptsize
+  #+BEGIN_SRC bash
+  On branch main
+
+  Your branch is up to date with 'origin/main'.
+
+  Changes not staged for commit:
+    (use "git add <file>..." to update what will be committed)
+    (use "git restore <file>..." to discard changes in working directory)
+    modified:   README.md
+
+  Untracked files:
+    (use "git add <file>..." to include in what will be committed)
+    STUDENT_LIST.md
+
+  no changes added to commit (use "git add" and/or "git commit -a")
+  #+END_SRC
+
+
 ** Creating an empty repository
    :PROPERTIES:
    :BEAMER_opt: t
@@ -233,12 +347,15 @@ whole team works towards.
 
    \includegraphics[width=\textwidth]{figures/git_empty.pdf}
 
+*** Creating an empty repository
+
   #+attr_latex: :options bgcolor=light
   #+BEGIN_SRC bash
   $ git init
   #+END_SRC
-  - Creates empty repository with a single branch =main=
 
+  - Creates and initializes an empty repository
+    in the current directory
 
 ** Adding changes to the repository
    :PROPERTIES:
@@ -247,9 +364,10 @@ whole team works towards.
 
    \includegraphics[width=\textwidth]{figures/git_empty.pdf}
 
-  1. =git add= marks changed or new files for the next commit
+*** Adding changes
+  1. Staging: =git add= marks changed or new files for the next commit
   
-  2. =git commit= adds the changes from the staged files as an atomic change
+  2. Commiting: =git commit= adds the changes from the staged files as an atomic change
     to the repository[fn:5]
 
 [fn:5] Explicit staging can be skipped by using =git commit= followed by
@@ -329,8 +447,7 @@ or
 
 
    - However, currently we are still on the =main= branch[fn:6]
-   - All git commands that we execute affect the branch
-     /that is currently checked out/, i.e. =main=.
+   - All git commands affect the branch /that is currently checked out/, i.e. =main=.
 
 [fn:6] Indicated by grey rectangle in figure. Use =git status=
     to verify.
@@ -433,7 +550,7 @@ or
 *** Diverging branches
    - However, typically the branches will /diverge/
    - In this case a merge operation is required, which itself
-     is commited to repository
+     is a change commited to the repository
 
 ** Merging
    :PROPERTIES:
@@ -457,7 +574,7 @@ or
    \includegraphics[width=\textwidth]{figures/git_remote_0.pdf}
 
 *** Remotes
-    - Distributed version control system: Every repository can be synchronized
+    - Distributed version control: Every repository can be synchronized
       with multiple other repositories in different locations.
     - A separate repository setup to track the same development is called
       a \textbf{remote}
@@ -497,36 +614,7 @@ or
     $ git push # Same as: git push origin/main
     #+END_SRC
 
-** Working with remotes
-   :PROPERTIES:
-   :BEAMER_opt: t
-   :END:
-   
-   \includegraphics[width=\textwidth]{figures/git_remote_1.pdf}
 
-*** Cloning a repository
-  - This is the same state you would have reached if you would have
-    cloned a remote repository:
-    #+attr_latex: :options bgcolor=light, fontsize=\scriptsize
-    #+BEGIN_SRC bash
-    $ git clone https://github.com/see-mof/ssdp
-    #+END_SRC
-
-** Working with remotes
-   :PROPERTIES:
-   :BEAMER_opt: t
-   :END:
-   
-   \includegraphics[width=\textwidth]{figures/git_remote_2.pdf}
-
-*** Multiple remotes
-    - However, it is typical to have multiple remotes[fn:8]:
-    #+attr_latex: :options bgcolor=light, fontsize=\scriptsize
-    #+BEGIN_SRC bash
-    $ git add remote fork https://github.com/simonpf/ssdp
-    $ git push fork
-    #+END_SRC
-[fn:8] For example a personal fork of a public repository.
 
 ** Updating your local repository
    :PROPERTIES:
@@ -537,7 +625,7 @@ or
 
 *** Fetching changes from remote
     - =git= keeps local copy of remote branches
-    - The are denoted as =<remote_name>/<branch_name>=
+    - They are denoted by =<remote_name>/<branch_name>=
     - =git fetch= updates the local copy of the remote branch:
 
     #+attr_latex: :options bgcolor=light, fontsize=\scriptsize
@@ -595,6 +683,43 @@ or
     #+BEGIN_SRC bash
     $ git pull # sufficient, if local branch tracks remote
     #+END_SRC
+
+
+** Working with remotes
+   :PROPERTIES:
+   :BEAMER_opt: t
+   :END:
+   
+   \includegraphics[width=\textwidth]{figures/git_remote_1.pdf}
+
+*** Cloning a repository
+    #+attr_latex: :options bgcolor=light, fontsize=\scriptsize
+    #+BEGIN_SRC bash
+    $ git clone https://github.com/see-mof/ssdp
+    #+END_SRC
+  - This creates a new local repository, adds the target as remote
+    and pulls all branches
+
+** git exercise
+   - Solve tasks 1 and 2 from the git task sheet
+   - Time 10 minutes
+   - Help each other in breakout rooms
+
+** Working with remotes
+   :PROPERTIES:
+   :BEAMER_opt: t
+   :END:
+   
+   \includegraphics[width=\textwidth]{figures/git_remote_2.pdf}
+
+*** Multiple remotes
+    - It is possible to have multiple remotes[fn:8]:
+    #+attr_latex: :options bgcolor=light, fontsize=\scriptsize
+    #+BEGIN_SRC bash
+    $ git add remote fork https://github.com/simonpf/ssdp
+    $ git push fork
+    #+END_SRC
+[fn:8] For example a personal fork of a public repository.
 
 ** Distributed development workflow
    :PROPERTIES:
@@ -656,4 +781,42 @@ or
     4. Make pull request (PR) from fork
     5. Update local =main= branch
 
-* Project development with GitHub
+** Forks and pull requests
+
+   \includegraphics[width=\textwidth]{figures/github}
+
+*** Forks and pull requests
+
+   - To fork a repository, click the fork symbol in the upper right corner
+   - To make a pull request, click on =Pull reqeusts= and then =New pull request=
+
+** git exercise
+   - Solve tasks 3 and 4 from the git task sheet
+   - Time: 10 minutes
+   - Help each other in breakout rooms
+
+** =git status= revisited
+
+  #+attr_latex: :options bgcolor=light, fontsize=\scriptsize
+  #+BEGIN_SRC bash
+  On branch main
+
+  Your branch is up to date with 'origin/main'.
+
+  Changes not staged for commit:
+    (use "git add <file>..." to update what will be committed)
+    (use "git restore <file>..." to discard changes in working directory)
+    modified:   README.md
+
+  Untracked files:
+    (use "git add <file>..." to include in what will be committed)
+    STUDENT_LIST.md
+
+  no changes added to commit (use "git add" and/or "git commit -a")
+  #+END_SRC
+
+* Project pitches
+** Rules
+   - Maximum 5 minutes presentation
+   - A few minutes for discussion
+   - 
