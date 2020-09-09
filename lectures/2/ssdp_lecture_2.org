@@ -37,6 +37,9 @@
 ** Dimensions of software development
 \centering
 \includegraphics[width=0.6\textwidth]{figures/dimensions_of_software_development_parts}
+** Dimensions of software development
+\centering
+\includegraphics[width=0.6\textwidth]{figures/dimensions_of_software_development_this}
 
 * Agile software development
 
@@ -64,7 +67,7 @@
 *** Emergence of agile practices:       
     - 90s: Development of programming and design practices to address problems of
       heavyweight processes
-    - 00: Generalization of agile practices to a management framework.
+    - 00s: Generalization of agile practices to a management framework.
 
 
 ** The agile manifesto (2001)
@@ -129,7 +132,7 @@
    :END:
 
    \centering
-   \includegraphics[width=0.5\textwidth]{figures/dimensions_of_software_development_agile_0}
+   \includegraphics[width=0.6\textwidth]{figures/dimensions_of_software_development_agile_0}
 
    - Organizational-conceptual level: Agile management practices
    - Organizational-technical: Agile development techniques
@@ -140,12 +143,12 @@
    :END:
 
    \centering
-   \includegraphics[width=0.5\textwidth]{figures/dimensions_of_software_development_agile}
+   \includegraphics[width=0.6\textwidth]{figures/dimensions_of_software_development_agile}
 
    - Organizational-conceptual level: ???[fn:2]
    - Organizational-technical: Agile techniques are de facto standard
 
-[fn:2] I personally don't know. If you have empirical evidence, contact me.
+[fn:2] I, personally, don't know. Hopefully, we'll find out during the course.
 
 ** Agile project management
 *** Iterative development
@@ -159,7 +162,7 @@
 ** Agile project management
 *** Project planning
      - Acknowledge uncertainty:
-       - Not all details from the start
+       - Not all can be known details from the start
        - Requirements are likely going to change during the process
      - Keep it simple:
        - Focus on functionality from user perspective (\textbf{features})
@@ -182,8 +185,8 @@
   planning tool of agile project management. 
   \end{alertblock}
 
-** Sprints
-*** Sprint planning
+** The three sprint phases
+*** 1. Sprint planning
     - Defines the work to be done in a sprint by selecting
       user stories from the backlog
     - The team decides how the stories should be implemented
@@ -196,7 +199,7 @@ Result of the sprint planning should be a tangible \textbf{sprint goal}, which
  the team commits to as a whole.
 \end{alertblock}
 
-** Sprints
+** The three sprint phases
 
 *** During the sprint
     - The team self-organizes its work to reach the sprint goal
@@ -211,7 +214,7 @@ Result of the sprint planning should be a tangible \textbf{sprint goal}, which
 
 [fn:3] Adapted from https://www.scrumguides.org/docs/scrumguide/v2016/2016-Scrum-Guide-US.pdf
 
-** Sprints
+** The three sprint phases
 
 *** After the sprint
   1. Sprint review:
@@ -265,31 +268,22 @@ Result of the sprint planning should be a tangible \textbf{sprint goal}, which
      - Issue tracking
 
 \begin{alertblock}{}
-  If you don't have an account, get one at \texttt{https://github.com}.
+  If you don't have an account, get one at \texttt{https://github.com}!
 \end{alertblock}
    
-** Initial setup
-*** Your identity
-      #+attr_latex: :options bgcolor=light, fontsize=\scriptsize
-      #+BEGIN_SRC bash
-      $ git config --global user.name "your_name"
-      $ git config --global user.email your_email@chalmers.se
-      #+END_SRC
+** Principles
+   :PROPERTIES:
+   :BEAMER_opt: t
+   :END:
 
-*** Your editor
-      #+attr_latex: :options bgcolor=light, fontsize=\scriptsize
-      #+BEGIN_SRC bash
-      $ git config --global core.editor vim # or emacs, nano, ...
-      #+END_SRC
+   \includegraphics[width=\textwidth]{figures/git_principle.pdf}
 
-*** Default branch name
-      - Change default branch name to main[fn:4]:
-      #+attr_latex: :options bgcolor=light, fontsize=\scriptsize
-      #+BEGIN_SRC bash
-      $ git config --global init.defaultBranch main
-      #+END_SRC
-
-[fn:4] https://tools.ietf.org/id/draft-knodel-terminology-00.html
+*** Principles
+  - git tracks development as a sequence of changes in \textbf{repositories}
+  - Examples of changes:
+    - Adding a file
+    - Removing/renaming a file
+    - Changing its content
 
 ** Principles
    :PROPERTIES:
@@ -299,20 +293,11 @@ Result of the sprint planning should be a tangible \textbf{sprint goal}, which
    \includegraphics[width=\textwidth]{figures/git_principle.pdf}
 
 *** Principles
-  - git tracks development as a sequence of changes
   - A single sequence of changes is called a \textbf{branch}
-
-** Principles
-   :PROPERTIES:
-   :BEAMER_opt: t
-   :END:
-
-   \includegraphics[width=\textwidth]{figures/git_principle.pdf}
-
-*** Principles
   - the current state of your directory is defined by
     which branch is \textbf{checked out} (grey rectangle)
   - The currently checked out files are referred to as the \textbf{working tree}
+
 
 ** The most important git command
 
@@ -339,6 +324,28 @@ Result of the sprint planning should be a tangible \textbf{sprint goal}, which
   no changes added to commit (use "git add" and/or "git commit -a")
   #+END_SRC
 
+** Initial setup
+*** Your identity
+      #+attr_latex: :options bgcolor=light, fontsize=\scriptsize
+      #+BEGIN_SRC bash
+      $ git config --global user.name "your_name"
+      $ git config --global user.email your_email@chalmers.se
+      #+END_SRC
+
+*** Your editor
+      #+attr_latex: :options bgcolor=light, fontsize=\scriptsize
+      #+BEGIN_SRC bash
+      $ git config --global core.editor vim # or emacs, nano, ...
+      #+END_SRC
+
+*** Default branch name
+      - Change default branch name to main[fn:4]:
+      #+attr_latex: :options bgcolor=light, fontsize=\scriptsize
+      #+BEGIN_SRC bash
+      $ git config --global init.defaultBranch main
+      #+END_SRC
+
+[fn:4] https://tools.ietf.org/id/draft-knodel-terminology-00.html
 
 ** Creating an empty repository
    :PROPERTIES:
@@ -357,33 +364,34 @@ Result of the sprint planning should be a tangible \textbf{sprint goal}, which
   - Creates and initializes an empty repository
     in the current directory
 
-** Adding changes to the repository
+** Committing changes
    :PROPERTIES:
    :BEAMER_opt: t
    :END:
 
    \includegraphics[width=\textwidth]{figures/git_empty.pdf}
 
-*** Adding changes
-  1. Staging: =git add= marks changed or new files for the next commit
+*** Committing changes
+  1. \textbf{Staging}: =git add= marks changed or new files for the next commit
   
-  2. Commiting: =git commit= adds the changes from the staged files as an atomic change
+  2. \textbf{Commiting}: =git commit= adds the changes from the staged files as an atomic change
     to the repository[fn:5]
 
 [fn:5] Explicit staging can be skipped by using =git commit= followed by
    a list of file names.
 
-** Adding changes to the repository
+** Committing changes
    :PROPERTIES:
    :BEAMER_opt: t
    :END:
 
    \includegraphics[width=\textwidth]{figures/git_first_commit.pdf}
 
+*** Committing changes
   #+attr_latex: :options bgcolor=light, fontsize=\footnotesize
   #+BEGIN_SRC bash
-  $ git commit                   # Commit to branch
   $ git add README.md LICENSE.md # Stage files for commit
+  $ git commit                   # Commit to branch
   #+END_SRC
 or 
   #+attr_latex: :options bgcolor=light, fontsize=\footnotesize
@@ -393,7 +401,7 @@ or
 
 
 
-** Adding some files
+** Committing changes
    :PROPERTIES:
    :BEAMER_opt: t
    :END:
@@ -471,7 +479,7 @@ or
     directory doesn't change.
 
 [fn:7] Alternatively, use =git checkout -b <branch_name>= to
-    create new branch and checkout directly.
+    create new branch and to check it out immediately.
 
 ** Branching
    :PROPERTIES:
@@ -481,7 +489,12 @@ or
    \includegraphics[width=\textwidth]{figures/git_branch_new_3.pdf}
 
 
-   - We can now add the new feature to the branch 
+   - We can now add the new feature to the branch:
+  #+attr_latex: :options bgcolor=light, fontsize=\scriptsize
+  #+BEGIN_SRC bash
+  $ git add new_feature.py
+  $ git commit
+  #+END_SRC
   
 ** Merging
    :PROPERTIES:
@@ -595,7 +608,7 @@ or
     - If the remote is a newly created repository it is still
       empty.
 
-** Working with remotes
+** Updating the remote repository
    :PROPERTIES:
    :BEAMER_opt: t
    :END:
@@ -643,7 +656,8 @@ or
 *** Fetching changes from remote
     - =git= keeps local copy of remote branches
     - The are denoted as =<remote_name>/<branch_name>=
-    - =git fetch= updates the local copy of the remote branch:
+    - =git fetch <remote_name> <branch_name>= updates the local copy of
+       the remote branch:
 
     #+attr_latex: :options bgcolor=light, fontsize=\scriptsize
     #+BEGIN_SRC bash
@@ -816,7 +830,15 @@ or
   #+END_SRC
 
 * Project pitches
-** Rules
-   - Maximum 5 minutes presentation
-   - A few minutes for discussion
-   - 
+** Project requirements
+   - Final project published a Python package
+   - Installable via =pip=
+   - Automated test suite with high coverage (> 90%)
+   - Automated deployment
+   - Online documentation hosted on GitHub or Read The Docs.
+
+** Project pitches
+   - Maximum 5 minutes per presentation
+   - Ideally more than two persons per project
+   - If you work alone, please find someone to discuss
+     your progress with and review code
