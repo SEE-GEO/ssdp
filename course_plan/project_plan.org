@@ -1,0 +1,64 @@
+#+TITLE:       Scientific Software Development with Python
+#+SUBTITLE:    Project requirements
+#+AUTHOR:      Simon Pfreunschuh 
+#+EMAIL:       simon.pfreundschuh@chalmers.se
+#+OPTIONS: toc:nil
+#+LaTeX_HEADER: \usepackage{natbib}
+#+LaTeX_HEADER: \usepackage{siunitx}
+#+LaTeX_HEADER: \usepackage{subcaption}
+#+LaTeX_HEADER: \usepackage{todonotes}
+#+LaTeX_HEADER: \DeclareMathOperator\arctanh{arctanh}
+
+The project part comprises  4 mandatory presentations that will
+be given during and after the actual project work: **3 retrospectives**,
+focusing on the ongoing work, and **a final presentation,** presenting the
+project work as a whole. In addition to this, the projects should fulfill
+the following technical requirements:
+
+* Technical requirements
+
+The final projects should fulfill the following technical requirements:
+
+   - Final project published as Python package on PyPI
+   - Installable via =pip=
+   - Automated test suite with high coverage (> 90%)
+   - Automated deployment
+   - Online documentation hosted on GitHub or Read The Docs.
+
+* Presentations
+
+** Retrospectives
+  During the retrospectives each team will present their progress. Presentations will
+  be limited to 10 minutes.
+
+*** 1st retrospective ($\sim$ Week 5)
+    - Background and motivation for project
+    - Related and similar software
+    - User stories defining the project scope
+    - Road map outlining the implementation
+    - How you plan to organize you work
+
+
+*** 2nd and 3rd retrospective ($\sim$ Week 10 and 14)
+    - Present current development snapshot
+    - Reflection on progress since first implementation
+    - Current state of the backlog
+    - What do you want to improve during next iteration?
+    - Encountered difficulties and lessons learned
+
+** Final presentation 
+   
+   Final presentations will be limited to a maximum of 20 minutes and
+   consist of two parts.
+   
+**** Project presentation
+    - Present final project results
+    - Feature show case
+    - General usage
+
+**** Reflection
+    - How did you organize your work?
+    - What tools did you use?
+    - How well did the collaboration work?
+    - What went well what didn't?
+    
