@@ -1,0 +1,185 @@
+#+TITLE: Scientific Software Development with Python
+#+SUBTITLE: DevOps 1: Testing and documenting Python code
+#+AUTHOR: Simon Pfreundschuh
+#+OPTIONS: H:2 toc:nil
+#+REVEAL_THEME: chalmers
+#+REVEAL_TRANS: fast
+#+REVEAL_EXTRA_CSS: ./local.css
+#+LaTeX_HEADER: \institute{Department of Space, Earth and Environment}
+#+LaTeX_HEADER: \setbeamerfont{title}{family=\sffamily, series=\bfseries, size=\LARGE}
+#+LATEX_HEADER: \usepackage[style=authoryear]{biblatex}
+#+LATEX_HEADER: \usepackage{siunitx}
+#+LaTeX_HEADER: \usetheme{chalmers}
+#+LATEX_HEADER: \usepackage{subcaption}
+#+LATEX_HEADER: \usepackage{amssymb}
+#+LATEX_HEADER: \usepackage{dirtree}
+#+LATEX_HEADER: \usemintedstyle{monokai}
+#+LATEX_HEADER: \usepackage{pifont}
+#+LATEX_HEADER: \definecolor{light}{HTML}{BBBBBB}
+#+LATEX_HEADER: \definecolor{dark}{HTML}{353535}
+#+LATEX_HEADER: \newcommand{\greencheck}{{\color{green}\ding{51}}}
+#+LATEX_HEADER: \newcommand{\redcross}{{\color{red}\ding{55}}}
+#+LATEX_HEADER: \newcommand{\question}{{\color{yellow}\textbf{???}}}
+#+LATEX_HEADER: \addbibresource{literature.bib}
+#+BEAMER_HEADER: \AtBeginSection[]{\begin{frame}<beamer>\frametitle{Agenda}\tableofcontents[currentsection]\end{frame}}
+
+* Introduction
+** Lecture content
+\centering
+\includegraphics[width=0.6\textwidth]{figures/dimensions_of_software_development}
+
+** Lecture content
+\centering
+\includegraphics[width=0.6\textwidth]{figures/dimensions_of_software_development_this}
+
+** DevOps
+
+*** DevOps
+
+- Wikipedia[fn:1]: /set of practices that combines software development (Dev) and IT operations (Ops)./
+- Personal definition: The steps that are required to turn code
+  into software, e.g.:
+  - Running tests
+  - Generating documentation
+  - Releasing the package
+
+[fn:1] https://en.wikipedia.org/wiki/DevOps
+
+
+** Aims and principles
+
+*** Aims
+    - Enable change
+    - Ensure correctness
+
+*** Principles
+    - All code in one place
+    - Short feedback times: continuous integration (CI)
+    - Automate everything
+
+** Lecture content
+*** This lecture
+    - From Python code to software:
+      - Packaging
+      - Testing
+      - Documentation
+
+*** Next lecture
+    - Automate everything:
+      - Continuous integration with GitHub
+
+** Exercise
+
+   - Exercise 1 from task sheet
+   - Time: 10 minutes
+
+* Test driven development
+** Testing software
+*** Testing levels   
+    - \textbf{Unit tests}: specific section of code (module)
+    - Integration tests: Interaction between modules
+    - System testing: Software as a whole
+    - \textbf{Acceptance testing}: Functional requirements (user stories)
+
+
+** Benefits of testing
+
+*** Testing and agile development
+    - Testing enables rapid change and adaptation (flexibility)
+    - Testing gives you confidence in your code
+    - Short feedback loops crucial for learning
+   
+** Test driven development (TDD)
+*** TDD Workflow:
+    1. Write test
+    2. Run test to ensure that it fails
+    3. Add new code until test passes
+
+*** Benefits
+    - All code is verified
+    - Developer is forced into user role
+    - Code is more modular
+    - Code is guaranteed to be testable
+    - Writing tests first ensures that tests cover only functionality and
+      not implementation details
+
+** Unit testing with Pytest
+*** Simple usage
+   - Assuming the following project structure: 
+@@latex:\dirtree{.1 project\_dir/. .2 module/. .3 \_\_init\_\_.py. .2 test/. .3 test\_module.py. }@@
+
+** Unit testing with Pytest
+*** Simple usage
+   - =module/__init__.py=:
+  #+attr_latex: :options bgcolor=dark, fontsize=\scriptsize
+  #+BEGIN_SRC Python
+  def multiply(a, b):
+      return a * b 
+  #+END_SRC
+
+   - =test/test_moudle.py=:
+  #+attr_latex: :options bgcolor=dark, fontsize=\scriptsize
+  #+BEGIN_SRC Python
+  from module import multiply
+  from random import randint
+
+  def test_multiply():
+      a = randint(0, 99)
+      b = randint(0, 99)
+      result = multiply(a, b)
+      assert result == a * b
+  #+END_SRC
+
+
+** Unit testing with Pytest
+*** Invoking tests:
+    - Pytest automatically runs all
+      - =test=-prefixed functions,
+      - =test=-prefixed methods inside =Test=-prefixed classes
+      - in files matching =test_*.py= or =*_test.py=.
+
+  #+attr_latex: :options bgcolor=light, fontsize=\scriptsize, style=fruity
+  #+BEGIN_SRC bash
+  cd project_dir
+  pytest test/
+  #+END_SRC
+
+  - Example output:
+  #+attr_latex: :options bgcolor=light, fontsize=\tiny, style=fruity
+  #+BEGIN_SRC bash
+  ==================================== test session starts =====================================
+  platform linux -- Python 3.7.4, pytest-5.3.5, py-1.8.1, pluggy-0.13.1
+  rootdir: /home/simon/src/scratch/module
+  plugins: hypothesis-5.5.4, doctestplus-0.5.0, astropy-header-0.1.2, arraydiff-0.3, ...
+  collected 1 item                                                                             
+
+  test/test_module.py .                                                                  [100%]
+
+  ===================================== 1 passed in 0.02s ======================================
+  #+END_SRC
+
+
+** Acceptance tests
+
+** Unit testing with PyTest
+
+* Python modules
+  
+* Python packaging system
+** Recap: Python modules
+*** Python module
+    - A python source file: =<module_name>.py=
+    - A directory tree:
+@@latex:\dirtree{.1 module\_name/. .2 \_\_init\_\_.py. .2 submodule\_1.py. .2 submodule\_2/. .3 \_\_init\_\_.py. }@@
+
+@@latex:\vspace{0.5cm}@@
+\begin{alertblock}{Packaging:}
+  How can we share our code with others?
+\end{alertblock}
+      
+
+* Documenting Python source code
+
+** 
+
+** Sphinx documentation
