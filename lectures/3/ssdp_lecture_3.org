@@ -103,12 +103,12 @@
     - Writing tests first ensures that tests cover only functionality and
       not implementation details
 
-** Unit testing with Pytest
+** Unit testing with pytest
 *** Simple usage
    - Assuming the following project structure: 
 @@latex:\dirtree{.1 project\_dir/. .2 module/. .3 \_\_init\_\_.py. .2 test/. .3 test\_module.py. }@@
 
-** Unit testing with Pytest
+** Unit testing with pytest
 *** Simple usage
    - =module/__init__.py=:
   #+attr_latex: :options bgcolor=dark, fontsize=\scriptsize
@@ -131,9 +131,9 @@
   #+END_SRC
 
 
-** Unit testing with Pytest
+** Unit testing with pytest
 *** Invoking tests:
-    - Pytest automatically runs all
+    - pytest automatically runs all
       - =test=-prefixed functions,
       - =test=-prefixed methods inside =Test=-prefixed classes
       - in files matching =test_*.py= or =*_test.py=.
@@ -158,25 +158,102 @@
   ===================================== 1 passed in 0.02s ======================================
   #+END_SRC
 
+** Exercise
+
+   - Exercise 2 from task sheet
+   - Time: 15 minutes
+
+** Unit testing with pytest
+*** Some comments
+    - Folder structure is not mandatory
+    - Source files and test file can also be in same repository
+
+*** Advanced concepts     
+    - =pytest= provides several ways to handle the
+      setup and teardown of more complex tests (/fixtures/)
+    - More information can be found in the documentation[fn:2]
+
+[fn:2] https://docs.pytest.org/en/stable/fixture.html
 
 ** Acceptance tests
+   \begin{alertblock}{Note}
+   Unit tests alone are not sufficient to ensure correctness of your
+   software\footnote{Although, formally, nothing is: \url{https://en.wikipedia.org/wiki/Halting\_problem}}
+   \end{alertblock}
 
-** Unit testing with PyTest
+*** Acceptance tests   
+    - Verify that software fulfills requirements
+    - User stories should be turned into acceptance tests
+    - Benefits:
+      - Ensures that functionality doesn't /decay/ over time
+      - Can be turned into documentation (examples)
+    - Example: Your plot script from the first exercise
 
-* Python modules
-  
+** Summary
+*** Unit tests   
+    - Force you to write better code
+    - Basis for iterative improvements
+    - Ensure correctness on module level
+*** Acceptance tests
+    - Ensure that your software does what 
+      it is expected to.
+
+\begin{alertblock}{}
+  Although reality may not always allow us to, we should consider test code  of
+  equal importance as implementation code.
+\end{alertblock}
+
 * Python packaging system
-** Recap: Python modules
-*** Python module
-    - A python source file: =<module_name>.py=
-    - A directory tree:
+** Python modules
+
+*** Typical usage
+
+
+      #+attr_latex: :options bgcolor=dark, fontsize=\scriptsize
+      #+BEGIN_SRC Python
+      # Import statments tell Python to load a module
+      import module
+      import module as m
+      from module import function, Class
+      # Functions and classes defined in the module can
+      # be accessed through its attributes.
+      module.function()
+      m.function()
+      #+END_SRC
+
+*** Modules
+   - Act as namespaces that bundle classes and functions
+   - Module imports are cached:
+     - Once a module is imported, it can't (easily) be changed[fn:5]
+
+[fn:5] \scriptsize To enable autoreload in IPython: \newline \tiny \texttt{[get\_ipython().magic(m) for m in ["\%load\_ext autoreload", "\%autoreload 2"]]}
+** Python modules
+*** What qualifies as a module?
+      - A python source file: =<module_name>.py=
+      - A directory tree:
 @@latex:\dirtree{.1 module\_name/. .2 \_\_init\_\_.py. .2 submodule\_1.py. .2 submodule\_2/. .3 \_\_init\_\_.py. }@@
 
+** Python modules
+*** How does Python find them?
+      - Modules are searched in the folders contained in =sys.path=[fn:4]
+      - By default =sys.path= contains:
+        1. Working directory
+        2. Content of =PYTHONPATH= environment variable
+        3. Installation-dependent default directory.
+
+[fn:4] To verify: =import sys; print(sys.path)=
 @@latex:\vspace{0.5cm}@@
-\begin{alertblock}{Packaging:}
-  How can we share our code with others?
-\end{alertblock}
       
+** Packaging
+*** Python packaging system
+    - Python built-in support for:
+      - Installing packages (making modules importable)
+      - Handling dependencies
+      - Distributing packages
+
+** Packaging
+*** Minimal setup
+
 
 * Documenting Python source code
 
