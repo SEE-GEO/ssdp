@@ -75,5 +75,6 @@ the course lectures in PDF format.
 +------------+--------------------------------------------------+-----------------------------------------------+
 
 .. _ssdp_lecture_1: https://github.com/SEE-MOF/ssdp/raw/main/lectures/1/ssdp_lecture_1.pdf
+.. _ssdp_lecture_1: https://github.com/SEE-MOF/ssdp/raw/main/lectures/1/ssdp_lecture_1.pdf
 .. _ssdp_lecture_2: https://github.com/SEE-MOF/ssdp/raw/main/lectures/1/ssdp_lecture_2.pdf
 .. _ssdp_lecture_2_exercise: https://github.com/SEE-MOF/ssdp/raw/main/lectures/1/ssdp_lecture_2_exercise.pdf
