@@ -1,5 +1,5 @@
 #+TITLE: Scientific Software Development with Python
-#+SUBTITLE: DevOps 1: Testing and documenting Python code
+#+SUBTITLE: DevOps 1: Testing and packaging Python software
 #+AUTHOR: Simon Pfreundschuh
 #+OPTIONS: H:2 toc:nil
 #+REVEAL_THEME: chalmers
@@ -17,6 +17,7 @@
 #+LATEX_HEADER: \usepackage{pifont}
 #+LATEX_HEADER: \definecolor{light}{HTML}{BBBBBB}
 #+LATEX_HEADER: \definecolor{dark}{HTML}{353535}
+#+LATEX_HEADER: \definecolor{source_file}{rgb}{0.82, 0.1, 0.26}
 #+LATEX_HEADER: \newcommand{\greencheck}{{\color{green}\ding{51}}}
 #+LATEX_HEADER: \newcommand{\redcross}{{\color{red}\ding{55}}}
 #+LATEX_HEADER: \newcommand{\question}{{\color{yellow}\textbf{???}}}
@@ -59,14 +60,12 @@
 
 ** Lecture content
 *** This lecture
-    - From Python code to software:
-      - Packaging
       - Testing
-      - Documentation
+      - Packaging
 
 *** Next lecture
-    - Automate everything:
-      - Continuous integration with GitHub
+    - Documentation
+    - Automation: Continuous integration with GitHub
 
 ** Exercise
 
@@ -104,12 +103,15 @@
       not implementation details
 
 ** Unit testing with pytest
-*** Simple usage
+*** pytest
+    - Unit testing framework for python
+    - There exist others, but general usage is the same.
+*** Basic usage
    - Assuming the following project structure: 
 @@latex:\dirtree{.1 project\_dir/. .2 module/. .3 \_\_init\_\_.py. .2 test/. .3 test\_module.py. }@@
 
-** Unit testing with pytest
-*** Simple usage
+** Unit testing with =pytest=
+*** Basic usage
    - =module/__init__.py=:
   #+attr_latex: :options bgcolor=dark, fontsize=\scriptsize
   #+BEGIN_SRC Python
@@ -131,12 +133,12 @@
   #+END_SRC
 
 
-** Unit testing with pytest
+** Unit testing with =pytest=
 *** Invoking tests:
-    - pytest automatically runs all
-      - =test=-prefixed functions,
-      - =test=-prefixed methods inside =Test=-prefixed classes
-      - in files matching =test_*.py= or =*_test.py=.
+   =pytest= automatically runs all
+      1. functions prefixed with =test=
+      2. methods prefixed with =test= inside =Test=-prefixed classes
+    in files matching =test_*.py= or =*_test.py=.
 
   #+attr_latex: :options bgcolor=light, fontsize=\scriptsize, style=fruity
   #+BEGIN_SRC bash
@@ -144,7 +146,8 @@
   pytest test/
   #+END_SRC
 
-  - Example output:
+  - Example output: \vspace{-0.3cm}
+
   #+attr_latex: :options bgcolor=light, fontsize=\tiny, style=fruity
   #+BEGIN_SRC bash
   ==================================== test session starts =====================================
@@ -229,21 +232,28 @@
 [fn:5] \scriptsize To enable autoreload in IPython: \newline \tiny \texttt{[get\_ipython().magic(m) for m in ["\%load\_ext autoreload", "\%autoreload 2"]]}
 ** Python modules
 *** What qualifies as a module?
-      - A python source file: =<module_name>.py=
+      - A python source file: =module.py=
       - A directory tree:
-@@latex:\dirtree{.1 module\_name/. .2 \_\_init\_\_.py. .2 submodule\_1.py. .2 submodule\_2/. .3 \_\_init\_\_.py. }@@
+@@latex:\dirtree{.1 module/. .2 \_\_init\_\_.py. .2 submodule\_1.py. .2 submodule\_2/. .3 \_\_init\_\_.py. }@@
 
 ** Python modules
 *** How does Python find them?
-      - Modules are searched in the folders contained in =sys.path=[fn:4]
+      - Modules are searched in the folders contained in the =sys.path=[fn:4]
+        path variable
       - By default =sys.path= contains:
-        1. Working directory
+        1. Working directory from which Python interpreter is executed
         2. Content of =PYTHONPATH= environment variable
         3. Installation-dependent default directory.
 
 [fn:4] To verify: =import sys; print(sys.path)=
 @@latex:\vspace{0.5cm}@@
       
+** Python modules
+   \begin{alertblock}{Problem}
+    Python only finds our own modules only when we are
+    in the right directory.
+    \end{alertblock}
+
 ** Packaging
 *** Python packaging system
     - Python built-in support for:
@@ -253,10 +263,276 @@
 
 ** Packaging
 *** Minimal setup
+    - A project folder containing:
+      1. the modules to include in the package
+      2. a =setup.py=, which describes the package
+      3. a README file
+      4. a LICENSE file
+
+     \vspace{0.5cm}
+@@latex:\dirtree{.1 project\_folder/. .2 module\_name/. .3 \_\_init\_\_.py. .2 setup\_.py. .2 README.md. .2 LICENSE. }@@
+
+** Choosing a license
+*** Do choose a license
+    - No license means exclusive copyright by default
+      - This gets messy as soon as you collaborate with others
+    - MIT license is a popular default and the most permissive
+    - GNU GPLv3 forbids distributing closed source version of you code
+
+** README
+*** README.md
+    - Rendered on GitHub as the frontpage of your repository.
+    - Uses Markdown markup language.
+    - Also used for package description on PyPI.
+
+      #+attr_latex: :options bgcolor=light, fontsize=\tiny
+      #+BEGIN_SRC bash
+      # Header 1
+       
+      Normal text, *Italic text*, **Bold text**, ...
+
+      ## Header 2
+      
+      1. A numerated ...
+      2. ... list
+
+      - A bulletted ...
+      - ... list
+
+      [A text link](https://link.target). 
+      #+END_SRC
+
+** setup.py
+- Python source file defining package metadata
+- Good template can be found on https://packaging.python.org/tutorials/packaging-projects/
+- It is good practice to use the same name for the package and the included modules
+#+attr_latex: :options bgcolor=dark, fontsize=\tiny
+#+BEGIN_SRC Python
+import setuptools
+
+with open("README.md", "r") as fh:
+    long_description = fh.read()
+
+setuptools.setup(
+    name="package_name",
+    version="0.0.1",
+    author="Your name",
+    author_email="your@address.com",
+    description="My first package.",
+    long_description=long_description,
+    long_description_content_type="text/markdown",
+    url="https://github.com/you_username/your_project",
+    packages=setuptools.find_packages(), # Searches modules in current directory.
+    python_requires='>=3.6',
+)
+#+END_SRC
+
+** Installing your package locally
+
+*** Install using pip:
+  #+attr_latex: :options bgcolor=light, fontsize=\scriptsize
+  #+BEGIN_SRC bash
+  $ cd project_folder
+  $ pip install .
+  #+END_SRC
+
+ - Alternatively, you could use =python setup.py install=
+ - Advantages of using pip:
+   - =pip= automatically downloads dependencies
+   - =pip= can be used to uninstall the package again
+
+** Installing your package locally
+
+*** Issue with normal install
+
+    - Installing copies the module code into
+      an installation-dependent directory
+    - Changes made to the the code in the =project_folder=
+      therefore do not affect the installed module
+    - This is impractical when a package is in development
+*** Solution
+
+  #+attr_latex: :options bgcolor=light, fontsize=\scriptsize
+  #+BEGIN_SRC bash
+  $ pip install -e . # or pip install --editable
+  #+END_SRC
+
+** Handling dependencies
+
+*** Install requires
+    - Required packages are specified as argument to the =setuptools.setup=
+      call.
+    - Packages listed here are installed automatically before the package
+      is installed.
+#+attr_latex: :options bgcolor=dark, fontsize=\scriptsize
+#+BEGIN_SRC Python
+setuptools.setup(
+    ...
+    install_requires([
+        package_name,
+        another_name>=1.0,
+    ])
+    ...
+)
+#+END_SRC
 
 
-* Documenting Python source code
+** Exercise
 
-** 
+   - Exercise 3 from task sheet
+   - Time: 10 minutes
 
-** Sphinx documentation
+
+** Distributing packages
+
+Python provides two built-in ways of distributing
+packages:
+
+*** Source distributions
+    - A source distribution (sdist) is simply the source
+      code as a =tar.gz= archive.
+
+*** Wheel
+    - Built distribution already containing files and metadata required
+      to install a package
+    - Advantages over sdist:
+      - Smaller in size
+      - Faster to install
+      - More secure (no =setup.py= execution)
+
+** Distributing packages
+
+*** Generating wheels
+    #+attr_latex: :options bgcolor=dark, fontsize=\scriptsize
+    #+BEGIN_SRC Python
+    $ python setup.py sdist bdist_wheel
+    #+END_SRC
+
+** Publishing your package
+
+*** Package indices
+    - Python packages can be published via package indices
+    - The Python Package Index (PyPI) is the most popular one
+
+*** Uploading your package
+    - For testing, uploading to the test index[fn:6] of PyPI is recommended.
+      This avoids polluting the standard PyPI name space.
+    - To upload to =test.pypi.org=:
+    #+attr_latex: :options bgcolor=light, fontsize=\scriptsize
+    #+BEGIN_SRC bash
+    $ python -m twine upload --repository testpypi dist/*
+    #+END_SRC
+
+[fn:6] Requires account at https://test.pypi.org
+
+** Publishing your packages
+
+*** Uploading your package
+    - To upload to the real PyPI[fn:7]:
+    #+attr_latex: :options bgcolor=light, fontsize=\scriptsize
+    #+BEGIN_SRC bash
+    $ python -m twine upload --repository testpypi dist/*
+    #+END_SRC
+
+[fn:7] Requires account at https://pypi.org
+
+
+** Publishing your package
+*** Installing your package from PyPI
+
+    - Since the package has been upload to =test.pypi.org=, we need to specify
+      the URL of the index:
+    #+attr_latex: :options bgcolor=light, fontsize=\scriptsize
+    #+BEGIN_SRC bash
+    python3 -m pip install --index-url https://test.pypi.org/simple/ your_package
+    #+END_SRC
+
+** Exercise
+   - Exercise 4 on exercise sheet
+   - Time: 10 minutes
+
+** Packaging --- Summary
+*** What you have learned
+    - How to declare a package (=setup.py=)
+    - How to package it into wheels
+    - How to upload it to a package index
+
+* Virtual environments
+** Virtual environments
+*** Dependency hell
+    - The problem with the presented workflow:
+      - By default =pip= will install packages system- or user-wide
+      - This can lead to clashes if packages depend on different versions
+        of a given package
+    - It possible to end up in a configuration where not all requirements
+      for all packages can be resolved simultaneously (dependency hell)
+  
+** Virtual environments
+*** The solution
+    - Virtual environment
+    - A virtual environment is project-specific Python environment
+
+*** =venv=
+    - =venv= is a tool to create virtual environments
+    - part of Python standard library
+    - usage:
+      #+attr_latex: :options bgcolor=light, fontsize=\scriptsize
+      #+BEGIN_SRC bash
+      $ python -m venv ...
+      #+END_SRC
+
+** Virtual environments
+*** Creating a virtual environment
+    - To create a virtual environment in the folder =.venv=:
+      =project_folder=:
+      #+attr_latex: :options bgcolor=light, fontsize=\scriptsize
+      #+BEGIN_SRC bash
+      $ python -m venv .venv
+      #+END_SRC
+
+*** Activating the environment
+    - To activate the environment:
+      =project_folder=:
+      #+attr_latex: :options bgcolor=light, fontsize=\scriptsize
+      #+BEGIN_SRC bash
+      $ ./.venv/bin/activate
+      #+END_SRC
+    - Note that you will need to reinstall any non-standard-library
+      packages in the new environment
+
+** Virtual environments
+
+*** Listing installed packages
+    - To extract names of currently installed packages:
+      #+attr_latex: :options bgcolor=light, fontsize=\scriptsize
+      #+BEGIN_SRC bash
+      $ pip freeze > requirements.txt
+      #+END_SRC
+    - The =requirements.txt= file can be shared with others
+      who can install file from it:
+      #+BEGIN_SRC bash
+      $ pip install -r requirements.txt
+      #+END_SRC
+
+** Virtual environments
+
+*** Listing installed packages
+    - To extract names of currently installed packages:
+      #+attr_latex: :options bgcolor=light, fontsize=\scriptsize
+      #+BEGIN_SRC bash
+      $ pip freeze > requirements.txt
+      #+END_SRC
+    - The =requirements.txt= file can be shared with others
+      who can install file from it:
+      #+BEGIN_SRC bash
+      $ pip install -r requirements.txt
+      #+END_SRC
+
+** Exercise
+   - Exercise 5 on exercise sheet
+   - Time: 10 minutes
+
+** Packaging --- Summary
+*** What we have learned
+    - How to avoid dependency hell (=venv=)
+    - How to share specific environments with others (=requirements.txt=)

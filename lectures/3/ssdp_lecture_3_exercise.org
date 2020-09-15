@@ -1,0 +1,48 @@
+#+TITLE:       Testing and documentation
+#+AUTHOR:      Simon Pfreunschuh
+#+EMAIL:       simon.pfreundschuh@chalmers.se
+#+OPTIONS: toc:nil
+#+LaTeX_HEADER: \usepackage{natbib}
+#+LaTeX_HEADER: \usepackage{siunitx}
+#+LaTeX_HEADER: \usepackage{subcaption}
+#+LaTeX_HEADER: \usepackage{todonotes}
+#+LATEX_HEADER: \usepackage{dirtree}
+#+LaTeX_HEADER: \DeclareMathOperator\arctanh{arctanh}
+
+
+* Getting and understanding the =weather_app= code.
+
+ - Clone the repository =https://github.com/simonpf/weather_app=, which provides an interface
+   to the current SMHI weather forecast. The project folder contains the following subfolders and
+  files:
+
+
+@@latex:\dirtree{.1 weather\_app/. .2 weather\_app/. .3 \_\_init\_\_.py. .3 api.py. .2 test. .3 test\_api.py. .3 test\_weather\_app.py. }@@
+  
+
+  - Have a look at the code in the =weather_app/api.py= source flie. It should be sufficiently
+    well documented to figure out how to use it.
+  - Use the =weather_app.api= module to plot predicted temperature and precipitation.
+
+* Test driven development
+  
+  - Install the pytest package using =pip=:
+    #+BEGIN_SRC bash
+    pip install pytest
+    #+END_SRC
+  - Run =pytest= on the tests in the =test= subfolder. You will see that one of the tests fail.
+  - Implement the required functionality to make the test pass.
+
+* Turning your code into a package
+  - Add the required files to turn you code into a package. Use
+    =weather_app_<your_name>= as the package name to avoid name clashes
+    when uploading the package.
+  - Add the required non-standard library packages to the install_dependencies in
+    the =setup.py=.
+
+
+* Make a pull request
+  - Go to the repository page of your fork
+  - Make a pull request
+  - If necessary, merge changes from other students
+  - Wait for approval
