@@ -369,8 +369,8 @@ setuptools.setup(
 setuptools.setup(
     ...
     install_requires=[
-        package_name,
-        another_name>=1.0,
+        "package_name",
+        "another_name>=1.0",
     ]
     ...
 )
