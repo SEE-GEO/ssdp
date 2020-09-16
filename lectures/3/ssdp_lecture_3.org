@@ -368,10 +368,10 @@ setuptools.setup(
 #+BEGIN_SRC Python
 setuptools.setup(
     ...
-    install_requires([
+    install_requires=[
         package_name,
         another_name>=1.0,
-    ])
+    ]
     ...
 )
 #+END_SRC
@@ -552,3 +552,4 @@ packages:
 *** What we have learned
     - How to avoid dependency hell (=venv=)
     - How to share specific environments with others (=requirements.txt=)
+
