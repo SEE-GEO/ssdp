@@ -47,7 +47,7 @@ the course lectures in PDF format.
 +------------+--------------------------------------------------+-----------------------------------------------+
 | 2020-09-09 | Project management, version control with git     | ssdp_lecture_2_, ssdp_lecture_2_exercise_     |
 +------------+--------------------------------------------------+-----------------------------------------------+
-| 2020-09-16 | Testing, documentation and deployment            | ssdp_lecture_3                                |
+| 2020-09-16 | Testing, documentation and deployment            | ssdp_lecture_3_, ssdp_lecture_3_exercise_     |
 +------------+--------------------------------------------------+-----------------------------------------------+
 | 2020-09-23 | **1st Retrospective**: Presentation of project plans                                             |
 +------------+--------------------------------------------------+-----------------------------------------------+
@@ -76,5 +76,7 @@ the course lectures in PDF format.
 
 .. _ssdp_lecture_1: https://github.com/SEE-MOF/ssdp/raw/main/lectures/1/ssdp_lecture_1.pdf
 .. _ssdp_lecture_1: https://github.com/SEE-MOF/ssdp/raw/main/lectures/1/ssdp_lecture_1.pdf
-.. _ssdp_lecture_2: https://github.com/SEE-MOF/ssdp/raw/main/lectures/1/ssdp_lecture_2.pdf
-.. _ssdp_lecture_2_exercise: https://github.com/SEE-MOF/ssdp/raw/main/lectures/1/ssdp_lecture_2_exercise.pdf
+.. _ssdp_lecture_2: https://github.com/SEE-MOF/ssdp/raw/main/lectures/2/ssdp_lecture_2.pdf
+.. _ssdp_lecture_2_exercise: https://github.com/SEE-MOF/ssdp/raw/main/lectures/2/ssdp_lecture_2_exercise.pdf
+.. _ssdp_lecture_3: https://github.com/SEE-MOF/ssdp/raw/main/lectures/3/ssdp_lecture_3.pdf
+.. _ssdp_lecture_3_exercise: https://github.com/SEE-MOF/ssdp/raw/main/lectures/3/ssdp_lecture_3_exercise.pdf
