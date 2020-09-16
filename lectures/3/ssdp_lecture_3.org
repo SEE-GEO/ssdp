@@ -401,6 +401,22 @@ packages:
       - More secure (no =setup.py= execution)
 
 ** Distributing packages
+*** Tools
+    - The =wheels= package is required to build Python wheels:
+    #+attr_latex: :options bgcolor=dark, fontsize=\scriptsize
+    #+BEGIN_SRC Python
+    $ pip install wheels
+    #+END_SRC
+      
+    - We will use the =twine= package to upload your package
+      distributions to PyPI:
+    #+attr_latex: :options bgcolor=dark, fontsize=\scriptsize
+    #+BEGIN_SRC Python
+    $ pip install twine
+    #+END_SRC
+
+
+** Distributing packages
 
 *** Generating wheels
     #+attr_latex: :options bgcolor=dark, fontsize=\scriptsize
@@ -444,7 +460,7 @@ packages:
       the URL of the index:
     #+attr_latex: :options bgcolor=light, fontsize=\scriptsize
     #+BEGIN_SRC bash
-    python3 -m pip install --index-url https://test.pypi.org/simple/ your_package
+    python3 -m pip install --index-url https://test.pypi.org your_package
     #+END_SRC
 
 ** Exercise
@@ -495,7 +511,7 @@ packages:
       =project_folder=:
       #+attr_latex: :options bgcolor=light, fontsize=\scriptsize
       #+BEGIN_SRC bash
-      $ ./.venv/bin/activate
+      $ source .venv/bin/activate
       #+END_SRC
     - Note that you will need to reinstall any non-standard-library
       packages in the new environment

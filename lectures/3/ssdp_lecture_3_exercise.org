@@ -37,12 +37,17 @@
   - Add the required files to turn you code into a package. Use
     =weather_app_<your_name>= as the package name to avoid name clashes
     when uploading the package.
-  - Add the required non-standard library packages to the install_dependencies in
+  - Add the required non-standard library packages to the install\_dependencies in
     the =setup.py=.
+  - Install your package locally using =pip=
 
+* Uploading your code into a package
+  - Build wheels for you package following the instruction from the lecture
+  - Create an account on =test.pypi.org=
+  - Upload your binary distribution package to the =test.pypi= index.
 
-* Make a pull request
-  - Go to the repository page of your fork
-  - Make a pull request
-  - If necessary, merge changes from other students
-  - Wait for approval
+* Testing your package in a virtual environment
+  - Create a new folder, change into it and create a virtual environment
+  - Install your uploaded =weather_app= package from PyPI. Note that you
+    have to specify the index explicitly =https://test.pypi.org= 
+  - Use your package to plot the temperature forecast for the next 24 hours.
