@@ -102,11 +102,11 @@ setup Python on the virtual machine that executes the workflow. The syntax for
 executing actions is <cite>uses: &lt;user&gt;/&lt;repository&gt;</cite> where <code class="code docutils literal notranslate"><span class="pre">&lt;user&gt;</span></code> is the
 name of a GitHub user and <code class="code docutils literal notranslate"><span class="pre">repository</span></code> the name of a repository. In this
 case, the two executed actions are the actions defined in <code class="code docutils literal notranslate"><span class="pre">action.yml</span></code>
-files found in the repositories <cite>https://github.com/actions/checkout</cite> and
-<cite>https://github.com/actions/setup-python</cite>. Since setting checking out the
-current repository and setting up a Python development environment on the virtual
-machine running the workflow is so common, they are provided as publicly available
-actions by GitHub for reuse in your personal workflows.</p>
+files found in the repositories <a class="reference external" href="https://github.com/actions/checkout">https://github.com/actions/checkout</a> and
+<a class="reference external" href="https://github.com/actions/setup-python">https://github.com/actions/setup-python</a>. Since setting checking out the
+current repository and setting up a Python development environment on the
+virtual machine running the workflow is so common, they are provided as publicly
+available actions by GitHub for reuse in your personal workflows.</p>
 <p>The three remaining steps execute the commands required to install the
 package and execute pytest.</p>
 <p>When you add and push the above workflow as file <code class="code docutils literal notranslate"><span class="pre">./.github/workflows/install_and_test.yml</span></code>
