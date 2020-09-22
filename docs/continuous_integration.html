@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+
+
+    
+
+
+
+
+
+
+
+    
+
+
+
+    
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Continuous integration &#8212; ssdp 0.0.1 documentation</title>
+    <link rel="stylesheet" href="_static/smpl.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Documenting your package" href="documentation.html" /> 
+  </head><body>
+      <div class="navigation_bar" role="navigation" aria-label="main navigation">
+          <div class="logo_wrapper" ><div style="margin: auto;
+            text-align: center;
+            position: relative;">
+
+<div style="color: #FFFFFF;
+            margin: 0;
+            @import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@;0,800;&display=swap');
+            font-size: 300%;
+            font-weight:800;
+            letter-spacing: 0.0em;
+            font-family: 'Open Sans', sans-serif;
+            " >
+    ssdp </div>
+
+</div></div>
+          <div class="navigation_bar_wrapper">
+              <ul><li><a href="index.html"> Home</a></li><li><a href="lectures.html"> Lectures</a></li><li><a href="compendium.html"> Compendium</a></li></ul>
+          <div class="clearer"></div>
+          </div>
+      </div>
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="continuous-integration">
+<h1>Continuous integration<a class="headerlink" href="#continuous-integration" title="Permalink to this headline">¶</a></h1>
+<p>Continuous integration refers to the practice of frequently integrating changes
+into a code base. To enable this, it is necessary to automate all or most steps
+of the DevOps pipeline. This document explains how this can be achieved using
+GitHub workflows.</p>
+<p>This guide will only explain the basic concepts required to get up and running
+with a customized CI workflow. For more a more in-depth treatment of GitHubs CI
+functionality refer to GitHubs <a class="reference external" href="https://docs.github.com/en/actions">extensive online documentation</a>.</p>
+<div class="section" id="github-workflows">
+<h2>GitHub workflows<a class="headerlink" href="#github-workflows" title="Permalink to this headline">¶</a></h2>
+<p>A GitHub workflow is a sequence of commands that are performed upon a specific
+event, such as the pushing of new code to the repository or a new pull request.
+Even with a free account, GitHub will execute these workflows for you <em>in the cloud</em>
+and notify you about their success or failure.</p>
+<p>GitHub expects workflows to be defined by <code class="code docutils literal notranslate"><span class="pre">.yml</span></code> files in the
+a folder named <code class="code docutils literal notranslate"><span class="pre">.github/workflows</span></code> in your repository. To understand how
+such a file works consider the following example, which runs all unit tests
+upon pushing of new code to the repository:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">install_and_test</span>
+<span class="nt">on</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">push</span><span class="p p-Indicator">]</span>
+<span class="nt">jobs</span><span class="p">:</span>
+  <span class="nt">install_job</span><span class="p">:</span>
+    <span class="nt">runs-on</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
+    <span class="nt">steps</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">uses</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">actions/checkout@v2</span>
+        <span class="nt">with</span><span class="p">:</span>
+          <span class="nt">ref</span><span class="p">:</span> <span class="s">&#39;main&#39;</span>
+      <span class="p p-Indicator">-</span> <span class="nt">uses</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">actions/setup-python@v2</span>
+        <span class="nt">with</span><span class="p">:</span>
+          <span class="nt">python-version</span><span class="p">:</span> <span class="s">&#39;3.6&#39;</span>
+      <span class="p p-Indicator">-</span> <span class="nt">run</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">pip install .</span>
+      <span class="p p-Indicator">-</span> <span class="nt">run</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">pip install pytest</span>
+      <span class="p p-Indicator">-</span> <span class="nt">run</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">pytest test/</span>
+</pre></div>
+</div>
+<p>A workflow may consists of several independent jobs. Each job in turn involves several
+steps. A single step may consist of a command to execute or the execution of
+a <cite>GitHub action</cite>. Actions allow bundling, parametrizing and reusing common processing
+steps in workflow.</p>
+<p>The above code snippet defines a workflow, called <code class="code docutils literal notranslate"><span class="pre">install</span> <span class="pre">and</span> <span class="pre">test</span></code>,
+which consists of a single <cite>job</cite>. This job consists of 5 steps that are
+executed. The first two are predefined actions that checkout your repository and
+setup Python on the virtual machine that executes the workflow. The syntax for
+executing actions is <cite>uses: &lt;user&gt;/&lt;repository&gt;</cite> where <code class="code docutils literal notranslate"><span class="pre">&lt;user&gt;</span></code> is the
+name of a GitHub user and <code class="code docutils literal notranslate"><span class="pre">repository</span></code> the name of a repository. In this
+case, the two executed actions are the actions defined in <code class="code docutils literal notranslate"><span class="pre">action.yml</span></code>
+files found in the repositories <cite>https://github.com/actions/checkout</cite> and
+<cite>https://github.com/actions/setup-python</cite>. Since setting checking out the
+current repository and setting up a Python development environment on the virtual
+machine running the workflow is so common, they are provided as publicly available
+actions by GitHub for reuse in your personal workflows.</p>
+<p>The three remaining steps execute the commands required to install the
+package and execute pytest.</p>
+<p>When you add and push the above workflow as file <code class="code docutils literal notranslate"><span class="pre">./.github/workflows/install_and_test.yml</span></code>
+to your repository on GitHub, it will be recognized as a workflow and automatically run
+every time code is pushed to the repository. The output generated from the workflow execution
+can be accessed via the <code class="code docutils literal notranslate"><span class="pre">Actions</span></code> tab on your repository page.</p>
+</div>
+<div class="section" id="testing-multiple-environments">
+<h2>Testing multiple environments<a class="headerlink" href="#testing-multiple-environments" title="Permalink to this headline">¶</a></h2>
+<p>GitHub allows you to run your workflows on multiple computing environments simultaneously.
+Most commonly this is used to ensure that your code works on multiple platforms and
+different version of Python.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">install_and_test</span>
+<span class="nt">on</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">push</span><span class="p p-Indicator">]</span>
+<span class="nt">jobs</span><span class="p">:</span>
+  <span class="nt">install_job</span><span class="p">:</span>
+    <span class="nt">strategy</span><span class="p">:</span>
+      <span class="nt">matrix</span><span class="p">:</span>
+        <span class="nt">os</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">ubuntu-latest</span><span class="p p-Indicator">,</span> <span class="nv">windows-latest</span><span class="p p-Indicator">,</span> <span class="nv">macos-latest</span><span class="p p-Indicator">]</span>
+        <span class="nt">python</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">3.6</span><span class="p p-Indicator">,</span> <span class="nv">3.8</span><span class="p p-Indicator">]</span>
+    <span class="nt">runs-on</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">${{ matrix.os }}</span>
+    <span class="nt">steps</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">uses</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">actions/checkout@v2</span>
+        <span class="nt">with</span><span class="p">:</span>
+          <span class="nt">ref</span><span class="p">:</span> <span class="s">&#39;main&#39;</span>
+      <span class="p p-Indicator">-</span> <span class="nt">uses</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">actions/setup-python@v2</span>
+        <span class="nt">with</span><span class="p">:</span>
+          <span class="nt">python-version</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">${{ matrix.python }}</span>
+      <span class="p p-Indicator">-</span> <span class="nt">run</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">pip install .</span>
+      <span class="p p-Indicator">-</span> <span class="nt">run</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">pip install pytest</span>
+      <span class="p p-Indicator">-</span> <span class="nt">run</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">pytest test/</span>
+</pre></div>
+</div>
+<p>This is achieved by defining an execution matrix. A matrix defines one or multiple variables
+together with lists of specific values that each variable should take. The variable values
+can then be used in the remainder of the job definition using the <code class="code docutils literal notranslate"><span class="pre">${{</span> <span class="pre">matrix.&lt;variable&gt;</span> <span class="pre">}}</span></code>
+syntax. GitHub will then automatically start one job instance for each possible combination
+of different variable values.</p>
+<p>In the example above, the <code class="code docutils literal notranslate"><span class="pre">install_job</span></code> will be run in total 6 times on three different
+operating systems and with two different versions of Python.</p>
+</div>
+<div class="section" id="adding-a-status-badge-to-your-repository">
+<h2>Adding a status badge to your repository<a class="headerlink" href="#adding-a-status-badge-to-your-repository" title="Permalink to this headline">¶</a></h2>
+<p>GitHub automatically produces so called badges that display the current status of your
+workflows. These are commonly used in the <code class="code docutils literal notranslate"><span class="pre">README.md</span></code> file to show the availability
+and status of automated tests for the repository.</p>
+<p>For a given workflow with name :code:&lt;name&gt; the badge is a <code class="code docutils literal notranslate"><span class="pre">.svg</span></code> stored in the file</p>
+<div class="highlight-html notranslate"><div class="highlight"><pre><span></span>https://github.com/<span class="p">&lt;</span><span class="nt">username</span><span class="p">&gt;</span>/<span class="p">&lt;</span><span class="nt">repository</span><span class="p">&gt;</span>/workflows/<span class="p">&lt;</span><span class="nt">name</span><span class="p">&gt;</span>/badge.svg
+</pre></div>
+</div>
+<p>You can embed this file directly in your README.md using</p>
+<div class="highlight-rst notranslate"><div class="highlight"><pre><span></span>![workflow name](https://github.com/&lt;username&gt;/&lt;repository&gt;/workflows/&lt;name&gt;/badge.svg)
+</pre></div>
+</div>
+</div>
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+
+  </body>
+</html>

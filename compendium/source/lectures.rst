@@ -49,7 +49,7 @@ the course lectures in PDF format.
 +------------+--------------------------------------------------+-----------------------------------------------+
 | 2020-09-16 | Testing, packaging and deployment                | ssdp_lecture_3_, ssdp_lecture_3_exercise_     |
 +------------+--------------------------------------------------+-----------------------------------------------+
-| 2020-09-23 | Documentation and automation                     |                                               |
+| 2020-09-23 | Documentation and automation                     | ssdp_lecture_4_, ssdp_lecture_4_exercise_     |
 +------------+--------------------------------------------------+-----------------------------------------------+
 | 2020-09-30 | **1st Retrospective**: Presentation of project plans                                             |
 +------------+--------------------------------------------------+-----------------------------------------------+
@@ -82,3 +82,5 @@ the course lectures in PDF format.
 .. _ssdp_lecture_2_exercise: https://github.com/SEE-MOF/ssdp/raw/main/lectures/2/ssdp_lecture_2_exercise.pdf
 .. _ssdp_lecture_3: https://github.com/SEE-MOF/ssdp/raw/main/lectures/3/ssdp_lecture_3.pdf
 .. _ssdp_lecture_3_exercise: https://github.com/SEE-MOF/ssdp/raw/main/lectures/3/ssdp_lecture_3_exercise.pdf
+.. _ssdp_lecture_4: https://github.com/SEE-MOF/ssdp/raw/main/lectures/4/ssdp_lecture_4.pdf
+.. _ssdp_lecture_4_exercise: https://github.com/SEE-MOF/ssdp/raw/main/lectures/4/ssdp_lecture_4_exercise.pdf
