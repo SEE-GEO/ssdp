@@ -1,0 +1,54 @@
+#+TITLE:       Documentation and Continous Integration
+#+AUTHOR:      Simon Pfreunschuh
+#+EMAIL:       simon.pfreundschuh@chalmers.se
+#+OPTIONS: toc:nil
+#+LaTeX_HEADER: \usepackage{natbib}
+#+LaTeX_HEADER: \usepackage{siunitx}
+#+LaTeX_HEADER: \usepackage{subcaption}
+#+LaTeX_HEADER: \usepackage{todonotes}
+#+LATEX_HEADER: \usepackage{dirtree}
+#+LaTeX_HEADER: \DeclareMathOperator\arctanh{arctanh}
+
+
+* Updating your =weather_app= code.
+
+ - Update your clone of  =https://github.com/simonpf/weather_app= repository from
+   the last lecture.
+ - The code has been updated and now contains a command-line application
+   implemented by the function =smhpy= in =weather_app.app=.
+ - Make Python install the command-line application by adding the following lines
+   to your =setup.py=:
+   
+    #+BEGIN_SRC python
+    setuptools.setup(
+        ...
+        entry_points={
+            "console_scripts": [
+                "smhpy=weather_app.app:smhpy"
+            ]
+        }
+        ...
+    )
+    #+END_SRC
+   - Reinstall the package.
+   - Test the installation by running =smhpy= from the command line.
+
+
+* Adding Sphinx documentation
+  
+  - Install Sphinx
+  - Follow the instruction from the lecture (or course homepage) to initialize
+    the Sphinx documentation.
+  - Add the pages =installtion.rst=, =usage.rst= and =api_reference.rst= and reference them from =index.rst=
+  - Build the HTML documentation
+
+* Including Python docstrings in the  documentation
+  - Enable the =autodoc= and =napoleon= extensions
+  - Add a file =api_referenc/api.rst= and reference it from =api_reference.rst=
+  - Include the documentation from the =weather_app.api= module using the =automodule= directive.
+  
+* Automating unit tests
+  - Add a GitHub workflow to automate running unit tests to the repository
+  - Push the workflow to your personal fork of the repository
+  - Check the Actions tab on the GitHub page to make sure that workflows are running
+  - Add a badge to your README.md indicating the status of the workflow.

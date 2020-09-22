@@ -13,3 +13,5 @@ Content
    :maxdepth: 1
 
    getting_started
+   documentation
+   continuous_integration

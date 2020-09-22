@@ -1,10 +1,8 @@
 Getting started
 ===============
 
-
 The course targets Python version 3.6. This document describes how to
 setup Python 3, pip and IPython on your Linux system.
-
 
 .. note:: Python 2 is reach its end of life in January and should be
    considered dead. The only reason it may still exist on your system
