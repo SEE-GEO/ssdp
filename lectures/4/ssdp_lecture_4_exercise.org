@@ -30,9 +30,14 @@
         ...
     )
     #+END_SRC
-   - Reinstall the package.
-   - Test the installation by running =smhpy= from the command line.
 
+ - Reinstall the package.
+ - Test the installation by running =smhpy= from the command line. If that doesn't work
+   you may have to add =~/.local/bin= to your =PATH= environment variable:
+
+    #+BEGIN_SRC bash
+    $ export PATH = ~/.local/bin:${PATH}
+    #+END_SRC
 
 * Adding Sphinx documentation
   

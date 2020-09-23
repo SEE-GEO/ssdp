@@ -36,6 +36,40 @@
       - Documentation with Sphinx
       - Continuous integration with GitHub
 
+** Before we start
+*** Nature Astronomy: The climate issue
+    - In Australia emissions from super computers stand for
+      largest part of $CO_2$ emissions
+    - Running calculations in pure Python emits much more $CO_2$
+      than when written in low-level language
+*** Flaws in argumentation
+    - Emissions in Australia depend on energy mix
+    - Heavy calculations running on supercomputers are already
+      not using Python
+    - Emissions from personal computers much lower than from compute clusters
+    - False dilemma: You should combine programming languages to get
+      the best of both worlds
+
+** Before we start
+*** Nature Astronomy: The climate issue
+
+    \includegraphics[width=0.6\textwidth]{figures/pp_0}
+
+** Before we start
+*** Nature Astronomy: The climate issue
+
+    \includegraphics[width=0.6\textwidth]{figures/pp_1}
+
+** Before we start
+*** Nature Astronomy: The climate issue
+
+    \includegraphics[width=0.6\textwidth]{figures/pp_2}
+
+** Execise 1
+
+   - Complete exercise 1 on task sheet.
+   - Time: 10 minutes.
+
 * Documentation
 ** Documentation
 *** Purposes
@@ -95,7 +129,8 @@
 ** Documentation with Sphinx
 *** Minimal setup
     - I recommend separating source and build path for docs
-    - =source/conf.py=: Python source file containing documentation
+    - =source/conf.py=: Python source file to configure documentation
+      settings
     - =source/index.rst=: Root document for documentation
     - =Makefile=: Makefile to build documentation
 
@@ -129,6 +164,12 @@
 
   #+END_SRC
 
+** Documentation with Sphinx
+
+*** The generated =index.html=
+    \includegraphics[width=\textwidth]{figures/sphinx_example}
+
+    - Not much to see, so far
 ** Documentation with Sphinx
 *** ReStructuredText
 
@@ -216,6 +257,7 @@
 
     - Expects name of language as argument
 
+
 ** Documentation with Sphinx
 *** Building the documentation
 
@@ -228,7 +270,47 @@
     $ make html
 
     #+END_SRC
+** Documentation with Sphinx
 
+
+*** Extended =index.rst=
+
+
+    #+attr_latex: :options fontsize=\tiny, style=manni, bgcolor=light
+    #+BEGIN_SRC rst
+    The weather_app package
+    =======================
+
+    The ``weahter_app`` Python package provides a Python API to access the current
+    SMHI weather forecast as well as a command line application to check the
+    forecast for the next 24 hours at your location in Sweden.
+
+
+    .. toctree::
+      :maxdepth: 2
+      :caption: Contents:
+
+      installation
+      usage
+      api_reference
+
+    Indices and tables
+    ==================
+
+    * :ref:`genindex`
+    * :ref:`modindex`
+    * :ref:`search`
+    #+END_SRC
+
+    - Expects name of language as argument
+
+** Documentation with Sphinx
+
+*** The generated =index.html=
+    \includegraphics[width=0.8\textwidth]{figures/sphinx_example_2}
+
+
+    
 
 ** Execise 2
 
@@ -293,13 +375,18 @@
 *** Example workflow
     #+attr_latex: :options fontsize=\tiny, style=manni, bgcolor=light
     #+BEGIN_SRC bash
+    git branch -d gh-pages         # Delete branch if exists
     git checkout --orphan gh-pages # Use --orphan to discard history
     git rm -rf .                   # Removes staged files contained in branch
     cp -r docs/build/html/* .      # Copy generated documentation
     touch .nojekyll                # Create .nojekyll file
     git add *.html *.js *.inv _static _sources .nojekyll
+    git commit
     git push -u <remote-name>
     #+END_SRC
+
+    - Need to make sure GitHub pages service is activated for repository
+    - Documentation available at =<user_name>.github.io/<repository_name>=
 
 ** Hosting documentation
 *** Read the docs

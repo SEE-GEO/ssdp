@@ -431,7 +431,7 @@ packages:
     - The Python Package Index (PyPI) is the most popular one
 
 *** Uploading your package
-    - For testing, uploading to the test index[fn:6] of PyPI is recommended.
+    - For testing, uploading to the test index[fn:6] of PyPI is recommended. 
       This avoids polluting the standard PyPI name space.
     - To upload to =test.pypi.org=:
     #+attr_latex: :options bgcolor=light, fontsize=\scriptsize
