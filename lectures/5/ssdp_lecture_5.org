@@ -1,0 +1,94 @@
+#+TITLE: Scientific Software Development with Python
+#+SUBTITLE: Part 1 --- Recap
+#+AUTHOR: Simon Pfreundschuh
+#+OPTIONS: H:2 toc:nil
+#+LaTeX_HEADER: \institute{Department of Space, Earth and Environment}
+#+LaTeX_HEADER: \setbeamerfont{title}{family=\sffamily, series=\bfseries, size=\LARGE}
+#+LATEX_HEADER: \usepackage[style=authoryear]{biblatex}
+#+LATEX_HEADER: \usepackage{siunitx}
+#+LaTeX_HEADER: \usetheme{chalmers}
+#+LATEX_HEADER: \usepackage{subcaption}
+#+LATEX_HEADER: \usepackage{amssymb}
+#+LATEX_HEADER: \usepackage{dirtree}
+#+LATEX_HEADER: \usemintedstyle{monokai}
+#+LATEX_HEADER: \usepackage{pifont}
+#+LATEX_HEADER: \definecolor{light}{HTML}{CCCCCC}
+#+LATEX_HEADER: \definecolor{dark}{HTML}{353535}
+#+LATEX_HEADER: \definecolor{source_file}{rgb}{0.82, 0.1, 0.26}
+#+LATEX_HEADER: \newcommand{\greencheck}{{\color{green}\ding{51}}}
+#+LATEX_HEADER: \newcommand{\redcross}{{\color{red}\ding{55}}}
+#+LATEX_HEADER: \newcommand{\question}{{\color{yellow}\textbf{???}}}
+#+LATEX_HEADER: \addbibresource{literature.bib}
+#+BEAMER_HEADER: \AtBeginSection[]{\begin{frame}<beamer>\frametitle{Agenda}\tableofcontents[currentsection]\end{frame}}
+
+* Recap
+** What we have learned so far
+\centering
+\includegraphics[width=0.6\textwidth]{figures/dimensions_of_software_development}
+
+** What we have learned so far
+\centering
+\includegraphics[width=0.6\textwidth]{figures/dimensions_of_software_development_part_1}
+
+** Agile project management
+
+   1. Embrace and acknowledge uncertainty:
+      - We can't plan everything ahead, requirements will likely change
+   2. Iterative development
+      - Release early, release often
+      - Sprint-based process model
+      
+  \vspace{0.5cm}
+  \begin{alertblock}{}
+  We should make use of Agile practices and tools (DevOps) to make
+  Agile work.
+  \end{alertblock}
+
+** DevOps
+
+*** Version control
+    - Using git and GitHub
+
+*** Testing
+    - Unit testing with Pytest
+
+** DevOps
+
+*** Packaging
+    - Defining packages
+    - Publishing packages
+
+*** Documentation
+    - Writing documentation with Sphinx
+
+*** Continuous integration
+    - Automating DevOps with GitHub
+
+** There's more
+
+*** Other useful tools
+    - Code formatter:[[https://github.com/psf/black][ black]]
+    - Linter: [[https://www.pylint.org/][pylint]]
+    - Test coverage: [[https://coverage.readthedocs.io/en/coverage-5.3/][Coverage.py]]
+    
+* Development workflow
+
+** Development workflow
+*** The typical development workflow
+   - Central repository contains \textbf{working} development version
+   - Developers implement features in personal forks
+   - When a feature is ready, it developer makes pull request to central repository
+   - Good practice: Request review from other developer to ensure that code
+     satisfies quality requirements
+
+** Development workflow
+*** Definition of done
+   - What is required for a feature to be considered done?
+   - Should be agreed upon by the team
+   - Typical requirements:
+     - Unit tests
+     - Acceptance tests (example) for user story
+     - Documentation
+     - No decrease in test coverage
+
+* Preview

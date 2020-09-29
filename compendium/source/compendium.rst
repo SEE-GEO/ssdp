@@ -10,8 +10,9 @@ Content
 -------
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
 
    getting_started
+   packaging
    documentation
    continuous_integration

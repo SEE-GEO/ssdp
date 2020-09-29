@@ -36,7 +36,7 @@
    you may have to add =~/.local/bin= to your =PATH= environment variable:
 
     #+BEGIN_SRC bash
-    $ export PATH = ~/.local/bin:${PATH}
+    $ export PATH=~/.local/bin:${PATH}
     #+END_SRC
 
 * Adding Sphinx documentation
