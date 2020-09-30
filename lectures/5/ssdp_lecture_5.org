@@ -71,24 +71,37 @@
     - Linter: [[https://www.pylint.org/][pylint]]
     - Test coverage: [[https://coverage.readthedocs.io/en/coverage-5.3/][Coverage.py]]
     
-* Development workflow
-
-** Development workflow
-*** The typical development workflow
+** Putting it all together
+*** A typical development workflow
    - Central repository contains \textbf{working} development version
    - Developers implement features in personal forks
-   - When a feature is ready, it developer makes pull request to central repository
-   - Good practice: Request review from other developer to ensure that code
+   - When a feature is ready, it developer makes pull request to central
+     repository
+   - Good practice: Request code review from other developer to ensure that code
      satisfies quality requirements
 
-** Development workflow
+** Putting it all together
 *** Definition of done
    - What is required for a feature to be considered done?
    - Should be agreed upon by the team
    - Typical requirements:
      - Unit tests
-     - Acceptance tests (example) for user story
+     - Acceptance test (example) for user story
      - Documentation
      - No decrease in test coverage
 
 * Preview
+
+** Part 2
+\centering
+\includegraphics[width=0.6\textwidth]{figures/dimensions_of_software_development}
+
+** Part 2
+\centering
+\includegraphics[width=0.6\textwidth]{figures/dimensions_of_software_development_part_2}
+
+** Part 2
+*** Topics
+    - Object orient programming with Python (Lecture 1 and 2)
+    - Python standard library (Lecture 3)
+    - Python recipes (Lecture 4)
