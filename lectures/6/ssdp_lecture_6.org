@@ -1,0 +1,466 @@
+#+TITLE: Scientific Software Development with Python
+#+SUBTITLE: Object oriented programming --- Part 1
+#+AUTHOR: Simon Pfreundschuh
+#+OPTIONS: H:2 toc:nil
+#+LaTeX_HEADER: \institute{Department of Space, Earth and Environment}
+#+LaTeX_HEADER: \setbeamerfont{title}{family=\sffamily, series=\bfseries, size=\LARGE}
+#+LATEX_HEADER: \usepackage[style=authoryear]{biblatex}
+#+LATEX_HEADER: \usepackage{siunitx}
+#+LaTeX_HEADER: \usetheme{chalmers}
+#+LATEX_HEADER: \usepackage{subcaption}
+#+LATEX_HEADER: \usepackage{amssymb}
+#+LATEX_HEADER: \usepackage{dirtree}
+#+LATEX_HEADER: \usemintedstyle{monokai}
+#+LATEX_HEADER: \usepackage{pifont}
+#+LATEX_HEADER: \definecolor{light}{HTML}{CCCCCC}
+#+LATEX_HEADER: \definecolor{dark}{HTML}{353535}
+#+LATEX_HEADER: \definecolor{source_file}{rgb}{0.82, 0.1, 0.26}
+#+LATEX_HEADER: \newcommand{\greencheck}{{\color{green}\ding{51}}}
+#+LATEX_HEADER: \newcommand{\redcross}{{\color{red}\ding{55}}}
+#+LATEX_HEADER: \newcommand{\question}{{\color{yellow}\textbf{???}}}
+#+LATEX_HEADER: \addbibresource{literature.bib}
+#+BEAMER_HEADER: \AtBeginSection[]{\begin{frame}<beamer>\frametitle{Agenda}\tableofcontents[currentsection]\end{frame}}
+
+* Overview
+** Part 2
+  \centering
+  \includegraphics[width=0.6\textwidth]{figures/dimensions_of_software_development}
+
+** Part 2
+  \centering
+  \includegraphics[width=0.6\textwidth]{figures/dimensions_of_software_development_part_2}
+
+* Object oriented thinking
+
+** Object orient design
+   - Modeling approach
+   - Processes are modeled using interacting objects
+   - A class describes a type of object
+   - Objects of a given class are called /instances/
+*** Example: Drawing diagrams
+    - Objects: Figure, rectangles, text, arrows
+    - Actions:
+      - add rectangle
+      - add text to rectangle
+      - draw arrow from rectangle to rectangle
+    
+    
+** Object orient design
+*** Unified modeling language (UML)
+    - Graphical modeling language
+    - Formal application quite complex
+    - But: Useful and intuitive way to communicate class relations
+*** Example: Drawing diagrams
+    - Corresponding UML class diagram:
+  \centering
+  \includegraphics[width=0.5\textwidth]{figures/diagram_full}
+
+** Object orient design
+*** Unified modeling language (UML)
+    - UML class diagrams visualize classes and their relationships
+    - Can be mapped directly to code
+
+      \vspace{1cm}
+      \begin{alertblock}{}
+      So how can we map the different components of a UML diagram
+      to Python?
+      \end{alertblock}
+
+
+** UML components
+*** Classes
+
+*** left                                                              :BMCOL:
+    :PROPERTIES:
+    :BEAMER_col: 0.6
+    :END:
+    - Block represents class
+    - Top: Class name
+    - Middle: Attributes (data)
+    - Bottom: Methods (actions)
+*** right                                                             :BMCOL:
+    :PROPERTIES:
+    :BEAMER_col: 0.4
+    :END:
+  \centering
+  \includegraphics[width=0.7\textwidth]{figures/diagram_coordinates}
+
+
+* Classes
+** Classes in Python
+*** Classes in Python
+    - Defined using the =class= keyword
+    - Definition consists of class methods
+    - =__init__= function used to initialize new object[fn:2]
+    
+
+    #+attr_latex: :options fontsize=\tiny, bgcolor=dark
+    #+BEGIN_SRC Python
+    class Coordinates:
+        """
+        The coordinate class represents two-dimensional, Cartesian
+        coordinates.
+        ...
+        """
+        def __init__(self, x, y):
+            """
+            Create pair of coordinates.
+            ...
+            """
+            self.x = x
+            self.y = y
+        ...
+    #+END_SRC
+
+[fn:2] There's also the =__new__= function, which is called when a new object is created, but it's usage
+is quite advanced.
+  
+** Classes in Python
+*** Methods
+    - Methods are functions that act on class objects.
+    - General syntax:
+      #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+      #+BEGIN_SRC Python
+      object.method_name(arg_1, arg_2, ...)
+      #+END_SRC
+      - Calls method =method_name= defined in =object='s class with arguments
+        =object, arg_1, arg_2, ...=
+
+      
+\begin{alertblock}{}
+  The object whose method is called upon is always passed as the first  argument (\texttt{self})
+  to the class method. \textbf{This is how the method gains access to the class attributes.}
+\end{alertblock}
+
+** Classes in Python
+*** Attributes
+    - Attributes represent the specific properties (data) of a
+      class instance.
+    - Attributes /should be set in/ =__init__= /method/.
+    - But: This is not enforced. Attributes can be defined dynamically:
+      
+      #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+      #+BEGIN_SRC Python
+      coordinates = Coordinates(1.0, 2.0)
+      print(coordinates.z) # Error
+      coordinates.z = 3.0
+      print(coordinates.z) # Prints: 3
+      #+END_SRC
+
+** Classes in Python
+*** Attribute access
+    - In contrast to other language, Python does not really restrict
+      access to class attributes
+    - \textbf{But}: Python does apply name mangling to attributes starting
+      with two undescores[fn:5]:
+      #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+      #+BEGIN_SRC Python
+      class A:
+          def __init__(self):
+              self.__attribute = 1
+      
+      a = A()
+      print(a.__attribute) # Error
+      print(a._A__attribute) # Prints: 1
+      #+END_SRC
+    - Convention: Attributes prefixed with 1 underscore (=_=) should not
+      be accessed from the outside.
+  
+[fn:5] The attribute name becomes =_<class_name><attribute_name>=.
+** Classes in Python
+*** Static methods
+    - Static methods are methods that do not depend on a specific
+      object and can therefore be called directly on the class
+    - Static methods are defined using the =@staticmethod= decorator[fn:3][fn:4]
+*** Example
+      #+attr_latex: :options fontsize=\tiny, bgcolor=dark
+      #+BEGIN_SRC Python
+    class Color:
+        @staticmethod
+        def Black():
+            return Color("#000000")
+        ...
+        def __init__(self, color_code):
+            self.color_code = color_code
+
+    black = Color.Black()
+      #+END_SRC
+
+[fn:3] We'll learn more about decorators later.
+[fn:4] There's also the =@classmethod= decorator, which serves a similar purpose
+
+** Classes in Python
+*** Special class methods
+  - Python uses magic (or dunder) methods to implement special
+    functionality (syntactic sugar):
+    - =__repr__(self)=: Used to print output in interpreter.
+    - =__str__(self)=: Used to generate output for print. Will use =__repr__= is defined.
+    - =__add__(self, other)=: Implements =+= operator
+    - =__sub__(self, other)=: Implements =-= operator
+    - =__mul__(self, other)=: Implements =*= operator
+    - =__call__(self, *args, **kwargs)=: Implements =obect(*args, **kwargs)=
+  - All special syntax in Python is implemented in this way[fn:4]
+  
+[fn:4] See official docs or https://levelup.gitconnected.com/python-dunder-methods-ea98ceabad15 for an overview.
+
+
+** Exercise
+   - Exercise 1 in exercise notebook
+   - Time: 10 minutes
+
+** Brief summary
+*** What we have learned
+    - Classes define types of objects with given properties and actions
+    - How to define class methods
+    - How to define class attributes
+    - How to define static and special methods.
+
+* Inheritance
+** UML components
+*** Moving on with the design
+    - Let's add classes for the object we would like to draw:
+    
+  \centering
+  \includegraphics[width=0.8\textwidth]{figures/diagram_no_inheritance}
+
+  \begin{alertblock}{Problem}
+  All classes have \texttt{position} and \texttt{color} attributes as well as
+  \texttt{translate} and \texttt{change\_color} functions, that do the same.
+  \end{alertblock}
+
+** Inheritance
+*** The DRY principle
+    - \textbf{Do not Repeat Yourself}
+    - Every piece of knowledge must have a single, unambiguous, authoritative
+      representation within a system
+    - Duplicate code will sooner or later become inconsistent
+
+** UML components
+*** Inheritance
+    - Represents a /is a/ relationship.
+    - /Child class/ inherits from /base class/.
+    - The child class inherits all /methods and attributes/ from
+      its parent.
+
+  \centering
+  \includegraphics[width=0.6\textwidth]{figures/diagram_inheritance}
+
+** Inheritance
+*** Inheritance in Python
+    - Basic syntax:
+        #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+        #+BEGIN_SRC Python
+      class ChildClass(BaseClass):
+          def __init__(self, ...):
+              super().__init__(...) # Calls __init__ of BaseClass
+          ...
+        #+END_SRC
+    - All functions defined in =BaseClass= are available in
+      =ChildClass=.
+    
+    \begin{alertblock}{Important}
+    \texttt{\_\_init\_\_} function of child class must call \texttt{\_\_init\_\_} function
+    to ensure object is properly initialized.\footnote{Exceptions are classes that don't define
+     any attributes and therefore don't need to be initialized.}
+
+    \end{alertblock}
+    
+
+** Inheritance
+*** Overriding
+    - If the child class redefines a method of the base class, it
+      /overrides/ the implementation of the base class
+      #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+      #+BEGIN_SRC Python
+    class A:
+        def print_class(self):
+            print("A")
+        
+        def print_base(self):
+            print("A")
+
+    class B(A):
+        def print_class(self):
+            print("B")
+
+    b = B()
+    b.print_class() # Prints: B
+    b.print_base()  # Prints: A
+      #+END_SRC
+
+** Inheritance
+*** Overriding
+    - The =draw= method in the =DiagramComponent= class is
+      an abstract method.
+    - An abstract method is a method that /must/ be overridden
+      by the child classes.
+      
+
+  \centering
+  \includegraphics[width=0.6\textwidth]{figures/diagram_inheritance}
+
+** Inheritance
+*** Polymorphism
+    - Polymorphism is when a functions executes different code
+      based the object types of its arguments
+
+      #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+      #+BEGIN_SRC Python
+      object = Rectangle(...)
+      object.draw(canvas) # Draws a rectangle
+      object = Text(...)
+      object.draw(canvas) # Draws text
+      object = Arrow(...)
+      object.draw(canvas) # Draws an arrow
+      #+END_SRC
+
+    - Python achieves polymorphism through /duck typing/[fn:8]
+
+[fn:8] "If it walks like a duck and it quacks like a duck, then it must be a duck"
+
+** Multiple inheritance
+*** Multiple inheritance
+    - /If you think you need multiple inheritance, you're probably wrong,
+      but if you know you need it, you might be right./[fn:7]
+    - Python allows classes to inherit from multiple base classes:
+      
+      #+attr_latex: :options fontsize=\tiny, bgcolor=dark
+      #+BEGIN_SRC Python
+    class A:
+        def print_a(self):
+            print("A")
+
+    class B:
+        def print_b(self):
+            print("A")
+
+    class C(A, B):
+        pass
+
+    c = C()
+    c.print_a() # Prints "A"
+    c.print_b() # Prints "B"
+      #+END_SRC
+[fn:7]  Phillips, Dusty. Python 3 object oriented programming.
+
+** Multiple inheritance
+*** The diamond problem
+    - Things get messy, when multiple base classes share a common
+      ancestor
+
+*** left                                                              :BMCOL:
+    :PROPERTIES:
+    :BEAMER_col: 0.6
+    :END:
+      #+attr_latex: :options fontsize=\tiny, bgcolor=dark
+      #+BEGIN_SRC Python
+    class A:
+        def __init__(self):
+            print("Initializing A ...")
+
+    class B(A):
+        def __init__(self):
+            super().__init__()
+            print("Initializing B ...")
+
+    class C(A):
+        def __init__(self):
+            super().__init__()
+            print("Initializing C ...")
+
+    class D(B, C):
+        def __init__(self):
+            super().__init__()
+      #+END_SRC
+*** right                                                             :BMCOL:
+    :PROPERTIES:
+    :BEAMER_col: 0.4
+    :END:
+  \centering
+  \includegraphics[width=\textwidth]{figures/diamond_problem}
+   
+** Multiple inheritance
+
+*** The diamond problem
+    - How can we know which =__init__= function is called?
+
+      #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+      #+BEGIN_SRC Python
+      d = D()
+      #+END_SRC
+
+    - Output:
+      #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+      #+BEGIN_SRC Python
+      Initializing A ...
+      Initializing C ...
+      Initializing B ...
+      #+END_SRC
+
+    - =super()= linearized the class hierarchy and calls all functions in
+      sequence
+    - \textbf{But:} This becomes problematic when these functions take
+      different parameters.
+
+** Multiple inheritance
+
+*** Mixin classes
+    - A mixin class is a super class that only implements functionality and
+      can be easily added to a class.
+
+      #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+      #+BEGIN_SRC Python
+      class PrettyPrint:
+          class pretty_print(self):
+              print(f"~~ {self} ~~")
+
+      class A(PrettyPrint):
+          def __str__(self):
+              return "A"
+              
+      a = A()
+      a.pretty_print() # Prints: ~~ A ~~
+      #+END_SRC
+
+** Exercise
+   - Exercise 2 in exercise notebook
+   - Time: 15 minutes
+
+** Summary
+*** What we have learned:
+    - How to reuse code using inheritance
+    - How to achieve polymorphism using inheritance
+    
+* Aggregation and composition
+** UML components
+*** Composition
+    - A node /consists of/ a rectangle and a text.
+    - Objects are in a composition relation when their lifetimes
+      are dependent on each other.
+
+  \centering
+  \includegraphics[width=0.7\textwidth]{figures/diagram_composition}
+
+** Composition
+*** Composition as abstraction
+    - Abstraction: Dealing with the level of detail that is most appropriate
+      to a given task
+    - Manually creating a node from a rectangle and text is complex:
+      - Text must be placed correctly, both rectangle and text must
+        be drawn on diagram.
+    - =Node= class hides a way information (the rectangle and text) to
+      simplify creation of diagram nodes.
+
+** Aggregation
+*** Finalizing the design
+    - The diagram class collects and draws the components of
+      the diagram.
+  \centering
+  \includegraphics[width=0.7\textwidth]{figures/diagram_full}
+
+** Exercise
+   
+   - Exercise 3 in exercise notebook
+   - Time: 15 minutes
+
+** Summary

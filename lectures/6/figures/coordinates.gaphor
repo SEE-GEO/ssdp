@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="utf-8"?>
+<gaphor xmlns="http://gaphor.sourceforge.net/model" version="3.0" gaphor-version="2.0.0">
+<Package id="4272e506-07f7-11eb-8deb-cbc4679db4a1">
+<name>
+<val>New model</val>
+</name>
+<ownedClassifier>
+<reflist>
+<ref refid="43cbb9d2-07f7-11eb-8deb-cbc4679db4a1"/>
+</reflist>
+</ownedClassifier>
+<ownedDiagram>
+<reflist>
+<ref refid="4272eb96-07f7-11eb-8deb-cbc4679db4a1"/>
+</reflist>
+</ownedDiagram>
+</Package>
+<Diagram id="4272eb96-07f7-11eb-8deb-cbc4679db4a1">
+<name>
+<val>main</val>
+</name>
+<package>
+<ref refid="4272e506-07f7-11eb-8deb-cbc4679db4a1"/>
+</package>
+<canvas>
+<item id="43cc890c-07f7-11eb-8deb-cbc4679db4a1" type="ClassItem">
+<matrix>
+<val>(1.0, 0.0, 0.0, 1.0, 136.639892578125, 264.98455810546875)</val>
+</matrix>
+<width>
+<val>160.0</val>
+</width>
+<height>
+<val>159.0</val>
+</height>
+<subject>
+<ref refid="43cbb9d2-07f7-11eb-8deb-cbc4679db4a1"/>
+</subject>
+</item>
+</canvas>
+</Diagram>
+<StyleSheet id="427361f2-07f7-11eb-8deb-cbc4679db4a1">
+<styleSheet>
+<val>* {
+ background-color: transparent;
+ color: black;
+ font-family: sans;
+ font-size: 14;
+ highlight-color: rgba(0, 0, 255, 0.4);
+ line-width: 2;
+ padding: 0;
+}
+
+diagram {
+ background-color: white;
+ line-style: normal;
+ /* line-style: sloppy 0.3; */
+}
+</val>
+</styleSheet>
+</StyleSheet>
+<Class id="43cbb9d2-07f7-11eb-8deb-cbc4679db4a1">
+<name>
+<val>Coordinates</val>
+</name>
+<ownedAttribute>
+<reflist>
+<ref refid="48b15c5e-07f7-11eb-8deb-cbc4679db4a1"/>
+<ref refid="4a766e80-07f7-11eb-8deb-cbc4679db4a1"/>
+</reflist>
+</ownedAttribute>
+<ownedOperation>
+<reflist>
+<ref refid="4f069c7c-07f7-11eb-8deb-cbc4679db4a1"/>
+<ref refid="603e0c28-07f7-11eb-8deb-cbc4679db4a1"/>
+<ref refid="662e3b12-07f7-11eb-8deb-cbc4679db4a1"/>
+<ref refid="695c3992-07f7-11eb-8deb-cbc4679db4a1"/>
+</reflist>
+</ownedOperation>
+<package>
+<ref refid="4272e506-07f7-11eb-8deb-cbc4679db4a1"/>
+</package>
+<presentation>
+<reflist>
+<ref refid="43cc890c-07f7-11eb-8deb-cbc4679db4a1"/>
+</reflist>
+</presentation>
+</Class>
+<Property id="48b15c5e-07f7-11eb-8deb-cbc4679db4a1">
+<class_>
+<ref refid="43cbb9d2-07f7-11eb-8deb-cbc4679db4a1"/>
+</class_>
+<name>
+<val>x</val>
+</name>
+<typeValue>
+<val>float</val>
+</typeValue>
+</Property>
+<Property id="4a766e80-07f7-11eb-8deb-cbc4679db4a1">
+<class_>
+<ref refid="43cbb9d2-07f7-11eb-8deb-cbc4679db4a1"/>
+</class_>
+<name>
+<val>y</val>
+</name>
+<typeValue>
+<val>float</val>
+</typeValue>
+</Property>
+<Operation id="4f069c7c-07f7-11eb-8deb-cbc4679db4a1">
+<class_>
+<ref refid="43cbb9d2-07f7-11eb-8deb-cbc4679db4a1"/>
+</class_>
+<formalParameter>
+<reflist>
+<ref refid="4f0ac450-07f7-11eb-8deb-cbc4679db4a1"/>
+<ref refid="4f0bab4a-07f7-11eb-8deb-cbc4679db4a1"/>
+<ref refid="5c332000-07f7-11eb-8deb-cbc4679db4a1"/>
+</reflist>
+</formalParameter>
+<name>
+<val>__init__</val>
+</name>
+<returnResult>
+<reflist>
+<ref refid="4f09ac82-07f7-11eb-8deb-cbc4679db4a1"/>
+</reflist>
+</returnResult>
+</Operation>
+<Parameter id="4f09ac82-07f7-11eb-8deb-cbc4679db4a1">
+<direction>
+<val>return</val>
+</direction>
+<ownerReturnParam>
+<ref refid="4f069c7c-07f7-11eb-8deb-cbc4679db4a1"/>
+</ownerReturnParam>
+</Parameter>
+<Parameter id="4f0ac450-07f7-11eb-8deb-cbc4679db4a1">
+<name>
+<val>self</val>
+</name>
+<ownerFormalParam>
+<ref refid="4f069c7c-07f7-11eb-8deb-cbc4679db4a1"/>
+</ownerFormalParam>
+</Parameter>
+<Parameter id="4f0bab4a-07f7-11eb-8deb-cbc4679db4a1">
+<name>
+<val>x</val>
+</name>
+<ownerFormalParam>
+<ref refid="4f069c7c-07f7-11eb-8deb-cbc4679db4a1"/>
+</ownerFormalParam>
+</Parameter>
+<Parameter id="5c332000-07f7-11eb-8deb-cbc4679db4a1">
+<name>
+<val>y</val>
+</name>
+<ownerFormalParam>
+<ref refid="4f069c7c-07f7-11eb-8deb-cbc4679db4a1"/>
+</ownerFormalParam>
+</Parameter>
+<Operation id="603e0c28-07f7-11eb-8deb-cbc4679db4a1">
+<class_>
+<ref refid="43cbb9d2-07f7-11eb-8deb-cbc4679db4a1"/>
+</class_>
+<formalParameter>
+<reflist>
+<ref refid="603f63c0-07f7-11eb-8deb-cbc4679db4a1"/>
+<ref refid="603fa70e-07f7-11eb-8deb-cbc4679db4a1"/>
+</reflist>
+</formalParameter>
+<name>
+<val>__add__</val>
+</name>
+<returnResult>
+<reflist>
+<ref refid="603f1794-07f7-11eb-8deb-cbc4679db4a1"/>
+</reflist>
+</returnResult>
+</Operation>
+<Parameter id="603f1794-07f7-11eb-8deb-cbc4679db4a1">
+<direction>
+<val>return</val>
+</direction>
+<ownerReturnParam>
+<ref refid="603e0c28-07f7-11eb-8deb-cbc4679db4a1"/>
+</ownerReturnParam>
+</Parameter>
+<Parameter id="603f63c0-07f7-11eb-8deb-cbc4679db4a1">
+<name>
+<val>self</val>
+</name>
+<ownerFormalParam>
+<ref refid="603e0c28-07f7-11eb-8deb-cbc4679db4a1"/>
+</ownerFormalParam>
+</Parameter>
+<Parameter id="603fa70e-07f7-11eb-8deb-cbc4679db4a1">
+<name>
+<val>other</val>
+</name>
+<ownerFormalParam>
+<ref refid="603e0c28-07f7-11eb-8deb-cbc4679db4a1"/>
+</ownerFormalParam>
+</Parameter>
+<Operation id="662e3b12-07f7-11eb-8deb-cbc4679db4a1">
+<class_>
+<ref refid="43cbb9d2-07f7-11eb-8deb-cbc4679db4a1"/>
+</class_>
+<formalParameter>
+<reflist>
+<ref refid="66320850-07f7-11eb-8deb-cbc4679db4a1"/>
+</reflist>
+</formalParameter>
+<name>
+<val>__repr__</val>
+</name>
+<returnResult>
+<reflist>
+<ref refid="6630f7b2-07f7-11eb-8deb-cbc4679db4a1"/>
+</reflist>
+</returnResult>
+</Operation>
+<Parameter id="6630f7b2-07f7-11eb-8deb-cbc4679db4a1">
+<direction>
+<val>return</val>
+</direction>
+<ownerReturnParam>
+<ref refid="662e3b12-07f7-11eb-8deb-cbc4679db4a1"/>
+</ownerReturnParam>
+</Parameter>
+<Parameter id="66320850-07f7-11eb-8deb-cbc4679db4a1">
+<name>
+<val>self</val>
+</name>
+<ownerFormalParam>
+<ref refid="662e3b12-07f7-11eb-8deb-cbc4679db4a1"/>
+</ownerFormalParam>
+</Parameter>
+<Operation id="695c3992-07f7-11eb-8deb-cbc4679db4a1">
+<class_>
+<ref refid="43cbb9d2-07f7-11eb-8deb-cbc4679db4a1"/>
+</class_>
+<formalParameter>
+<reflist>
+<ref refid="69607462-07f7-11eb-8deb-cbc4679db4a1"/>
+</reflist>
+</formalParameter>
+<name>
+<val>__str__</val>
+</name>
+<returnResult>
+<reflist>
+<ref refid="695f1c7a-07f7-11eb-8deb-cbc4679db4a1"/>
+</reflist>
+</returnResult>
+</Operation>
+<Parameter id="695f1c7a-07f7-11eb-8deb-cbc4679db4a1">
+<direction>
+<val>return</val>
+</direction>
+<ownerReturnParam>
+<ref refid="695c3992-07f7-11eb-8deb-cbc4679db4a1"/>
+</ownerReturnParam>
+</Parameter>
+<Parameter id="69607462-07f7-11eb-8deb-cbc4679db4a1">
+<name>
+<val>self</val>
+</name>
+<ownerFormalParam>
+<ref refid="695c3992-07f7-11eb-8deb-cbc4679db4a1"/>
+</ownerFormalParam>
+</Parameter>
+</gaphor>
