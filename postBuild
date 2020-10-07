@@ -1,0 +1,4 @@
+#!/bin/bash
+
+# Following instruction from: https://github.com/martinRenou/ipycanvas/issues/95
+jupyter labextension install @jupyter-widgets/jupyterlab-manager
