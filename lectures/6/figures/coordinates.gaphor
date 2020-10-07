@@ -25,13 +25,13 @@
 <canvas>
 <item id="43cc890c-07f7-11eb-8deb-cbc4679db4a1" type="ClassItem">
 <matrix>
-<val>(1.0, 0.0, 0.0, 1.0, 136.639892578125, 264.98455810546875)</val>
+<val>(1.0, 0.0, 0.0, 1.0, 360.973388671875, 279.3173828125)</val>
 </matrix>
 <width>
 <val>160.0</val>
 </width>
 <height>
-<val>159.0</val>
+<val>193.0</val>
 </height>
 <subject>
 <ref refid="43cbb9d2-07f7-11eb-8deb-cbc4679db4a1"/>
@@ -75,6 +75,7 @@ diagram {
 <ref refid="603e0c28-07f7-11eb-8deb-cbc4679db4a1"/>
 <ref refid="662e3b12-07f7-11eb-8deb-cbc4679db4a1"/>
 <ref refid="695c3992-07f7-11eb-8deb-cbc4679db4a1"/>
+<ref refid="e096f580-085e-11eb-a966-8df921c8059c"/>
 </reflist>
 </ownedOperation>
 <package>
@@ -210,10 +211,11 @@ diagram {
 <formalParameter>
 <reflist>
 <ref refid="66320850-07f7-11eb-8deb-cbc4679db4a1"/>
+<ref refid="f1ae3b4e-085e-11eb-a966-8df921c8059c"/>
 </reflist>
 </formalParameter>
 <name>
-<val>__repr__</val>
+<val>__mul__</val>
 </name>
 <returnResult>
 <reflist>
@@ -244,10 +246,11 @@ diagram {
 <formalParameter>
 <reflist>
 <ref refid="69607462-07f7-11eb-8deb-cbc4679db4a1"/>
+<ref refid="f7f8c2d0-085e-11eb-a966-8df921c8059c"/>
 </reflist>
 </formalParameter>
 <name>
-<val>__str__</val>
+<val>__eq__</val>
 </name>
 <returnResult>
 <reflist>
@@ -266,6 +269,56 @@ diagram {
 <Parameter id="69607462-07f7-11eb-8deb-cbc4679db4a1">
 <name>
 <val>self</val>
+</name>
+<ownerFormalParam>
+<ref refid="695c3992-07f7-11eb-8deb-cbc4679db4a1"/>
+</ownerFormalParam>
+</Parameter>
+<Operation id="e096f580-085e-11eb-a966-8df921c8059c">
+<class_>
+<ref refid="43cbb9d2-07f7-11eb-8deb-cbc4679db4a1"/>
+</class_>
+<formalParameter>
+<reflist>
+<ref refid="e09869ba-085e-11eb-a966-8df921c8059c"/>
+</reflist>
+</formalParameter>
+<name>
+<val>__repr__</val>
+</name>
+<returnResult>
+<reflist>
+<ref refid="e0982522-085e-11eb-a966-8df921c8059c"/>
+</reflist>
+</returnResult>
+</Operation>
+<Parameter id="e0982522-085e-11eb-a966-8df921c8059c">
+<direction>
+<val>return</val>
+</direction>
+<ownerReturnParam>
+<ref refid="e096f580-085e-11eb-a966-8df921c8059c"/>
+</ownerReturnParam>
+</Parameter>
+<Parameter id="e09869ba-085e-11eb-a966-8df921c8059c">
+<name>
+<val>self</val>
+</name>
+<ownerFormalParam>
+<ref refid="e096f580-085e-11eb-a966-8df921c8059c"/>
+</ownerFormalParam>
+</Parameter>
+<Parameter id="f1ae3b4e-085e-11eb-a966-8df921c8059c">
+<name>
+<val>other</val>
+</name>
+<ownerFormalParam>
+<ref refid="662e3b12-07f7-11eb-8deb-cbc4679db4a1"/>
+</ownerFormalParam>
+</Parameter>
+<Parameter id="f7f8c2d0-085e-11eb-a966-8df921c8059c">
+<name>
+<val>other</val>
 </name>
 <ownerFormalParam>
 <ref refid="695c3992-07f7-11eb-8deb-cbc4679db4a1"/>

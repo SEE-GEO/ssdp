@@ -55,7 +55,7 @@ the course lectures in PDF format.
 +------------+--------------------------------------------------+-----------------------------------------------+
 | **Part 2**                                                                                                    |
 +------------+--------------------------------------------------+-----------------------------------------------+
-| 2020-10-07 | Object oriented programming with Python, part 1  | ssdp_lecture_6, ssdp_lecture_6_exercise_      |
+| 2020-10-07 | Object oriented programming with Python, part 1  | ssdp_lecture_6_, ssdp_lecture_6_exercise_     |
 +------------+--------------------------------------------------+-----------------------------------------------+
 | 2020-10-14 | Design patterns with Python                      | ssdp_lecture_5                                | 
 +------------+--------------------------------------------------+-----------------------------------------------+
@@ -86,4 +86,4 @@ the course lectures in PDF format.
 .. _ssdp_lecture_4_exercise: https://github.com/SEE-MOF/ssdp/raw/main/lectures/4/ssdp_lecture_4_exercise.pdf
 .. _ssdp_lecture_5: https://github.com/SEE-MOF/ssdp/raw/main/lectures/5/ssdp_lecture_5.pdf
 .. _ssdp_lecture_6: https://github.com/SEE-MOF/ssdp/raw/main/lectures/6/ssdp_lecture_6.pdf
-.. _ssdp_lecture_6_exercise: https://github.com/SEE-MOF/ssdp/raw/main/lectures/6/ssdp_lecture_6_exercise.pdf
+.. _ssdp_lecture_6_exercise: https://github.com/SEE-MOF/ssdp/raw/main/lectures/6/ssdp_lecture_6_exercises.ipynb
