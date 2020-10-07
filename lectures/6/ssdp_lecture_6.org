@@ -543,3 +543,14 @@ is quite advanced.
    - Time: 15 minutes
 
 ** Summary
+*** Object oriented design
+    - UML class diagrams
+    - Classes: Define types of object through properties (attributes)
+      and associated behavior (method)
+    - Relationships: Inheritance, composition aggregation
+
+*** Object oriented programming with Python
+    - Python class
+      - Methods (=self= argument, static methods, overriding)
+      - Attributes (normal attributes and =@property= decorator)
+
