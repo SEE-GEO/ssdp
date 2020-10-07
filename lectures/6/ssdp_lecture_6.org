@@ -513,8 +513,7 @@ is quite advanced.
 
 ** Composition
 *** Composition as abstraction
-    - \textbf{Abstraction: Dealing with the level of detail that is most appropriate
-      to a given task}
+    - \textbf{Abstraction: Dealing with the level of detail that is most appropriate to a given task}
     - Manually creating a node from a rectangle and text is complex
       and error prone:
       - Text must be placed correctly, both rectangle and text must
