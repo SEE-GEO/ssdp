@@ -48,7 +48,12 @@
    - Processes are modeled using interacting objects.
    - A class describes a type of object.
    - Objects of a given class are called /instances/.
+
+** Object oriented design
 *** Example: Drawing diagrams
+    \centering
+    \includegraphics[width=0.5\textwidth]{figures/diagram} 
+
     - Objects: Figure, rectangles, text, arrows
     - Actions:
       - add rectangle
