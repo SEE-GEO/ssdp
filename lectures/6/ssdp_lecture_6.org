@@ -30,13 +30,24 @@
   \centering
   \includegraphics[width=0.6\textwidth]{figures/dimensions_of_software_development_part_2}
 
+** Content
+*** This lecture  
+    - Example of object oriented design
+    - Object oriented programming in Python
+    - Principle of object oriented programming
+
+*** Next lecture
+    - Specifying interfaces using abstract classes
+    - Common Python design patterns
+    - Structural vs. object oriented programming
+
 * Object oriented thinking
 
-** Object orient design
+** Object oriented design
    - Modeling approach
-   - Processes are modeled using interacting objects
-   - A class describes a type of object
-   - Objects of a given class are called /instances/
+   - Processes are modeled using interacting objects.
+   - A class describes a type of object.
+   - Objects of a given class are called /instances/.
 *** Example: Drawing diagrams
     - Objects: Figure, rectangles, text, arrows
     - Actions:
@@ -45,7 +56,7 @@
       - draw arrow from rectangle to rectangle
     
     
-** Object orient design
+** Object oriented design
 *** Unified modeling language (UML)
     - Graphical modeling language
     - Formal application quite complex
@@ -55,10 +66,10 @@
   \centering
   \includegraphics[width=0.5\textwidth]{figures/diagram_full}
 
-** Object orient design
+** Object oriented design
 *** Unified modeling language (UML)
-    - UML class diagrams visualize classes and their relationships
-    - Can be mapped directly to code
+    - UML class diagrams visualize classes and their relationships.
+    - Can be mapped directly to code.
 
       \vspace{1cm}
       \begin{alertblock}{}
@@ -89,9 +100,9 @@
 * Classes
 ** Classes in Python
 *** Classes in Python
-    - Defined using the =class= keyword
-    - Definition consists of class methods
-    - =__init__= function used to initialize new object[fn:2]
+    - Defined using the =class= keyword.
+    - Definition consists of class methods.
+    - =__init__= function used to initialize new object[fn:2].
     
 
     #+attr_latex: :options fontsize=\tiny, bgcolor=dark
@@ -112,7 +123,7 @@
         ...
     #+END_SRC
 
-[fn:2] There's also the =__new__= function, which is called when a new object is created, but it's usage
+[fn:2] There's also the =__new__= function, which is called when a new object is created, but its usage
 is quite advanced.
   
 ** Classes in Python
@@ -149,10 +160,10 @@ is quite advanced.
 
 ** Classes in Python
 *** Attribute access
-    - In contrast to other language, Python does not really restrict
+    - In contrast to other language, Python does not restrict
       access to class attributes
     - \textbf{But}: Python does apply name mangling to attributes starting
-      with two undescores[fn:5]:
+      with two undescores[fn:6]:
       #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
       #+BEGIN_SRC Python
       class A:
@@ -165,8 +176,51 @@ is quite advanced.
       #+END_SRC
     - Convention: Attributes prefixed with 1 underscore (=_=) should not
       be accessed from the outside.
-  
-[fn:5] The attribute name becomes =_<class_name><attribute_name>=.
+
+[fn:6] The attribute name becomes =_<class_name><attribute_name>=.
+
+** Classes in Python
+*** Attributes
+    - An alternative way of defining attributes in Python
+      is to use the =@property= decorator:
+    - The function marked with =@property= is called when
+      =obect.function_name= is accessed
+    - The function marked with =@<property_name>.setter= is
+      called when a value is assigned to =object.<property_name>=
+
+    #+attr_latex: :options fontsize=\tiny, bgcolor=dark
+    #+BEGIN_SRC Python
+    class Number:
+        def __init__(self, number):
+            self._number = number
+
+        @property
+        def plus_one(self):
+            return self._number + 1
+
+        @plus_one.setter
+        def plus_one(self, plus_one):
+            self._number = plus_one - 1
+    #+END_SRC
+
+** Classes in Python
+*** Example
+
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+    #+BEGIN_SRC Python
+     number = Number(1)
+     print(number.plus_one) # Print: 2
+     number.plus_one = 1
+     print(number.plus_one) # Print: 1
+     print(number._number)  # Print: 0
+    #+END_SRC
+*** Advantages
+    - The =@property= decorator allows defining getter and setter mehtods
+      for Python attributes
+    - Allows computing properties on the fly (dynamic attributes)
+    - Omitting the setter make the attribute read-only
+    - Setter can be used to check validity of value
+
 ** Classes in Python
 *** Static methods
     - Static methods are methods that do not depend on a specific
@@ -194,26 +248,24 @@ is quite advanced.
   - Python uses magic (or dunder) methods to implement special
     functionality (syntactic sugar):
     - =__repr__(self)=: Used to print output in interpreter.
-    - =__str__(self)=: Used to generate output for print. Will use =__repr__= is defined.
+    - =__str__(self)=: Called by =print= and =str= methods. Will use =__repr__= is defined.
     - =__add__(self, other)=: Implements =+= operator
-    - =__sub__(self, other)=: Implements =-= operator
     - =__mul__(self, other)=: Implements =*= operator
-    - =__call__(self, *args, **kwargs)=: Implements =obect(*args, **kwargs)=
-  - All special syntax in Python is implemented in this way[fn:4]
+    - =__eq__(self, other)=: Implements ==== operator
+  - All special syntax in Python is implemented in this way[fn:5]
   
-[fn:4] See official docs or https://levelup.gitconnected.com/python-dunder-methods-ea98ceabad15 for an overview.
-
+[fn:5] See official docs or https://levelup.gitconnected.com/python-dunder-methods-ea98ceabad15 for an overview.
 
 ** Exercise
    - Exercise 1 in exercise notebook
    - Time: 10 minutes
 
 ** Brief summary
-*** What we have learned
+*** What we have learned:
     - Classes define types of objects with given properties and actions
-    - How to define class methods
-    - How to define class attributes
-    - How to define static and special methods.
+    - How to define class methods in Python
+    - Two ways to define class attributes in Python
+    - How to define static and special methods
 
 * Inheritance
 ** UML components
@@ -245,6 +297,14 @@ is quite advanced.
   \centering
   \includegraphics[width=0.6\textwidth]{figures/diagram_inheritance}
 
+** UML components
+*** Inheritance in UML
+    - Represented by arrow with hollow head
+    - The arrow represents a /generalization/ relation.
+
+  \centering
+  \includegraphics[width=0.6\textwidth]{figures/diagram_inheritance}
+
 ** Inheritance
 *** Inheritance in Python
     - Basic syntax:
@@ -260,7 +320,7 @@ is quite advanced.
     
     \begin{alertblock}{Important}
     \texttt{\_\_init\_\_} function of child class must call \texttt{\_\_init\_\_} function
-    to ensure object is properly initialized.\footnote{Exceptions are classes that don't define
+    of base class to ensure object is properly initialized.\footnote{Exceptions are classes that don't define
      any attributes and therefore don't need to be initialized.}
 
     \end{alertblock}
@@ -291,13 +351,16 @@ is quite advanced.
 ** Inheritance
 *** Overriding
     - The =draw= method in the =DiagramComponent= class is
-      an abstract method.
+      an abstract method[fn:8].
     - An abstract method is a method that /must/ be overridden
       by the child classes.
       
 
   \centering
   \includegraphics[width=0.6\textwidth]{figures/diagram_inheritance}
+
+[fn:8] Illustrated by italic function name in UML diagram.
+
 
 ** Inheritance
 *** Polymorphism
@@ -314,9 +377,9 @@ is quite advanced.
       object.draw(canvas) # Draws an arrow
       #+END_SRC
 
-    - Python achieves polymorphism through /duck typing/[fn:8]
+    - Python achieves polymorphism through /duck typing/.[fn:9]
 
-[fn:8] "If it walks like a duck and it quacks like a duck, then it must be a duck"
+[fn:9] "If it walks like a duck and it quacks like a duck, then it must be a duck."
 
 ** Multiple inheritance
 *** Multiple inheritance
@@ -397,15 +460,15 @@ is quite advanced.
       Initializing B ...
       #+END_SRC
 
-    - =super()= linearized the class hierarchy and calls all functions in
-      sequence
+    - =super()= linearizes the class hierarchy and calls all functions in
+      sequence, so this works.
     - \textbf{But:} This becomes problematic when these functions take
       different parameters.
 
 ** Multiple inheritance
 
 *** Mixin classes
-    - A mixin class is a super class that only implements functionality and
+    - A mixin class is a super class that only implements functionality (no attributes) and
       can be easily added to a class.
 
       #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
@@ -428,8 +491,10 @@ is quite advanced.
 
 ** Summary
 *** What we have learned:
-    - How to reuse code using inheritance
-    - How to achieve polymorphism using inheritance
+    - Inheritance allows different objects to share common code
+    - How to achieve polymorphism using inheritance and overriding
+    - How to implement inheritance in Python
+    - The difficulties of multiple inheritance and when it is useful (Mixins)
     
 * Aggregation and composition
 ** UML components
@@ -443,9 +508,10 @@ is quite advanced.
 
 ** Composition
 *** Composition as abstraction
-    - Abstraction: Dealing with the level of detail that is most appropriate
-      to a given task
-    - Manually creating a node from a rectangle and text is complex:
+    - \textbf{Abstraction: Dealing with the level of detail that is most appropriate
+      to a given task}
+    - Manually creating a node from a rectangle and text is complex
+      and error prone:
       - Text must be placed correctly, both rectangle and text must
         be drawn on diagram.
     - =Node= class hides a way information (the rectangle and text) to
@@ -458,6 +524,14 @@ is quite advanced.
   \centering
   \includegraphics[width=0.7\textwidth]{figures/diagram_full}
 
+** Aggregation
+*** The aggregation relation
+    - Two objects are in an aggregation relation if one /contains/
+      the other but when their lifetimes are independent
+    - Example: A given node may appear in multiple diagrams.
+    - Difference to composition is mostly formal.
+  \centering
+  \includegraphics[width=0.7\textwidth]{figures/diagram_full}
 ** Exercise
    
    - Exercise 3 in exercise notebook
