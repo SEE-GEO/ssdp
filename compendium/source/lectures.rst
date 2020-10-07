@@ -86,5 +86,5 @@ the course lectures in PDF format.
 .. _ssdp_lecture_4_exercise: https://github.com/SEE-MOF/ssdp/raw/main/lectures/4/ssdp_lecture_4_exercise.pdf
 .. _ssdp_lecture_5: https://github.com/SEE-MOF/ssdp/raw/main/lectures/5/ssdp_lecture_5.pdf
 .. _ssdp_lecture_6: https://github.com/SEE-MOF/ssdp/raw/main/lectures/6/ssdp_lecture_6.pdf
-.. _ssdp_lecture_6_exercise: https://github.com/SEE-MOF/ssdp/main/lectures/6/ssdp_lecture_6_exercise.ipynb
-.. _ssdp_lecture_6_solution: https://github.com/SEE-MOF/ssdp/main/lectures/6/ssdp_lecture_6_solution.ipynb
+.. _ssdp_lecture_6_exercise: https://github.com/SEE-MOF/ssdp/blob/main/lectures/6/ssdp_lecture_6_exercise.ipynb
+.. _ssdp_lecture_6_solution: https://github.com/SEE-MOF/ssdp/blob/main/lectures/6/ssdp_lecture_6_solution.ipynb
