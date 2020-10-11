@@ -1,0 +1,52 @@
+#+TITLE: Scientific Software Development with Python
+#+SUBTITLE: Object oriented programming --- Part 2
+#+AUTHOR: Simon Pfreundschuh
+#+OPTIONS: H:2 toc:nil
+#+LaTeX_HEADER: \institute{Department of Space, Earth and Environment}
+#+LaTeX_HEADER: \setbeamerfont{title}{family=\sffamily, series=\bfseries, size=\LARGE}
+#+LATEX_HEADER: \usepackage[style=authoryear]{biblatex}
+#+LATEX_HEADER: \usepackage{siunitx}
+#+LaTeX_HEADER: \usetheme{chalmers}
+#+LATEX_HEADER: \usepackage{subcaption}
+#+LATEX_HEADER: \usepackage{amssymb}
+#+LATEX_HEADER: \usepackage{dirtree}
+#+LATEX_HEADER: \usemintedstyle{monokai}
+#+LATEX_HEADER: \usepackage{pifont}
+#+LATEX_HEADER: \definecolor{light}{HTML}{CCCCCC}
+#+LATEX_HEADER: \definecolor{dark}{HTML}{353535}
+#+LATEX_HEADER: \definecolor{source_file}{rgb}{0.82, 0.1, 0.26}
+#+LATEX_HEADER: \newcommand{\greencheck}{{\color{green}\ding{51}}}
+#+LATEX_HEADER: \newcommand{\redcross}{{\color{red}\ding{55}}}
+#+LATEX_HEADER: \newcommand{\question}{{\color{yellow}\textbf{???}}}
+#+LATEX_HEADER: \addbibresource{literature.bib}
+#+BEAMER_HEADER: \AtBeginSection[]{\begin{frame}<beamer>\frametitle{Agenda}\tableofcontents[currentsection]\end{frame}}
+
+* Overview
+
+** Part 2
+  \centering
+  \includegraphics[width=0.6\textwidth]{figures/dimensions_of_software_development_part_2}
+
+** Content
+*** This lecture  
+    - Specifying interfaces using abstract classes
+    - Common Python design patterns
+    - Procedural vs. object oriented programming
+
+* Drawing diagrams revisited
+
+** Improved design
+
+  \centering
+  \includegraphics[width=0.8\textwidth]{figures/diagram_full}
+
+** Abstract base classes
+
+** Exercise 1
+* Procedural vs. object oriented programming
+
+
+* Design patterns
+
+
+
