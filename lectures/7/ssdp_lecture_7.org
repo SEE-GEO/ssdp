@@ -35,16 +35,204 @@
 
 * Drawing diagrams revisited
 
-** Improved design
+** Design improvements
+
+*** Drawing diagrams
 
   \centering
-  \includegraphics[width=0.8\textwidth]{figures/diagram_full}
+  \includegraphics[width=0.6\textwidth]{figures/diagram_full}
+
+** Design improvements
+    1. =position= attribute of =DiagramComponent= class now represents a /relative position/
+      - This makes the attribute meaning full for components that are part of other components
+    2. The =Node= class was renamed to =RectangularNode= and made a subclass of =Rectangle=.
+    3. Additional abstract base class =Connectable= for components that can be connected
+      using arrows.
 
 ** Abstract base classes
 
+*** The dangers of duck typing
+    - Python's dynamic type system allows you to pass any
+      value as argument to a function.
+    
+    #+attr_latex: :options fontsize=\footnotesize, bgcolor=dark
+    #+BEGIN_SRC Python
+    diagram = Diagram()
+    node = Node((100, 100), (100, 100), "node")
+    diagram.add(node)   # Work as expected.
+    diagram.add("node") # Works as well.
+    diagram.draw()      # Ohoh ...
+    ...
+    #+END_SRC
+
+** Abstract base classes
+
+*** Solution
+    - Abstract base classes (ABC) allows specifying abstract 
+      class methods and properties, that a child class implement.
+    - Python will throw an error if a child class is instantiated
+      that does not implement an abstract method.
+    
+    #+attr_latex: :options fontsize=\footnotesize, bgcolor=dark
+    #+BEGIN_SRC Python
+    from abc import ABC, abstractmethod
+
+    class DiagramComponent(ABC):
+        """ ... """
+        @abstractmethod
+        def draw(self, canvas, offset=Coordinates(0, 0)):
+            """ ... """
+    #+END_SRC
+
+** Abstract base classes
+
+*** Example
+
+    #+attr_latex: :options fontsize=\footnotesize, bgcolor=dark
+    #+BEGIN_SRC Python
+    class A(DiagramComponent):
+        def draw(self, *args, **kwargs):
+            return 0
+
+    class B(Interface):
+        pass
+
+    a = A() # Works fine.
+    b = B() # Error: Doesn't implement draw method.
+    #+END_SRC
+
+** Abstract base classes
+*** Advantages
+    - Function can require a given interface by checking that an object
+      inherits from the abstract base class using =isinstance=:
+
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+    #+BEGIN_SRC Python
+    class Diagram:
+      ...
+      def add(self, component):
+          ...
+          if not isinstance(component, DiagramComponent):
+              raise TypeError("The given component does not implement"
+                              " the DiagramComponent interface.")
+          self.components.append(component)
+   #+END_SRC
+   - ABCs serve as documentation for other developers who may want to extend
+     your code.
+
+** Abstract base classes
+*** Some useful Python magic
+
+    #+attr_latex: :options fontsize=\footnotesize, bgcolor=dark
+    #+BEGIN_SRC Python
+    from abc import ABC, abstractmethod
+
+    class DiagramComponent(ABC):
+        ...
+
+        @classmethod
+        def __subclasshook__(cls, C):
+            if cls is DiagramComponent:
+                attributes = set(dir(C))
+                if (set(cls.__abstractmethods__) <= attributes and 
+                    set(cls.__abstractproperties__) <= attributes):
+                    return True
+            return NotImplemented
+    #+END_SRC
+
+
 ** Exercise 1
+
+   - Exercise 1 on exercise sheet
+   - Time: 5 minutes
+
+** Abstract base classes
+*** Solution
+
+    - =@classmethod= decorator makes method callable on the =DiagramComponent= class
+      with the =cls= parameter is set to the object's class
+    - =__subclasshook__= is used to determine whether a class is a subclass
+      of the ABC
+    - =set(dir(C))= creates a (unique) set of the method and attribute names of
+      the class =C=
+    - if statement checks whether abstract methods and properties of the ABC are
+      subsets of those.
+
+  \begin{alertblock}{}
+  With this mechanism classes can fulfill the interface defined by the \texttt{DiagramComponent}
+  ABC without explicitly inheriting from it.
+  \end{alertblock}
+
 * Procedural vs. object oriented programming
 
+** Exercise 2
+
+   - Exercise 2 on exercise sheet
+   - Time: 5 minutes
+
+** Procedural programming
+
+*** Procedural programming
+    - Code organized as functions operating on data types
+    - =C= and =Fortran= popular example of procedural programming languages.
+
+    #+attr_latex: :options fontsize=\footnotesize, bgcolor=dark
+    #+BEGIN_SRC Python
+    from diagrams.procedural import create_node, draw
+    node_1 = create_node((50, 50), (100, 100), "node 1")
+    print(type(node_1)) # Prints: dict
+    draw(node_1)
+    #+END_SRC
+
+** User perspective
+
+*** Procedural API
+    #+attr_latex: :options fontsize=\footnotesize, bgcolor=dark
+    #+BEGIN_SRC Python
+    node_1 = create_node((50, 50), (100, 100), "node 1")
+    node_2 = create_node((300, 50), (100, 100), "node 2", "blue")
+    arrow = create_arrow(right(node_1),
+                        left(node_2))
+
+    create_canvas(450, 200)
+    draw(node_1)
+    draw(node_2)
+    draw(arrow)
+    show()
+    #+END_SRC
+
+** User perspective
+
+*** Object oriented API
+
+    #+attr_latex: :options fontsize=\footnotesize, bgcolor=dark
+    #+BEGIN_SRC Python
+    from diagrams.object_oriented import (Diagram, Node, Arrow,
+                                          Coordinates, Color)
+
+    node_1 = Node((50, 50), (100, 100), "Node 1", Color.Red())
+    node_2 = Node((200, 50), (100, 100), "Node 2", Color.Blue())
+    arrow = Arrow(node_1.right, node_2.left)
+
+    diagram = Diagram(350, 200)
+    diagram.add(node_1)
+    diagram.add(node_2)
+    diagram.add(arrow)
+    diagram.draw()
+    #+END_SRC
+
+** User perspective
+
+*** Differences
+    - Usage is fairly similar
+    - Color handling in OO interface less error prone
+
+  \vspace{0.5cm}
+
+  \begin{alertblock}{Note}
+  Similarity between class methods and plain functions taking data structure
+  as first arguments.
+  \end{alertblock}
 
 * Design patterns
 
