@@ -1,0 +1,68 @@
+#+TITLE:       Object oriented programming --- Part 2
+#+AUTHOR:      Simon Pfreunschuh
+#+EMAIL:       simon.pfreundschuh@chalmers.se
+#+OPTIONS: toc:nil
+#+LaTeX_HEADER: \usepackage{natbib}
+#+LaTeX_HEADER: \usepackage{siunitx}
+#+LaTeX_HEADER: \usepackage{subcaption}
+#+LaTeX_HEADER: \usepackage{todonotes}
+#+LATEX_HEADER: \usepackage{dirtree}
+#+LATEX_HEADER: \usemintedstyle{monokai}
+#+LaTeX_HEADER: \DeclareMathOperator\arctanh{arctanh}
+#+LATEX_HEADER: \definecolor{light}{HTML}{CCCCCC}
+#+LATEX_HEADER: \definecolor{dark}{HTML}{353535}
+
+
+* Understanding =__subclasshook__=
+
+  - Use the Python documentation to understand what's the
+    purpose of the code shown below. A good starting point
+    is the official documentation of the [[https://docs.python.org/3/library/abc.html#abc.ABCMeta.__subclasshook__][=abc= module.]].
+
+    #+attr_latex: :options fontsize=\footnotesize, bgcolor=dark, linenos
+    #+BEGIN_SRC Python
+    from abc import ABC, abstractmethod
+
+    class DiagramComponent(ABC):
+        ...
+
+        @classmethod
+        def __subclasshook__(cls, C):
+            if cls is DiagramComponent:
+                attributes = set(dir(C))
+                if (set(cls.__abstractmethods__) <= attributes and 
+                    set(cls.__abstractproperties__) <= attributes):
+                    return True
+            return NotImplemented
+    #+END_SRC
+
+  - Select a presenter in your breakout room that can explain the functionality
+    implemented in each line.
+
+* Running the diagram examples
+  
+  - Clone the code of the =diagrams= example package from =https://github.com/simonpf/diagrams=. The
+    =diagrams= package is an improved implementation of the diagram module we developed during last lecture.
+    This time it has both an object oriented and a procedural API.
+  - Install the package using =pip=.
+  - The =examples= folder contains two examples of how to use the two different APIs in the
+    =procedural.py= and =object_oriented.py= files. Run both example files.
+  - Open the script in an editor and compare the two APIs.
+
+* Adding a new component to the OO API.
+  - Implement the =Circle= component class shown in the UML diagram below
+  - To draw a circle you can use the =create_oval= member method of the =tkinter= canvas:
+
+    #+attr_latex: :options fontsize=\footnotesize, bgcolor=dark, linenos
+    #+BEGIN_SRC Python
+    canvas.draw_oval(x_1, y_1, x_2, y_2, color="...")
+    #+END_SRC
+    where (=x_1=, =y_1=) and (=x_2=, =y_2=) are the upper left and lower right
+    corners of the bounding box of the circle.
+  - To test your implementation run the =object_oriented_circle.py= script. If it works
+    it should draw two circles connected by an arrow.
+
+* Adding a new component to the procedural API.
+  - Add the functionality to draw a circle also to the procedural API.
+
+  

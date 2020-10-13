@@ -33,6 +33,17 @@
     - Common Python design patterns
     - Procedural vs. object oriented programming
 
+** Recap
+*** Object oriented design
+    - Modeling framework based on describing classes of
+      objects and their interactions/relationships
+    - Relationships: Inheritance, aggregation, composition
+
+*** Benefits
+    - Avoiding code duplication (inheritance)
+    - Reducing complexity through abstraction (inheritance, composition)
+    - Modular code through encapsulation and interfaces (classes)
+   
 * Drawing diagrams revisited
 
 ** Design improvements
@@ -43,11 +54,51 @@
   \includegraphics[width=0.6\textwidth]{figures/diagram_full}
 
 ** Design improvements
-    1. =position= attribute of =DiagramComponent= class now represents a /relative position/
-      - This makes the attribute meaning full for components that are part of other components
-    2. The =Node= class was renamed to =RectangularNode= and made a subclass of =Rectangle=.
-    3. Additional abstract base class =Connectable= for components that can be connected
+    1. Split =DiagramComponent= into two classes:
+       - =DiagramComponent= now only specifies interface for =Diagram= class (interface)
+       - =ComponentBase= contains basic properties of component classes but they are not
+         required for the diagram interface.
+    2. =position= attribute of =DiagramComponent= class now represents a /relative position/
+       - This makes the attribute meaning full for components that are part of other components
+    3. The =Node= class was renamed to =RectangularNode= and made a subclass of =Rectangle=.
+    4. Additional abstract base class =Connectable= for components that can be connected
       using arrows.
+
+** Some notes on design
+
+*** The aims of object oriented design
+    - Handling complexity by breaking tasks down into different
+      levels of abstraction
+      - Note how this is the basis of all technological
+        progress
+    - A modular code base that allows for change, i.e. keep interdependencies
+      to a minimum
+
+*** Problems of object oriented design
+    - If done badly, your code will be unnecessarily complex
+
+
+** Different roles of classes
+  
+*** left                                                              :BMCOL:
+    :PROPERTIES:
+    :BEAMER_col: 0.5
+    :END:
+    \textbf{Defining interfaces (red)}
+     - Special case: abstract classes (classes that cannot be instantiated)
+     - Separation of concern between different parts of the
+       code
+
+     \textbf{Abstraction (blue)}
+     - Break down tasks into different level of abstraction
+     - Code reuse (DRY-principle)
+
+*** right                                                             :BMCOL:
+    :PROPERTIES:
+    :BEAMER_col: 0.5
+    :END:
+    \centering
+    \includegraphics[width=\textwidth]{figures/diagram_full_colors}
 
 ** Abstract base classes
 
@@ -58,7 +109,7 @@
     #+attr_latex: :options fontsize=\footnotesize, bgcolor=dark
     #+BEGIN_SRC Python
     diagram = Diagram()
-    node = Node((100, 100), (100, 100), "node")
+    node = RectangularNode((100, 100), (100, 100), "Node")
     diagram.add(node)   # Work as expected.
     diagram.add("node") # Works as well.
     diagram.draw()      # Ohoh ...
@@ -174,7 +225,7 @@
 
 *** Procedural programming
     - Code organized as functions operating on data types
-    - =C= and =Fortran= popular example of procedural programming languages.
+    - Example languages: =C= and =Fortran=
 
     #+attr_latex: :options fontsize=\footnotesize, bgcolor=dark
     #+BEGIN_SRC Python
@@ -227,12 +278,71 @@
     - Usage is fairly similar
     - Color handling in OO interface less error prone
 
-  \vspace{0.5cm}
+*** Similarities
+    - The procedural code /mimics/ the object oriented code
+    - \textbf{Note:} Conceptual similarity between a function
+       taking the object it acts upon as first argument and
+       a class method taking =self= as first argument.
 
-  \begin{alertblock}{Note}
-  Similarity between class methods and plain functions taking data structure
-  as first arguments.
-  \end{alertblock}
+** User perspective
+
+*** OO programming and domain specific languages (DSL)
+    #+attr_latex: :options fontsize=\footnotesize, bgcolor=dark
+    #+BEGIN_SRC Python
+    from diagrams.object_oriented import Color
+
+    red = Color.red()
+    blue = Color.blue()
+    purple = red + blue # Mix colors.
+    #+END_SRC
+
+    - Object oriented programming allows us to add new semantic layers to
+      code
+    - With the right design our code essentially becomes an (embedded) domain
+      specific language
+
+** Developer perspective
+*** Adding a new diagram component
+    \includegraphics[width=0.6\textwidth]{figures/diagram_full_colors}
+
+** Exercise 3
+
+   - Exercise 3 on exercise sheet
+   - Time: 20 minutes
+
+
+** Developer perspective
+*** Object oriented API
+
+    - Required changes:
+      - Add new class to =diagrams/object_oriented/components.py=
+      - Minor change (re-export) in =diagrams.object_oriented.__init__.py=
+
+    #+attr_latex: :options fontsize=\footnotesize, bgcolor=light, style=manni
+    #+BEGIN_SRC Python
+    $ git commit
+    2 files changed, 119 insertions(+), 2 deletions(-)
+    #+END_SRC
+
+
+** Exercise 4
+
+   - Exercise 5 on exercise sheet
+   - Time: 20 minutes
+
+** Developer perspective
+*** Procedural API
+
+    - Required changes:
+      - Added new function to create circle
+      - Additional changes in 9 functions:
+        =draw= and the 8 anchor functions.
+
+    #+attr_latex: :options fontsize=\footnotesize, bgcolor=light, style=manni
+    #+BEGIN_SRC Python
+    $ git commit
+    3 files changed, 69 insertions(+), 2 deletions(-)
+    #+END_SRC
 
 * Design patterns
 
