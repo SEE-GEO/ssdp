@@ -68,28 +68,31 @@
 
 *** The aims of object oriented design
     - Handling complexity by breaking tasks down into different
-      levels of abstraction
+      levels of abstraction[fn:1]
       - Note how this is the basis of all technological
         progress
     - A modular code base that allows for change, i.e. keep interdependencies
-      to a minimum
-
+      to a minimum (/shy classes/)
+    
 *** Problems of object oriented design
     - If done badly, your code will be unnecessarily complex
 
+[fn:1] Although this can be achieved with functions alone.
 
 ** Different roles of classes
-  
+   
 *** left                                                              :BMCOL:
     :PROPERTIES:
     :BEAMER_col: 0.5
     :END:
-    \textbf{Defining interfaces (red)}
+    \textbf{Defining interfaces (blue)}
      - Special case: abstract classes (classes that cannot be instantiated)
      - Separation of concern between different parts of the
        code
 
-     \textbf{Abstraction (blue)}
+     \textbf{Abstraction (red)}
+     - Encapsulation and information hiding: Expose only
+       required information
      - Break down tasks into different level of abstraction
      - Code reuse (DRY-principle)
 
@@ -100,6 +103,7 @@
     \centering
     \includegraphics[width=\textwidth]{figures/diagram_full_colors}
 
+* Abstract base classes
 ** Abstract base classes
 
 *** The dangers of duck typing
@@ -120,7 +124,7 @@
 
 *** Solution
     - Abstract base classes (ABC) allows specifying abstract 
-      class methods and properties, that a child class implement.
+      class methods and properties, that a child class has to implement.
     - Python will throw an error if a child class is instantiated
       that does not implement an abstract method.
     
@@ -154,7 +158,7 @@
 
 ** Abstract base classes
 *** Advantages
-    - Function can require a given interface by checking that an object
+    - User functions can require a given interface by checking that an object
       inherits from the abstract base class using =isinstance=:
 
     #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
@@ -214,12 +218,29 @@
   ABC without explicitly inheriting from it.
   \end{alertblock}
 
+** Abstract base classes
+*** Example
+
+    #+attr_latex: :options fontsize=\footnotesize, bgcolor=dark
+    #+BEGIN_SRC Python
+    class A(DiagramComponent):
+        def draw(self, *args, **kwargs):
+            return 0
+
+    class B:
+        def draw(self, *args, **kwargs):
+            return 0
+
+    print(isinstance(DiagramComponent, A()) # Prints: True
+    print(isinstance(DiagramComponent, B()) # Prints: True
+    #+END_SRC
+
 * Procedural vs. object oriented programming
 
 ** Exercise 2
 
    - Exercise 2 on exercise sheet
-   - Time: 5 minutes
+   - Time: 10 minutes
 
 ** Procedural programming
 
@@ -251,6 +272,7 @@
     draw(arrow)
     show()
     #+END_SRC
+
 
 ** User perspective
 
@@ -301,9 +323,51 @@
     - With the right design our code essentially becomes an (embedded) domain
       specific language
 
-** Developer perspective
+
+** Code structure
+
+*** Procedural API
+    \centering
+    \includegraphics[width=\textwidth]{figures/procedural_api_overview}
+
+** Code structure
+
+   - Since Python does not support overloading[fn:2], the argument types need to
+     be checked manually:
+
+    #+attr_latex: :options fontsize=\tiny, bgcolor=dark
+    #+BEGIN_SRC Python
+    def draw(component):
+        """
+        Draw component on the current canvas.
+
+        Args:
+            component(``dict``): A dictionary representing the component
+                to be drawn.
+        """
+        component_type = component["type"]
+        if component_type == ComponentType.RECTANGLE:
+            draw_rectangle(component)
+        elif component_type == ComponentType.TEXT:
+            draw_text(component)
+        elif component_type == ComponentType.ARROW:
+            draw_arrow(component)
+        elif component_type == ComponentType.RECTANGULAR_NODE:
+            draw_rectangular_node(component)
+    #+END_SRC
+
+[fn:2] Calling different function based on argument types.
+
+** Code structure
+
+*** Object oriented API
+    \centering
+    \includegraphics[width=\textwidth]{figures/oo_api_overview}
+
+** Case study
 *** Adding a new diagram component
-    \includegraphics[width=0.6\textwidth]{figures/diagram_full_colors}
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/diagram_circle}
 
 ** Exercise 3
 
@@ -311,18 +375,14 @@
    - Time: 20 minutes
 
 
-** Developer perspective
+** Case stude
 *** Object oriented API
 
     - Required changes:
-      - Add new class to =diagrams/object_oriented/components.py=
-      - Minor change (re-export) in =diagrams.object_oriented.__init__.py=
+      - @@latex:{\color{green}Add}@@ new class to =diagrams/object_oriented/components.py= (green)
 
-    #+attr_latex: :options fontsize=\footnotesize, bgcolor=light, style=manni
-    #+BEGIN_SRC Python
-    $ git commit
-    2 files changed, 119 insertions(+), 2 deletions(-)
-    #+END_SRC
+    \centering
+    \includegraphics[width=\textwidth]{figures/oo_api_overview_changes}
 
 
 ** Exercise 4
@@ -330,21 +390,39 @@
    - Exercise 5 on exercise sheet
    - Time: 20 minutes
 
-** Developer perspective
+** Case study
 *** Procedural API
 
     - Required changes:
-      - Added new function to create circle
-      - Additional changes in 9 functions:
+      - @@latex:{\color{green}Add}@@ new function to create circle
+      - @@latex:{\color{red}Additional changes}@@ in 9 functions.
         =draw= and the 8 anchor functions.
 
-    #+attr_latex: :options fontsize=\footnotesize, bgcolor=light, style=manni
-    #+BEGIN_SRC Python
-    $ git commit
-    3 files changed, 69 insertions(+), 2 deletions(-)
-    #+END_SRC
+    \centering
+    \includegraphics[width=\textwidth]{figures/procedural_api_overview_changes}
 
-* Design patterns
-
-
-
+** Case study
+*** OO vs. procedural:
+    - Substantially less complex changes required in OO design.
+    - \textbf{But}: This depends on the kind of change. Defining a new function on
+      diagram components is easier in the procedural paradigm.
+    - In general: OO design makes extending existing functionality easy. Procedural
+      design makes adding new functionality easy.
+** Summary
+*** What we have learned today:
+    - Using ABCs in Python to define generic interfaces
+    - Advantages of object oriented design:
+      - More expressive code (DSL)
+      - Keep it DRY, keep it shy: Avoiding code duplication and interdependencies
+        leads to modular code that can be easily changed
+    - Procedural vs. object oriented:
+      - Conceptual similarity between both approaches
+      - OO design makes it easy to extend existing functionality
+      - Procedural design makes it easy to add new functionality
+      
+** Some last words
+*** Design is hard
+    - It's not always black and white: Not everything must always be a
+      class. Not everything must always be a function.
+    - The best design is of course the one that works for you
+    - \textbf{But}: Good design usually pays of in the long run

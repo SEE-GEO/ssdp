@@ -60,23 +60,25 @@ the course lectures in PDF format.
   +------------+--------------------------------------------------+--------------------------------------------------------------------------+
   | 2020-10-07 | Object oriented programming with Python, part 1  | ssdp_lecture_6_, ssdp_lecture_6_exercise_, ssdp_lecture_6_solution_      |
   +------------+--------------------------------------------------+--------------------------------------------------------------------------+
-  | 2020-10-14 | Design patterns with Python                      | ssdp_lecture_5                                                           | 
+  | 2020-10-14 | Object oriented programming with Python, part 2  | ssdp_lecture_7_, ssdp_lecture_7_exercise_                                |
   +------------+--------------------------------------------------+--------------------------------------------------------------------------+
-  | 2020-10-21 | The Python standard library                      | ssdp_lecture_6                                                           |
+  | 2020-10-21 | Design patterns                                  | ssdp_lecture_8                                                           |
   +------------+--------------------------------------------------+--------------------------------------------------------------------------+
-  | 2020-10-28 | Advanced Python concepts                         | ssdp_lecture_7                                                           |
+  | 2020-10-28 | The Python standard library                      | ssdp_lecture_9                                                           |
   +------------+--------------------------------------------------+--------------------------------------------------------------------------+
-  | 2020-11-04 | **2nd Retrospective**: Results from first sprint                                                                            |
+  | 2020-11-04 | Advanced Python concepts                         | ssdp_lecture_10                                                          |
+  +------------+--------------------------------------------------+--------------------------------------------------------------------------+
+  | 2020-11-11 | **2nd Retrospective**: Results from first sprint                                                                            |
   +------------+--------------------------------------------------+--------------------------------------------------------------------------+
   | **Part 3**                                                                                                                               |
   +------------+--------------------------------------------------+--------------------------------------------------------------------------+
-  | 2020-11-11 | High-performance computing with Python           | ssdp_lecture_8                                                           |
+  | 2020-11-18 | High-performance computing with Python           | ssdp_lecture_8                                                           |
   +------------+--------------------------------------------------+--------------------------------------------------------------------------+
-  | 2020-11-18 | Big data processing with Python                  | ssdp_lecture_9                                                           | 
+  | 2020-11-25 | Big data processing with Python                  | ssdp_lecture_9                                                           | 
   +------------+--------------------------------------------------+--------------------------------------------------------------------------+
-  | 2020-11-25 | Scientific visualization with Python             | ssdp_lecture_10                                                          |
+  | 2020-12-02 | Scientific visualization with Python             | ssdp_lecture_10                                                          |
   +------------+--------------------------------------------------+--------------------------------------------------------------------------+
-  | 2020-12-02 | **3rd Retrospective**: Results from second sprint                                                                           | 
+  | 2020-12-09 | **3rd Retrospective**: Results from second sprint                                                                           | 
   +------------+--------------------------------------------------+--------------------------------------------------------------------------+
 
 .. _ssdp_lecture_1: https://github.com/SEE-MOF/ssdp/raw/main/lectures/1/ssdp_lecture_1.pdf
@@ -91,3 +93,5 @@ the course lectures in PDF format.
 .. _ssdp_lecture_6: https://github.com/SEE-MOF/ssdp/raw/main/lectures/6/ssdp_lecture_6.pdf
 .. _ssdp_lecture_6_exercise: https://github.com/SEE-MOF/ssdp/blob/main/lectures/6/ssdp_lecture_6_exercise.ipynb
 .. _ssdp_lecture_6_solution: https://github.com/SEE-MOF/ssdp/blob/main/lectures/6/ssdp_lecture_6_solution.ipynb
+.. _ssdp_lecture_7:  https://github.com/SEE-MOF/ssdp/raw/main/lectures/7/ssdp_lecture_7.pdf
+.. _ssdp_lecture_7_exercise:  https://github.com/SEE-MOF/ssdp/raw/main/lectures/7/ssdp_lecture_7_exercise.pdf

@@ -17,7 +17,8 @@
 
   - Use the Python documentation to understand what's the
     purpose of the code shown below. A good starting point
-    is the official documentation of the [[https://docs.python.org/3/library/abc.html#abc.ABCMeta.__subclasshook__][=abc= module.]].
+    is the official documentation of the [[https://docs.python.org/3/library/abc.html#abc.ABCMeta.__subclasshook__][=abc= module]] or the
+    =help= function of the =IPython= interpreter.
 
     #+attr_latex: :options fontsize=\footnotesize, bgcolor=dark, linenos
     #+BEGIN_SRC Python
@@ -41,13 +42,13 @@
 
 * Running the diagram examples
   
-  - Clone the code of the =diagrams= example package from =https://github.com/simonpf/diagrams=. The
-    =diagrams= package is an improved implementation of the diagram module we developed during last lecture.
-    This time it has both an object oriented and a procedural API.
-  - Install the package using =pip=.
+  - Clone the code of the =diagrams= example package from
+    [[https://github.com/simonpf/diagrams/][=https://github.com/simonpf/diagrams=]]. The
+    =diagrams= package is an improved implementation of the diagram module we worked
+    with during last lecture. This time it has both an object oriented and a procedural API.
   - The =examples= folder contains two examples of how to use the two different APIs in the
     =procedural.py= and =object_oriented.py= files. Run both example files.
-  - Open the script in an editor and compare the two APIs.
+  - Open the scripts in an editor and compare the two APIs.
 
 * Adding a new component to the OO API.
   - Implement the =Circle= component class shown in the UML diagram below
@@ -61,6 +62,12 @@
     corners of the bounding box of the circle.
   - To test your implementation run the =object_oriented_circle.py= script. If it works
     it should draw two circles connected by an arrow.
+
+    \begin{figure}
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/diagram_circle}
+    \caption{UML diagram of =diagrams= package with the new =Circle= class.}
+    \end{figure}
 
 * Adding a new component to the procedural API.
   - Add the functionality to draw a circle also to the procedural API.
