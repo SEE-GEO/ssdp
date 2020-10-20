@@ -1,0 +1,652 @@
+#+TITLE: Scientific Software Development with Python
+#+SUBTITLE: Design patterns
+#+AUTHOR: Simon Pfreundschuh
+#+OPTIONS: H:2 toc:nil
+#+LaTeX_HEADER: \institute{Department of Space, Earth and Environment}
+#+LaTeX_HEADER: \setbeamerfont{title}{family=\sffamily, series=\bfseries, size=\LARGE}
+#+LATEX_HEADER: \usepackage[style=authoryear]{biblatex}
+#+LATEX_HEADER: \usepackage{siunitx}
+#+LaTeX_HEADER: \usetheme{chalmers}
+#+LATEX_HEADER: \usepackage{subcaption}
+#+LATEX_HEADER: \usepackage{amssymb}
+#+LATEX_HEADER: \usepackage{dirtree}
+#+LATEX_HEADER: \usemintedstyle{monokai}
+#+LATEX_HEADER: \usepackage{pifont}
+#+LATEX_HEADER: \definecolor{light}{HTML}{CCCCCC}
+#+LATEX_HEADER: \definecolor{dark}{HTML}{353535}
+#+LATEX_HEADER: \definecolor{source_file}{rgb}{0.82, 0.1, 0.26}
+#+LATEX_HEADER: \newcommand{\greencheck}{{\color{green}\ding{51}}}
+#+LATEX_HEADER: \newcommand{\redcross}{{\color{red}\ding{55}}}
+#+LATEX_HEADER: \newcommand{\question}{{\color{yellow}\textbf{???}}}
+#+LATEX_HEADER: \addbibresource{literature.bib}
+#+BEAMER_HEADER: \AtBeginSection[]{\begin{frame}<beamer>\frametitle{Agenda}\tableofcontents[currentsection]\end{frame}}
+
+* Overview
+
+** Part 2
+  \centering
+  \includegraphics[width=0.6\textwidth]{figures/dimensions_of_software_development_part_2}
+
+
+** Content
+*** This lecture  
+    - Object oriented design patterns:
+      - General description
+      - Implementation in Python
+
+** Object oriented design
+*** Object oriented design
+    - Modeling the real world using classes and  their relations
+      to each other
+    - Keep it dry, keep it shy:
+      - Every class should have a single, unique responsibility
+      - Classes are decoupled from each other by defining interface
+    - Example: The =DiagramComponent= interface from last lecture
+
+  \vspace{0.5cm}
+  \centering
+  \includegraphics[width=0.8\textwidth]{figures/protocol_example}
+      
+** Design patterns
+
+*** Design patterns
+    - Generalized, object-oriented solution for common
+      design problems
+    - Motivation: Create a common language to solve reoccurring
+      problems in software design
+
+* The Iterator pattern
+
+** The Iterator pattern
+
+*** Iterators and iterables
+   - An \textbf{iterator} is an object that implements a loop over a sequence of
+     objects
+   - An \textbf{iterable} is an object that provides access to a sequence
+     of objects to iterate over
+
+*** UML Diagram
+  \vspace{0.5cm}
+  \centering
+  \includegraphics[width=0.6\textwidth]{figures/iterator_uml}
+
+** The Iterator pattern
+
+*** =Iterable=
+    - Interface for container objects that provide access to a sequence
+      of objects.
+    - ABC (standard library): =collectaion.abc.Iterable=
+    - Required class method: =__iter__=
+      - Should return /iterator object/.
+  
+** The Iterator pattern
+*** =Iterator=
+    - General protocol for /iterators/ that implement the looping over
+      object in a collection.
+    - ABC (standard library): =collections.abc.Iterator=
+    - Required class methods:
+       - =__next__=: Should return next object in collection or
+         =StopIteration= when exhausted
+       - =__iter__=: Should return iterator object itself
+  
+** The Iterator pattern
+
+*** Iterating over an iterator (the verbose way)
+    - The iterator protocol defines a generic way to loop over the
+      elements of a container:
+
+    #+attr_latex: :options fontsize=\footnotesize, bgcolor=dark
+    #+BEGIN_SRC Python
+    iterator = iterable.__iter__()
+    while True:
+        try:
+            item = iterator.__next__()
+            item.do_something()
+        except StopIteration:
+            break
+    #+END_SRC 
+    - Instead of the special member funcs \texttt{\_\_iter\_\_} and \texttt{\_\_next\_\_}, it is also possible to use \texttt{iter(iterable)} and \texttt{next(iterator)} builtin functions.
+
+** The Iterator pattern
+
+*** Iterating over an iterator (the Pythonic way)
+    - The iterator pattern is so ubiquitous that it has /language-level support/
+      in Python:
+
+    #+attr_latex: :options fontsize=\footnotesize, bgcolor=dark
+    #+BEGIN_SRC Python
+    for item in iterable:
+        item.do_something()
+    #+END_SRC
+
+    \vspace{0.5cm}
+    \begin{alertblock}{}
+    By implementing the \textbf{iterator protocol} you can use your own classes
+    in Python for loops.
+    \end{alertblock}
+    
+
+** The Iterator pattern
+
+*** From iterators to generators
+    - The iterator pattern hides away the details of element
+      storage from the user that consumes its elements.
+    - In some cases it can be desirable to /not store the elements
+      at all/:
+
+    #+attr_latex: :options fontsize=\tiny, bgcolor=dark
+    #+BEGIN_SRC Python
+    class Squares:
+        def __init__(self, start, stop):
+            self.value = start
+            self.stop = stop
+
+        def __iter__(self):
+            return self
+  
+        def __next__(self):
+            if self.value >= self.stop:
+                raise StopIteration()
+            square = self.value ** 2
+            self.value += 1
+            return square
+    #+END_SRC
+            
+** Generators
+*** Generator functions
+    - Python provides special syntax to simplify the implementation of generators:
+      
+    #+attr_latex: :options fontsize=\footnotesize, bgcolor=dark
+    #+BEGIN_SRC Python
+    def squares(start, stop):
+        for value in range(start, stop):
+            yield value ** 2
+
+    print(type(squares(0, 4))  # Prints: Generator
+    print(list(squares(0, 4))) # Prints: [1, 4, 9, 16]
+    #+END_SRC
+
+** Exercise
+   
+   - Exercise 1 a, b
+   - Time: 15 minutes
+
+** Iterators and generators
+   
+*** Conclusions from exercise
+
+   - Generators can help to reduce the memory footprint of sequences that
+     are consumed /directly/
+   - The =yield= keyword greatly simplifies the implementation of
+     both iterators and generators.
+
+   \centering
+  \includegraphics[width=0.6\textwidth]{figures/memory_used}
+
+** Comprehensions
+*** Comprehensions
+    - Comprehension are a special language construct that simplifies generating
+      or transforming of sequences of elements
+
+*** List comprehension:
+      
+      \vspace{-0.3cm}
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+    #+BEGIN_SRC Python
+    # List comprehension
+    squares = [value ** 2 for value in range(1, 5)]
+    print(type(squares))           # Prints: list
+    #+END_SRC
+
+** Comprehensions
+
+*** Generator expression:
+    - By using parantheses =(...)= instead of brackets =[...]= 
+      Python creates a generator object instead of a list directly:
+
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+    #+BEGIN_SRC Python
+    # Generator expression
+    squares_generator = (value ** 2 for value in range(1, 5))
+    print(type(squares_generator)) # Prints: Generator
+    #+END_SRC
+
+** Comprehensions
+
+*** Set and dictionary comprehension
+
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+    #+BEGIN_SRC Python
+    # Set comprehension
+    squares_set = {value ** 2 for value in range(1, 5)}
+    print(type(squares_set))       # Prints: set
+
+    # Dict comprehension
+    squares_dict = {value: value ** 2 for value in range(1, 5)}
+    print(type(squares_dict))      # Prints: dict
+    #+END_SRC
+      
+** Exercise
+   
+   - Exercise 2
+   - Time: 10 minutes
+
+   
+** Comprehensions
+*** Conclusions from exercise
+
+   - Comprehensions are faster than explicit for loops
+   - Lists are highly optimized and much faster than
+     custom iterators
+
+*** Some words of caution
+    - Don't try to optimize a certain part of your code before you don't know
+      that it is critical.[fn:1]
+    - Python does some optimization of =*.py= files so results from notebook
+      may not be fully representative.
+
+[fn:1] "Premature optimization is the root of all evil [...]." --- Donal Knuth
+
+* The Decorator pattern
+** The Decorator pattern
+*** The problem
+    - Want to dynamically modify the behavior of objects
+*** The design pattern
+    \vspace{0.5cm}
+    \centering
+    \includegraphics[width=0.4\textwidth]{figures/decorator}
+
+** The Decorator pattern
+*** Principle
+    - Define /wrapper/ class (=Decorator1=) that delegates the core
+      functionality to =Core= class but extends its functionality as
+      desired.
+
+*** The design pattern
+    \vspace{0.5cm}
+    \centering
+    \includegraphics[width=0.4\textwidth]{figures/decorator}
+   
+** The Decorator pattern
+
+*** A simple example
+
+    #+attr_latex: :options fontsize=\tiny, bgcolor=dark
+    #+BEGIN_SRC Python
+    from abc import ABC, abstractmethod
+
+    class Greeter(ABC):
+        @abstractmethod
+        def greeting(self):
+            pass
+
+    class English(Greeter):
+        def greeting(self):
+            return "hi"
+
+    class Swedish(Greeter):
+        def greeting(self):
+            return "hej"
+
+    class Scream(Greeter):
+        def __init__(self, greeter):
+            self.greeter = greeter
+
+        def greeting(self):
+            return self.greeter.greeting().upper() + "!!!"
+
+    print(Scream(English()).greeting()) # Prints: HI!!!
+    print(Scream(Swedish()).greeting()) # Prints: HEJ?!!!
+    #+END_SRC
+
+** The Decorator pattern
+
+*** A simple example
+    - The functionality can easily be extended and combined:
+
+    #+attr_latex: :options fontsize=\tiny, bgcolor=dark
+    #+BEGIN_SRC Python
+
+    class Question(Greeter):
+        def __init__(self, greeter):
+            self.greeter = greeter
+
+        def greeting(self):
+            return self.greeter.greeting() + "????"
+
+    print(Question(Scream(Swedish())).greeting()) # Prints: HEJ?!!!
+    #+END_SRC
+
+** The Decorator pattern
+*** Taking it further
+    - Python has /first-class functions/, i.e. functions are themselves
+      objects
+    - Thus, we can generalize the Decorator pattern to function objects:
+
+
+    #+attr_latex: :options fontsize=\tiny, bgcolor=dark
+    #+BEGIN_SRC Python
+    class LogDecorator:
+        def __init__(self, function):
+            self.function = function
+
+        def __call__(self, *args, **kwargs):
+            print(f"Calling {self.function.__name__}.")
+            return self.function(*args, **kwargs)
+
+    logged_print = LogDecorator(print)
+    logged_print("hi") # Prints: Calling print. hi.
+    #+END_SRC
+
+** The Decorator pattern
+*** ... and further
+    - This can be simplified using the closure to
+      store the function data to log:
+
+    #+attr_latex: :options fontsize=\tiny, bgcolor=dark
+    #+BEGIN_SRC Python
+    def log_decorator(function):
+        def logger(*args, **kwargs):
+            print(f"Calling {function.__name__}.")
+            function(*args, **kwargs)
+        return logger
+
+    logged_print = log_decorator(print)
+    logged_print("hi") # Prints: Calling print. hi.
+    #+END_SRC
+** The Decorator pattern
+*** Wait a minute ...
+
+    - \textbf{Closure of a function}: The variables defined in the scopes
+      surrounding the function definition.
+
+   \vspace{0.5cm}
+   \begin{alertblock}{}
+    When a function is defined within another function, the local variables
+    of the enclosing function are stored in the closure of the nested
+    function
+    \end{alertblock}
+
+    #+attr_latex: :options fontsize=\footnotesize, bgcolor=dark
+    #+BEGIN_SRC Python
+    def say_something_factory(something):
+        def say_something():
+            print(something)
+        return say_something
+
+    say_something = say_something_factory("Hi from the closure.")
+    say_something() # Prints: "Hi from the closure."
+    #+END_SRC
+
+
+** The Decorator pattern
+*** Decorators in Python
+    - Python provides the =@decorator= specieal syntax to apply
+      decorators to functions (and classes)
+      
+    #+attr_latex: :options fontsize=\footnotesize, bgcolor=dark
+    #+BEGIN_SRC Python
+    @log_decorator
+    def my_print(what):
+        print(what)
+        
+    my_print("hi") # Prints: Calling print. hi.
+    #+END_SRC
+
+    - This is just /syntactic sugar/ for:
+    #+attr_latex: :options fontsize=\footnotesize, bgcolor=dark
+    #+BEGIN_SRC Python
+    my_print = log_decorator(my_print)
+    #+END_SRC
+
+* The Strategy pattern
+** The Strategy pattern
+*** The problem
+    - Let user of a class choose the specific algorithm
+      used in a computation
+
+*** The design pattern
+    \vspace{0.5cm}
+    \centering
+    \includegraphics[width=0.4\textwidth]{figures/strategy}
+
+** The Strategy pattern
+*** Example
+    - Reducing a list of numbers
+
+    #+attr_latex: :options fontsize=\tiny, bgcolor=dark
+    #+BEGIN_SRC Python
+    class Reduction:
+        def __init__(self, list, strategy):
+           self.list = list
+           self.strategy = strategy
+
+        def compute(selef):
+            return self.strategy(list)
+
+    class ReductorInterface(ABC):
+        @abstractmethod
+        def __call__(self, list):
+    #+END_SRC
+
+** The Strategy pattern
+*** Example
+    #+attr_latex: :options fontsize=\tiny, bgcolor=dark
+    #+BEGIN_SRC Python
+    class Sum(ReductorInterface):
+        def __call__(self, list):
+           return sum(list)
+
+    class Product(ABC):
+        def __call__(self, list):
+            result = 1
+            for item in list:
+                result *= item
+            return result
+
+    list = [1, 2, 3, 4]
+    sum_reduce = Reduction(list, Sum())
+    print(sum_reduce.compute())      # Prints: 10
+
+    product_reduce = Reduction(list, Product())
+    print(product.reduce.computer()) # Prints: 24
+    #+END_SRC
+
+
+** The Strategy pattern
+*** Simplifications
+    - Since Python has first-class functions, we don't need to write
+      classes:
+
+    #+attr_latex: :options fontsize=\tiny, bgcolor=dark
+    #+BEGIN_SRC Python
+    def product(list):
+          result = 1
+          for item in list:
+              result *= item
+          return result
+
+    sum_reduce = Reduction(list, sum)
+    print(sum_reduce.compute())      # Prints: 10
+
+    product_reduce = Reduction(list, product)
+    print(product.reduce.computer()) # Prints: 24
+    #+END_SRC
+
+** The Strategy pattern
+*** Why not just an =if= statement?
+    - /Open-closed principle/: software entities should be open for extension, but closed
+      for modification
+    - The Strategy pattern allows changing the behavior of the =Context= class without
+      changing any of its code.
+    - Documentation: The abstract interface for the strategy classes acts as language-level
+      documentation of how to extend the code
+
+* The flyweight pattern
+** The Flyweight pattern
+*** The problem
+    - Frequent access to a memory-heavy object causes
+      memory issues
+*** The design pattern
+    \vspace{0.5cm}
+    \centering
+    \includegraphics[width=0.4\textwidth]{figures/flyweight}
+
+** The Flyweight pattern
+*** Generic implementation
+    - Uses a /factory class/ to ensure object are created
+      only once
+    - A factory class is a specialized class tasked with creating special
+      objects of another class
+    - The constructor methods  in the factory class are typically static
+      methods.
+
+    #+attr_latex: :options fontsize=\tiny, bgcolor=dark
+    #+BEGIN_SRC Python
+    black = Color("#000000")
+
+    class ColorFactory:
+        @staticmethod
+        def black():
+            return black
+    #+END_SRC
+
+** The Flyweight pattern
+*** Python implementation
+    - Can use =__new__= method instead of explicit factory class.
+
+    #+attr_latex: :options fontsize=\tiny, bgcolor=dark
+    #+BEGIN_SRC Python
+    class Color:
+        _colors = {}
+        def __new__(cls, color_string):
+            if color_string in Color._colors:
+                return _colors[color_string]
+
+            new_color = super().__new__(cls)
+            _colors[color_string] = new_color
+            self.initialized = False
+            return new_color
+            
+        def __init__(self, color_string):
+            if not self.initialized:
+                self.color_string = color_string
+                self.initialized = True
+            
+    #+END_SRC
+
+** The Flyweight pattern
+
+    #+attr_latex: :options fontsize=\footnotesize, bgcolor=dark
+    #+BEGIN_SRC Python
+    def __new__(cls, *args, **kwargs):
+    #+END_SRC
+
+*** Understanding =__new__=:
+    - Called /before/ =__init__= method
+    - Static method by default (no need for =@staticmethod= decorator)
+    - First argument: =cls= of the object being constructed
+    - Other arguments: Other constructor arguments.
+    - Should return the newly constructed object.
+
+** The Flyweight pattern
+
+*** Comments
+    - Note that we had to guard against multiple initialization in =__init__= 
+      function.
+    - Use this only if you know that memory is an issue. Helps only if
+      objects are in fact identical[fn:2].
+
+    #+attr_latex: :options fontsize=\footnotesize, bgcolor=dark
+    #+BEGIN_SRC Python
+    black = Color("#000000")
+    other_black = Color("#000000")
+    red = Color("#FF0000")
+
+    Print(black is other_black) # Prints: True
+    Print(red is other_black)   # Prints: False
+    #+END_SRC
+
+[fn:2] Another way to reduce the memory footprint of Python object is to use \texttt{\_\_slots\_\_}.
+
+** Exercise
+
+   - Exercise 4
+   - Time: 10 minutes
+
+* The Template pattern
+
+** The Template pattern
+*** The problem
+    - Two processes share common steps
+*** The pattern
+    \vspace{0.5cm}
+    \centering
+    \includegraphics[width=0.4\textwidth]{figures/template}
+
+** The Template pattern
+*** Example: File processing
+    #+attr_latex: :options fontsize=\tiny, bgcolor=dark
+    #+BEGIN_SRC Python
+    class FileProcessorBase:
+        def __init__(self, input, output):
+            self.filname = filename
+
+        def read(self):
+            self.content = open(filename).read()
+
+        @abstractmethod
+        def process(self):
+
+        def write(self):
+            with open(self.output) as file:
+                file.write(self.content)
+    #+END_SRC
+
+** The Template pattern
+*** Example: File processing
+    #+attr_latex: :options fontsize=\tiny, bgcolor=dark
+    #+BEGIN_SRC Python
+    class UpperCaseTransformer:
+        def __init__(self, input, output):
+            super().__init__(intput, output)
+
+        def process(self):
+            self.content = self.content.upper()
+    #+END_SRC
+    
+** The Template pattern
+*** Advantages
+    - DRY principle: Code for common steps can be reused
+    - Open/Closed principle: Functionality can be easily extended
+      without the need to modify any of the existing classes
+
+    
+* Summary and conclusion
+** Summary
+*** Iterators and generator
+    - Iterator pattern
+    - Language support for iterators and generators (=for=, =yield=, ...)
+*** Decorators
+    - The decorator pattern
+    - Language support for decorators
+
+** Summary
+*** Strategy pattern
+    - Supports open-closed principle leading
+      to modular code.
+*** Flyweight pattern
+    - Using static variables to save memory
+    - Manipulating object construction in Python
+*** More design patterns:
+    - There are a lot more.[fn:3]
+
+[fn:3] See [[https://en.wikipedia.org/wiki/Software_design_pattern][https://en.wikipedia.org/wiki/Software_design_pattern]]
+** Concluding remarks
+*** Why use design patterns:
+    - Duck typing in Python allows most patterns to be implemented
+      in a less formal way.
+    - \textbf{But}:
+      - Being explicit about the design can make code easier to understand
+      - Design patterns are known across programming languages
+
