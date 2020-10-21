@@ -236,16 +236,16 @@
 *** Conclusions from exercise
 
    - Comprehensions are faster than explicit for loops
-   - Lists are highly optimized and much faster than
+   - Lists are highly optimized and faster than
      custom iterators
+   - Having a custom iterator class is much slower than
+     using the =yield= keyword.
 
 *** Some words of caution
     - Don't try to optimize a certain part of your code before you don't know
       that it is critical.[fn:1]
-    - Python does some optimization of =*.py= files so results from notebook
-      may not be fully representative.
 
-[fn:1] "Premature optimization is the root of all evil [...]." --- Donal Knuth
+[fn:1] "Premature optimization is the root of all evil [...]." --- Donald Knuth
 
 * The Decorator pattern
 ** The Decorator pattern
@@ -302,7 +302,8 @@
 ** The Decorator pattern
 
 *** A simple example
-    - The functionality can easily be extended and combined:
+    - Note how the functionality can be extended and combined by
+      simply adding a new decorator class:
 
     #+attr_latex: :options fontsize=\tiny, bgcolor=dark
     #+BEGIN_SRC Python
@@ -312,9 +313,9 @@
             self.greeter = greeter
 
         def greeting(self):
-            return self.greeter.greeting() + "????"
+            return self.greeter.greeting() + "???"
 
-    print(Question(Scream(Swedish())).greeting()) # Prints: HEJ?!!!
+    print(Question(Scream(Swedish())).greeting()) # Prints: HEJ!!!???
     #+END_SRC
 
 ** The Decorator pattern
@@ -340,8 +341,8 @@
 
 ** The Decorator pattern
 *** ... and further
-    - This can be simplified using the closure to
-      store the function data to log:
+    - The code for this can be simplified by using the closures to
+      store the data required by the =logger= function:
 
     #+attr_latex: :options fontsize=\tiny, bgcolor=dark
     #+BEGIN_SRC Python
@@ -360,13 +361,6 @@
     - \textbf{Closure of a function}: The variables defined in the scopes
       surrounding the function definition.
 
-   \vspace{0.5cm}
-   \begin{alertblock}{}
-    When a function is defined within another function, the local variables
-    of the enclosing function are stored in the closure of the nested
-    function
-    \end{alertblock}
-
     #+attr_latex: :options fontsize=\footnotesize, bgcolor=dark
     #+BEGIN_SRC Python
     def say_something_factory(something):
@@ -377,6 +371,14 @@
     say_something = say_something_factory("Hi from the closure.")
     say_something() # Prints: "Hi from the closure."
     #+END_SRC
+
+   \vspace{0.5cm}
+   \begin{alertblock}{}
+    When a function is defined within another function, the local variables
+    of the enclosing function are stored in the closure of the nested
+    function.
+    \end{alertblock}
+
 
 
 ** The Decorator pattern
@@ -399,6 +401,18 @@
     my_print = log_decorator(my_print)
     #+END_SRC
 
+** The Decorator pattern
+*** Exercise
+    - Exercise 3
+    - Time: 10 Minutes
+ 
+
+** The Decorator pattern
+*** Decorators in Python
+    - This example only illustrated the basic use of
+      decorators in Python
+    - We will come back to them later.
+
 * The Strategy pattern
 ** The Strategy pattern
 *** The problem
@@ -408,7 +422,7 @@
 *** The design pattern
     \vspace{0.5cm}
     \centering
-    \includegraphics[width=0.4\textwidth]{figures/strategy}
+    \includegraphics[width=0.6\textwidth]{figures/strategy}
 
 ** The Strategy pattern
 *** Example
@@ -416,17 +430,21 @@
 
     #+attr_latex: :options fontsize=\tiny, bgcolor=dark
     #+BEGIN_SRC Python
+    from abc import ABC, abstractmethod
+
     class Reduction:
         def __init__(self, list, strategy):
            self.list = list
            self.strategy = strategy
 
-        def compute(selef):
+        def compute(self):
             return self.strategy(list)
 
+    # Could simply use collections.abc.Callable
     class ReductorInterface(ABC):
         @abstractmethod
         def __call__(self, list):
+            pass
     #+END_SRC
 
 ** The Strategy pattern
@@ -449,7 +467,7 @@
     print(sum_reduce.compute())      # Prints: 10
 
     product_reduce = Reduction(list, Product())
-    print(product.reduce.computer()) # Prints: 24
+    print(product_reduce.compute()) # Prints: 24
     #+END_SRC
 
 
@@ -470,7 +488,7 @@
     print(sum_reduce.compute())      # Prints: 10
 
     product_reduce = Reduction(list, product)
-    print(product.reduce.computer()) # Prints: 24
+    print(product_reduce.compute()) # Prints: 24
     #+END_SRC
 
 ** The Strategy pattern
@@ -493,13 +511,7 @@
     \includegraphics[width=0.4\textwidth]{figures/flyweight}
 
 ** The Flyweight pattern
-*** Generic implementation
-    - Uses a /factory class/ to ensure object are created
-      only once
-    - A factory class is a specialized class tasked with creating special
-      objects of another class
-    - The constructor methods  in the factory class are typically static
-      methods.
+*** Factory classes
 
     #+attr_latex: :options fontsize=\tiny, bgcolor=dark
     #+BEGIN_SRC Python
@@ -511,6 +523,17 @@
             return black
     #+END_SRC
 
+    - A factory class is a specialized class tasked with creating 
+      objects of another class
+    - The constructor methods  in the factory class are typically static
+      methods.
+    - Why an extra class?
+      - Single-responsibility principle: Each class should have a single
+        responsibility
+      - When programmers see a factory class, they immediately know its
+        role
+
+
 ** The Flyweight pattern
 *** Python implementation
     - Can use =__new__= method instead of explicit factory class.
@@ -520,16 +543,16 @@
     class Color:
         _colors = {}
         def __new__(cls, color_string):
-            if color_string in Color._colors:
+            if color_string in Color._colors: # Check if specific color already exists.
                 return _colors[color_string]
 
-            new_color = super().__new__(cls)
-            _colors[color_string] = new_color
-            self.initialized = False
+            new_color = super().__new__(cls)  # Create new object by calling __new__ of super()
+            _colors[color_string] = new_color # Store newly created object for next call.
+            self.initialized = False          # Flag that object has not yet been initialized.
             return new_color
             
         def __init__(self, color_string):
-            if not self.initialized:
+            if not self.initialized:          # Guard against multiple initialization.
                 self.color_string = color_string
                 self.initialized = True
             
@@ -545,8 +568,8 @@
 *** Understanding =__new__=:
     - Called /before/ =__init__= method
     - Static method by default (no need for =@staticmethod= decorator)
-    - First argument: =cls= of the object being constructed
-    - Other arguments: Other constructor arguments.
+    - First argument =cls=: The class of the object being constructed
+    - Remaining arguments: Other arguments passed to constructor.
     - Should return the newly constructed object.
 
 ** The Flyweight pattern
@@ -555,7 +578,8 @@
     - Note that we had to guard against multiple initialization in =__init__= 
       function.
     - Use this only if you know that memory is an issue. Helps only if
-      objects are in fact identical[fn:2].
+      objects are in fact identical, i.e. if /a lot of/ =black= objects would
+      be created.[fn:2]
 
     #+attr_latex: :options fontsize=\footnotesize, bgcolor=dark
     #+BEGIN_SRC Python
@@ -589,30 +613,45 @@
     #+attr_latex: :options fontsize=\tiny, bgcolor=dark
     #+BEGIN_SRC Python
     class FileProcessorBase:
-        def __init__(self, input, output):
-            self.filname = filename
+        def __init__(self,
+                    input_file,
+                    output_file):
+            self.input_file = input_file
+            self.output_file = output_file
 
         def read(self):
-            self.content = open(filename).read()
+            self.content = open(self.input_file).read()
 
         @abstractmethod
         def process(self):
+            pass
 
         def write(self):
-            with open(self.output) as file:
+            with open(self.output_file, "w") as file:
                 file.write(self.content)
+
+        def execute(self):
+            self.read()
+            self.process()
+            self.write()
     #+END_SRC
 
 ** The Template pattern
 *** Example: File processing
     #+attr_latex: :options fontsize=\tiny, bgcolor=dark
     #+BEGIN_SRC Python
-    class UpperCaseTransformer:
-        def __init__(self, input, output):
-            super().__init__(intput, output)
+    class UpperCaseTransformer(FileProcessorBase):
+        def __init__(self,
+                    input_file,
+                    output_file):
+            super().__init__(input_file, output_file)
 
         def process(self):
             self.content = self.content.upper()
+
+    open("test.txt", "w").write("This is just a test.")
+    transformer = UpperCaseTransformer("test.txt", "TEST.txt")
+    transformer.execute()
     #+END_SRC
     
 ** The Template pattern
@@ -641,7 +680,7 @@
 *** More design patterns:
     - There are a lot more.[fn:3]
 
-[fn:3] See [[https://en.wikipedia.org/wiki/Software_design_pattern][https://en.wikipedia.org/wiki/Software_design_pattern]]
+[fn:3] See \url{https://en.wikipedia.org/wiki/Software_design_pattern}
 ** Concluding remarks
 *** Why use design patterns:
     - Duck typing in Python allows most patterns to be implemented
