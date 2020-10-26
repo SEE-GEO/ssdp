@@ -1,0 +1,367 @@
+#+TITLE: Scientific Software Development with Python
+#+SUBTITLE: Python standard library
+#+AUTHOR: Simon Pfreundschuh
+#+OPTIONS: H:2 toc:nil
+#+LaTeX_HEADER: \institute{Department of Space, Earth and Environment}
+#+LaTeX_HEADER: \setbeamerfont{title}{family=\sffamily, series=\bfseries, size=\LARGE}
+#+LATEX_HEADER: \usepackage[style=authoryear]{biblatex}
+#+LATEX_HEADER: \usepackage{siunitx}
+#+LaTeX_HEADER: \usetheme{chalmers}
+#+LATEX_HEADER: \usepackage{subcaption}
+#+LATEX_HEADER: \usepackage{amssymb}
+#+LATEX_HEADER: \usepackage{dirtree}
+#+LATEX_HEADER: \usemintedstyle{monokai}
+#+LATEX_HEADER: \usepackage{pifont}
+#+LATEX_HEADER: \definecolor{light}{HTML}{CCCCCC}
+#+LATEX_HEADER: \definecolor{dark}{HTML}{353535}
+#+LATEX_HEADER: \definecolor{source_file}{rgb}{0.82, 0.1, 0.26}
+#+LATEX_HEADER: \newcommand{\greencheck}{{\color{green}\ding{51}}}
+#+LATEX_HEADER: \newcommand{\redcross}{{\color{red}\ding{55}}}
+#+LATEX_HEADER: \newcommand{\question}{{\color{yellow}\textbf{???}}}
+#+LATEX_HEADER: \addbibresource{literature.bib}
+#+BEAMER_HEADER: \AtBeginSection[]{\begin{frame}<beamer>\frametitle{Agenda}\tableofcontents[currentsection]\end{frame}}
+
+* Overview
+** Overview
+* Data structures
+** Tuples
+*** Tuple
+    - A tuple stores a sequence of values of arbitrary types:
+    #+attr_latex: :options fontsize=\footnotesize, bgcolor=dark
+    #+BEGIN_SRC Python
+    record = (1, "name", [])
+    #+END_SRC 
+    - Tuples are /immutable/:
+      - An existing =tuple= can't be changed ...
+      - but, this allows them to be used a keys in a =dict=
+    - =tuples= can be unpacked:
+  #+attr_latex: :options fontsize=\footnotesize, bgcolor=dark
+  #+BEGIN_SRC Python
+  id, name, properties = record
+  #+END_SRC 
+      
+
+** Named tuples
+*** The problem with tuples
+    - No inherent significance of tuple elements:
+      - Hard to guess what different elements mean
+      - Easy to make an error during unpacking
+*** Solution
+    - Named tuples:
+
+    #+attr_latex: :options fontsize=\footnotesize, bgcolor=dark
+    #+BEGIN_SRC Python
+    from collections import namedtuple
+    record_class = namedtuple("Record", ["id" ,"name", "properties"])
+    record = record_class(1, "name", [])
+    print(record) # Prints: Record(id=1, name='name', properties=[])
+    #+END_SRC 
+
+** Named tuples
+    #+attr_latex: :options fontsize=\footnotesize, bgcolor=dark
+    #+BEGIN_SRC Python
+    from collections import namedtuple
+    record_class = namedtuple("Record", ["id" ,"name", "properties"])
+    print(record) # Prints: Record(id=1, name='name', properties=[])
+    #+END_SRC 
+
+*** What's going on here?
+    - =namedtuple(typename, field_names, ...)= is a factory method that
+      produces a new =class= with the name given by the =typename= argument.
+    - The constructor of the =Record= class expects one value for each of the
+      names in =fieldnames=.
+    - The newly created class automatically has a useful implementation of the
+      =__repr__=.
+
+[fn:1] Yes, even classes are /objects/ in Python.
+
+** Dataclasses
+*** Another solution: Dataclasses
+    #+attr_latex: :options fontsize=\footnotesize, bgcolor=dark
+    #+BEGIN_SRC Python
+    from dataclasses import dataclass
+    @dataclass
+    class Record:
+        id: int
+        name: str
+        properties: list
+
+    record = Record(1, "name", 2)
+    print(record) # Prints: Record(id=1, name='name', properties=[])
+    #+END_SRC 
+
+** Dataclasses
+
+    \centering
+    \includegraphics[width=0.6\textwidth]{figures/long_neck}
+
+** Dataclasses
+    #+attr_latex: :options fontsize=\footnotesize, bgcolor=dark
+    #+BEGIN_SRC Python
+    from dataclasses import dataclass
+    @dataclass
+    class Record:
+        id: int
+        name: str
+        properties: list
+    #+END_SRC 
+*** What's going on here?
+    - Python 3.5 introduced type annotations[fn:3]:
+      #+attr_latex: :options fontsize=\footnotesize, bgcolor=dark
+      #+BEGIN_SRC Python
+      a : int = 1 # This is valid >= Python 3.5 code
+      #+END_SRC
+    - The =dataclass= decorator parses the annotate variables and
+      attributes of the class.
+
+
+[fn:3] We'll see more of them next lecture.
+
+** Dataclasses
+*** Default values:
+
+      #+attr_latex: :options fontsize=\footnotesize, bgcolor=dark
+      #+BEGIN_SRC Python
+      from dataclasses import dataclass, field
+      @dataclass
+      class Record:
+          id: int = 1
+          name: str = "name"
+          properties: list = field(default_factory=list)
+      record()
+      print(record) # Prints: Record(id=1, name='name', properties=[])
+      #+END_SRC 
+
+** Exercise 1
+
+   - Exercise 1 from exercise sheet
+   - Time: 5 minutes
+
+** Namedtuples vs. Dataclasses 
+
+*** Namedtuples
+    - Immutable:
+      - Can be used as key in dict.
+    - Smaller memory footprint
+
+*** Dataclasses
+    - More intuitive syntax than named tuples.
+    - Can add customized class methods and use inheritance
+
+** Dataclass
+
+*** Dataclass with customized behavior
+      #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+      #+BEGIN_SRC Python
+      from dataclasses import dataclass
+      @dataclass
+      class Record:
+          id: int
+          name: str
+          properties: list = field(default_factory=list)
+
+          def __add__(self, other):
+              """ A not very meaningfull addition operator. """
+              if isinstance(other, Record):
+                  Record(self.id, self.name, self.properties + other.properties)
+              # Should return NotImplemented if we can't handle type.
+              return NotImplemented
+
+      record_1 = Record(1, "name", ["proerty 1"])
+      record_2 = Record(2, "other name", ["proerty 2"])
+      print(record_1 + record_2)
+      # Prints: Record(id=1, name='name', properties=['proerty 1', 'proerty 2'])
+      
+      #+END_SRC 
+
+
+** Dictionaries
+*** Dictionary
+    - Container that maps a /key/ object to a /value/ object.
+    - The key object must be immutable (/hashable/)
+    - Highly optimized data structure:
+      - Used internally by all Python objects that support dynamic
+        attributes and accessible through the =__dict__= special attribute:
+
+      #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+      #+BEGIN_SRC Python
+      def a_function():
+          pass
+      a_function.attribute = "some value"
+      print(a_function.attribute) # Prints: some value
+      print(a_function.__dict__)  # Prints: {"attribute" : "some_value"}
+      #+END_SRC
+
+** Dictionaries
+*** Useful functions
+    - =get(key, default=None)=: If =key= is present, returns =value= corresponding to =key=
+      otherwise returns =default=
+    - =setdefault(key, default=None)=: Like =get= but also adds =key=  with =default= as value
+      to the =dict= if not already present.
+    - Iterating over =dict= content: =keys()=, =values()= =items()=
+*** Other features
+    - Since Python 3.7: Iterators return elements in order of insertion
+      - Use =collections.OrderedDict= in older code if required
+    - Other specialized dictionary types: =defaultdict= and =Counter= in =collections=
+      module[fn:4].
+
+[fn:4] Check docs for more info: https://docs.python.org/3.8/library/collections.html
+
+** Lists
+*** Lists
+    - Container type designed to hold sequences of objects similar types.[fn:5]
+      #+attr_latex: :options fontsize=\footnotesize, bgcolor=dark
+      #+BEGIN_SRC Python
+      numbers = [1, 2, 3, 4]
+      #+END_SRC
+*** Some useful member functions:
+     - =append(x)=: Append =x= to list.
+     - =insert(x, i)=: Insert =x= at index =i=.
+     - =remove(x)=: Remove first occurrence of =x=
+     - =index(x)=: Zero-based index of first element equal to =x=
+     - =sort()=: Sort list
+
+[fn:5] If you find yourself adding values of fundamentally different types to a
+ list, chances are your are using them incorrectly.
+
+** Lists
+*** Customizing =sort=
+
+  #+attr_latex: :options fontsize=\footnotesize, bgcolor=dark
+  #+BEGIN_SRC Python
+  from dataclasses import dataclass, field
+  @dataclass
+  class Record:
+      id: int
+      name: str
+      properties: list = field(default_factory=list)
+
+      def __lt__(self, other):
+          """Compares two records using their id attribute."""
+          return self.id < other.id
+          
+  record_1 = Record(1, "name", ["proerty 1"])
+  record_2 = Record(2, "other name", ["proerty 2"])
+  print(record_1 < record_2) # Prints: True
+  #+END_SRC
+
+
+** Lists
+*** Customizing =sort=
+    - =list.sort()= uses the =<= operator to compare objects
+    - For user-defined classes, the =<= is implemented by the
+      =__lt__= special method.
+
+  #+attr_latex: :options fontsize=\footnotesize, bgcolor=dark
+  #+BEGIN_SRC Python
+  record_1 = Record(1, "name", ["proerty 1"])
+  record_2 = Record(2, "other name", ["proerty 2"])
+  records = [record_2, record_1]
+  records.sort()
+  print(records[0].id) # Prints: 1
+  #+END_SRC
+
+** Set
+*** Set
+    - Container for unique objects
+
+      #+attr_latex: :options fontsize=\footnotesize, bgcolor=dark
+      #+BEGIN_SRC Python
+      numbers = {1, 1, 2, 2, 3, 3}
+      print(numbers) # Prints: {1, 2, 3}
+      #+END_SRC
+
+*** Useful functions:
+    - =union()= (or =|= operator): Union of two sets
+    - =intersect()= (or =&= operator): Intersection of two sets
+    - =difference()= (or =-= operator): Elements in first but not in second set
+    - =symmetric_difference()= (or =^= operator): Elements neither in first nor in second set.
+
+** Exercise 2
+
+   - Exercise 2 on exercise sheet.
+   - Time: 10 minutes
+
+* A brief tour of the standard library
+** The Python standard library
+   - Python comes with ax extensive standard library,[fn:6] which
+     is available on any system without the need to install any additional packages.
+
+   - Offers solutions for common programming problems.
+   - Most features are portable between operating systems (linux, windows, mac)
+
+
+[fn:6] Documented in full detail here: https://docs.python.org/3/library/
+
+** Built-in functions  
+*** Built-in functions
+    - As the name suggests, built-in functions are always available
+      without requiring any additional imports
+    - For complete list of built-in functions see: https://docs.python.org/3/library/functions.html
+*** Some examples:
+    - =any= and =all=:
+      #+attr_latex: :options fontsize=\footnotesize, bgcolor=dark
+      #+BEGIN_SRC Python
+      all([True, False]) # Evaluates to False
+      any([True, False]) # Evaluates to True
+      #+END_SRC
+
+** Built-in functions  
+*** Some examples (cont'd):
+    - =eval=, =exec= and =compile= to interactively execute code:
+      #+attr_latex: :options fontsize=\footnotesize, bgcolor=dark
+      #+BEGIN_SRC Python
+      a = eval("1 + 1")
+      print(a) # Prints: 2
+      #+END_SRC
+
+\vspace{0.5cm}
+ \begin{alertblock}{DANGER}
+ Don't use this with input you are not controlling. This is how computer
+ systems get hacked.\footnote{For details refer to https://nedbatchelder.com/blog/201206/eval\_really\_is\_dangerous.html}
+ \end{alertblock}
+    
+** Built-in functions  
+*** Some examples (cont'd):
+    - =locals=, and =globals= to access the local and module scope as
+      dictionary:
+      #+attr_latex: :options fontsize=\footnotesize, bgcolor=dark
+      #+BEGIN_SRC Python
+      globals()["my_variable"] = "my_value"
+      print(my_variable) # Prints: my_value
+      #+END_SRC
+
+** Built-in functions  
+*** Some examples (cont'd):
+    - =hasattr=, =getattr= and =setattr= to manipulate attributes using strings:
+      #+attr_latex: :options fontsize=\footnotesize, bgcolor=dark
+      #+BEGIN_SRC Python
+      class A: pass
+      a = A()
+      setattr(a, "attribute", 1)
+      print(a.attribute) # Prints: 1
+      #+END_SRC
+
+** Built-in functions  
+*** Some examples (cont'd):
+    - =chr= and =ord= to manipulate sequences of letters[fn:8]:
+      #+attr_latex: :options fontsize=\footnotesize, bgcolor=dark
+      #+BEGIN_SRC Python
+      letters = [chr(ord("a") + i) for i in range(16)]
+      print(letters) # Prints: ['a', 'b', ..., 'p']
+      #+END_SRC
+
+[fn:8] I use this to numerate subplots in a figure.
+
+** Regular expressions
+*** Regular expressions
+    - pattern matching language useful to extract sequences from text
+*** Example: Matching filenames
+     wli
+
+** File system operations
+
+** Handling dates
+
+** Parsing command line arguments
+
