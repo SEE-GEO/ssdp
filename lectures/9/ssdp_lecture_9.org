@@ -14,6 +14,7 @@
 #+LATEX_HEADER: \usepackage{pifont}
 #+LATEX_HEADER: \definecolor{light}{HTML}{CCCCCC}
 #+LATEX_HEADER: \definecolor{dark}{HTML}{353535}
+#+LATEX_HEADER: \definecolor{green}{HTML}{008800}
 #+LATEX_HEADER: \definecolor{source_file}{rgb}{0.82, 0.1, 0.26}
 #+LATEX_HEADER: \newcommand{\greencheck}{{\color{green}\ding{51}}}
 #+LATEX_HEADER: \newcommand{\redcross}{{\color{red}\ding{55}}}
@@ -23,7 +24,18 @@
 
 * Overview
 ** Overview
+  \centering
+  \includegraphics[width=0.6\textwidth]{figures/dimensions_of_software_development_part_2}
+   
 * Data structures
+** Classes or data structures? 
+*** Classes in object oriented programming
+    - Define data and associated behavior
+*** What if there is no associated behavior?
+    - Then defining a class is needlessly verbose.
+    - Python provides specialized /data structures/ to store and
+      retrieve data in different use cases.
+
 ** Tuples
 *** Tuple
     - A tuple stores a sequence of values of arbitrary types:
@@ -32,8 +44,8 @@
     record = (1, "name", [])
     #+END_SRC 
     - Tuples are /immutable/:
-      - An existing =tuple= can't be changed ...
-      - but, this allows them to be used a keys in a =dict=
+      - An existing =tuple= can't be changed.
+      - But it can be used as key in a =dict=
     - =tuples= can be unpacked:
   #+attr_latex: :options fontsize=\footnotesize, bgcolor=dark
   #+BEGIN_SRC Python
@@ -43,13 +55,13 @@
 
 ** Named tuples
 *** The problem with tuples
-    - No inherent significance of tuple elements:
+    - No inherent meaning of different tuple elements:
       - Hard to guess what different elements mean
       - Easy to make an error during unpacking
 *** Solution
     - Named tuples:
 
-    #+attr_latex: :options fontsize=\footnotesize, bgcolor=dark
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
     #+BEGIN_SRC Python
     from collections import namedtuple
     record_class = namedtuple("Record", ["id" ,"name", "properties"])
@@ -58,7 +70,7 @@
     #+END_SRC 
 
 ** Named tuples
-    #+attr_latex: :options fontsize=\footnotesize, bgcolor=dark
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
     #+BEGIN_SRC Python
     from collections import namedtuple
     record_class = namedtuple("Record", ["id" ,"name", "properties"])
@@ -67,13 +79,13 @@
 
 *** What's going on here?
     - =namedtuple(typename, field_names, ...)= is a factory method that
-      produces a new =class= with the name given by the =typename= argument.
-    - The constructor of the =Record= class expects one value for each of the
+      produces a new =class= with the name given by the =typename= argument[fn:1].
+    - The constructor of the newly created =Record= class expects one value for each of the
       names in =fieldnames=.
     - The newly created class automatically has a useful implementation of the
-      =__repr__=.
+      =__repr__= special method.
 
-[fn:1] Yes, even classes are /objects/ in Python.
+[fn:1] Yes, even classes are first-class objects in Python.
 
 ** Dataclasses
 *** Another solution: Dataclasses
@@ -111,8 +123,8 @@
       #+BEGIN_SRC Python
       a : int = 1 # This is valid >= Python 3.5 code
       #+END_SRC
-    - The =dataclass= decorator parses the annotate variables and
-      attributes of the class.
+    - The =dataclass= decorator parses the variable annotations and
+      turns them into attributes of the class.
 
 
 [fn:3] We'll see more of them next lecture.
@@ -351,17 +363,350 @@
       print(letters) # Prints: ['a', 'b', ..., 'p']
       #+END_SRC
 
-[fn:8] I use this to numerate subplots in a figure.
+[fn:8] I use this to automatically generate titles for subplots.
 
 ** Regular expressions
 *** Regular expressions
     - pattern matching language useful to extract sequences from text
+    - A regular expression is a string consisting of
+      - Regular letters
+      - Any of the special characters:
+      #+attr_latex: :options bgcolor=dark
+      #+BEGIN_SRC bash
+       . ^ $ * + ? { } [ ] \ | ( )
+      #+END_SRC bash
+
+** Regular expressions
 *** Example: Matching filenames
-     wli
+    - Assume you want to identify with the following
+      filenames:
+      #+attr_latex: :options bgcolor=light, style=fruity
+      #+BEGIN_SRC bash
+      file_art_2353.txt
+      file_ted_12.txt
+      file_zae_8.txt
+      file_lpi_9.txt
+      #+END_SRC
 
-** File system operations
+** Regular expressions
+*** Example: Matching filenames
+    - Since the first part of the filename is fixed, we can match
+      it using the test as is:
 
+      #+attr_latex: :options bgcolor=light, escapeinside=<>
+      #+BEGIN_SRC text
+      <\color{green}{file\_}>
+      #+END_SRC
+
+    - This matches:
+      
+      #+attr_latex: :options bgcolor=light, style=fruity, escapeinside=<>
+      #+BEGIN_SRC text
+      <\color{green}{file\_}>art_2353.txt
+      <\color{green}{file\_}>ted_12.txt
+      <\color{green}{file\_}>zae_8.txt
+      <\color{green}{file\_}>lpi_9.txt
+      #+END_SRC
+
+** Regular expressions
+*** Example: Matching filenames
+    - Next, we need to match 3 alphabetic characters
+    - For, this we need to learn to additional features of regexps:
+      - How to match classes or sets of characters
+      - How to match repeated characters
+    
+** Regular expressions
+*** Character classes
+    - The following special sequences match classes of characters in regular expressions:
+      - =.=: Matches any character (except newline)
+      - =\d=: Any digit
+      - =\D=: Anything /not matched/ by =\d=
+      - =\s=: Any whitespace character
+      - =\S=: Anything /not matched/ by =\s=
+      - =\w=: Any alphanumeric (letter or digit) character
+      - =\W=: Anything /not matched/ by =\w=
+
+** Regular expressions
+*** Character classes
+    - Example:
+      #+attr_latex: :options bgcolor=light, escapeinside=<>
+      #+BEGIN_SRC text
+      <{\color{green}file\_}{\color{red}{\textbackslash}w{\textbackslash}w{\textbackslash}w}>
+      #+END_SRC
+
+    - This matches:
+      #+attr_latex: :options bgcolor=light, style=fruity, escapeinside=<>
+      #+BEGIN_SRC text
+      <{\color{green}file\_}{\color{red}art}>_2353.txt
+      <{\color{green}file\_}{\color{red}ted}>_12.txt
+      <{\color{green}file\_}{\color{red}zae}>_8.txt
+      <{\color{green}file\_}{\color{red}lpi}>_9.txt
+      #+END_SRC
+    - But also:
+      #+attr_latex: :options bgcolor=light, style=fruity, escapeinside=<>
+      #+BEGIN_SRC text
+      <{\color{green}file\_}{\color{red}123}>_2353.txt
+      #+END_SRC
+
+** Regular expressions
+*** Character sets
+    - A character set =[...]= is defined using square brackets and may contain:
+      - Individual characters: =[abc]= match =a, b= or =c=
+      - Ranges: =[a-c]=, same as above
+      - Character classes
+    - Character sets can be complemented by adding a =^= in the beginning:
+      - =[^...]= matches all characters not matched by =[...]=.
+
+** Regular expressions
+*** Character sets
+
+    - Example:
+      #+attr_latex: :options bgcolor=light, escapeinside=<>
+      #+BEGIN_SRC text
+      <{\color{green}file\_}{\color{red}[a-zA-Z]}>
+      #+END_SRC
+
+    - This matches:
+      #+attr_latex: :options bgcolor=light, style=fruity, escapeinside=<>
+      #+BEGIN_SRC text
+      <{\color{green}file\_}{\color{red}a}>rt_2353.txt
+      <{\color{green}file\_}{\color{red}t}>ed_12.txt
+      <{\color{green}file\_}{\color{red}z}>ae_8.txt
+      <{\color{green}file\_}{\color{red}l}>pi_9.txt
+      #+END_SRC
+   
+** Regular expressions
+*** Repetitions
+    - =*=: Matches 0 or more repetitions of the previous expression
+      - Example =[a-z]*= matches =""=, ="word"= but not =123=.
+    - =+=: Matches 1 or more repetitions of the previous expression
+    - ={n}=: Match exactly =n= repetitions of the previous pattern.
+
+** Regular expressions
+*** Repetitions
+    - Example:
+      #+attr_latex: :options bgcolor=light, escapeinside=<>
+      #+BEGIN_SRC text
+      <{\color{green}file\_}{\color{red}[a-zA-Z]\{3\}}>
+      #+END_SRC
+
+    - This matches:
+      #+attr_latex: :options bgcolor=light, style=fruity, escapeinside=<>
+      #+BEGIN_SRC text
+      <{\color{green}file\_}{\color{red}art}>_2353.txt
+      <{\color{green}file\_}{\color{red}ted}>_12.txt
+      <{\color{green}file\_}{\color{red}zae}>_8.txt
+      <{\color{green}file\_}{\color{red}lpi}>_9.txt
+      #+END_SRC
+
+** Regular expressions
+*** Repetitions
+    - Example:
+      #+attr_latex: :options bgcolor=light, escapeinside=<>
+      #+BEGIN_SRC text
+      <{\color{green}file\_}{\color{red}[a-zA-Z]\{3\}}{\color{green}\_}{\color{blue}{\textbackslash}d+}{\color{green}.txt}>
+      #+END_SRC
+
+    - This matches:
+      #+attr_latex: :options bgcolor=light, style=fruity, escapeinside=<>
+      #+BEGIN_SRC text
+      <{\color{green}file\_}{\color{red}art}{\color{green}\_}{\color{blue}2353}{\color{green}.txt}>
+      <{\color{green}file\_}{\color{red}ted}{\color{green}\_}{\color{blue}12}{\color{green}.txt}>
+      <{\color{green}file\_}{\color{red}zae}{\color{green}\_}{\color{blue}8}{\color{green}.txt}>
+      <{\color{green}file\_}{\color{red}lpi}{\color{green}\_}{\color{blue}9}{\color{green}.txt}>
+      #+END_SRC
+
+** Using regular expressions
+
+   - Python provides built-in support for regular expression via the =re= module.
+   - Since the =\= character has special meaning in Python strings as well as regexps, it is
+     common to use a raw string to define a regular expression.
+    #+attr_latex: :options bgcolor=dark
+    #+BEGIN_SRC python
+    import re
+    expr = re.compile(r"file_[a-zA-Z]{3}_\d+.txt")
+    match = expr.match("file_art_2353.txt")
+    if match:
+        print("Filename matches!")
+    #+END_SRC
+
+** Regular expressions
+*** Extracting substrings
+    - Parentheses =(...)=  can be used to defined groups in a match:
+    - Example:
+      #+attr_latex: :options bgcolor=light, escapeinside=<>
+      #+BEGIN_SRC text
+      <{\color{green}file\_}{\color{red}([a-zA-Z]\{3\})}{\color{green}\_}{\color{blue}({\textbackslash}d+)}{\color{green}.txt}>
+      #+END_SRC
+      - Defines groups identified by indices @@latex:{\color{red}1}@@ and @@latex:{\color{blue}2}@@.
+    - Can be used to extract substrings from match:
+    #+attr_latex: :options bgcolor=dark
+    #+BEGIN_SRC python
+    import re
+    expr = re.compile(r"file_([a-zA-Z]{3})_(\d+).txt")
+    match = expr.match("file_art_2353.txt")
+    print(match.group(1)) # Prints: art
+    print(match.group(2)) # Prints: 2353
+    #+END_SRC
+
+** Manipulating file system paths
+*** The problem   
+    - File system paths look different Windows and Linux:
+      - Windows:
+        #+attr_latex: :options bgcolor=light, escapeinside=<>
+        #+BEGIN_SRC text
+        C:\Documents\Report.pdf
+        #+END_SRC
+
+      - Linux:
+        #+attr_latex: :options bgcolor=light, escapeinside=<>
+        #+BEGIN_SRC text
+        /home/simon/Documents/Report.pdf
+        #+END_SRC
+    - By using strings to handle paths your code will likely
+      become /platform dependent/ (or/and messy)
+      
+** Manipulating file system paths
+*** The solution   
+    - The =pathlib= module provides an object oriented
+      solution to handle file system paths in a (mostly) platform independent
+      way
+    - The documentation[fn:7] even contains a simplified UML diagram:
+
+      \centering
+      \includegraphics[width=0.5\textwidth]{figures/uml}
+
+[fn:7] Taken from https://docs.python.org/3/library/pathlib.html
+
+** Manipulating file system paths
+*** The =Path= class
+    - For mosts tasks simply using the =Path= class is suffcient
+*** Examples:
+    - A common requirement is to determine the directory that a source file
+      is located in:
+      
+    #+attr_latex: :options bgcolor=dark
+    #+BEGIN_SRC python
+    from pathlib import Path
+    this_directory = Path(__file__).parent
+    #+END_SRC
+
+    - Or to get the current working directory:
+      
+    #+attr_latex: :options bgcolor=dark
+    #+BEGIN_SRC python
+    this_directory = Path.cwd()
+    #+END_SRC
+
+** Manipulating file system paths
+*** More =Path= functionality
+    - Concatenating paths (=/= operator):
+      #+attr_latex: :options bgcolor=dark
+      #+BEGIN_SRC python
+      sub_dir = current_dir / "directory_name"
+      #+END_SRC
+
+    - Iterate over directory content:
+      #+attr_latex: :options bgcolor=dark
+      #+BEGIN_SRC python
+      for p in current_dir.iterdir():
+          print(p)
+    #+END_SRC
+      
+    - Creating directories:
+      - Avoids having to check whether directory already exists
+      #+attr_latex: :options bgcolor=dark
+      #+BEGIN_SRC python
+      sub_dir.mkdir(parents=True, exist_ok=True)
+      #+END_SRC
+      
 ** Handling dates
+*** =datetime=
+    - The =datetime= module provides two handy classes to handle dates and times:
+      - =datetime=: Represents a point in time defined by date and time
+      - =timedelta=: Represents a time difference between to points in time
+*** Useful functions
+    - Date arithmetic:
+      #+attr_latex: :options bgcolor=dark
+      #+BEGIN_SRC python
+      from datetime import datetime, timedelta
+      date_1 = datetime(2020, 2, 28)
+      date_2 = date_1 + timedelta(day=1)
+      print(date_2) # Prints: 2020-02-29 00:00:00
+      #+END_SRC
+
+** Datetime
+*** Useful functions
+    - Parsing of dates using =strptime=[fn:9]:
+      #+attr_latex: :options bgcolor=dark, fontsize=\scriptsize
+      #+BEGIN_SRC python
+      a_date = "27.10.2020" # Germans and their silly dates.
+      parsed_date = datetime.strptime(a_date, "%d.%m.%Y")
+      print(parsed_date) # Prints: 2020-10-27 00:00:00
+      #+END_SRC
+
+    - Parsing of dates using =strftime=:
+      #+attr_latex: :options bgcolor=dark, fontsize=\scriptsize
+      #+BEGIN_SRC python
+      a_date = parsed_date.strftime("%d.%m.%Y")
+      print(a_date) # Prints: 27.10.2020
+      #+END_SRC
 
 ** Parsing command line arguments
+*** The =argparse= module
+    - Provides an object oriented interface to build command
+      line application.
+    - Automatically parses command line arguments and displays
+      help messages.
 
+** The =argparse= module
+*** Example
+    - From the =smhpy= source code:
+      #+attr_latex: :options bgcolor=dark, fontsize=\scriptsize
+      #+BEGIN_SRC python
+      description = """Display SMHI weather forecasts on the command line."""
+      parser = argparse.ArgumentParser(prog="smhpy",
+                                     description=description)
+      parser.add_argument('--days',
+                           nargs=1,
+                           type=int,
+                           default=[1],
+                           help="Number of days (< 10) to display.")
+      args = parser.parse_args()
+      days = args.days[0]
+      #+END_SRC
+
+** The =argparse= module
+*** Example
+    - Resulting interface:
+      #+attr_latex: :options bgcolor=light, style=fruity, fontsize=\scriptsize
+      #+BEGIN_SRC bash
+      $ smhpy --help
+      usage: smhpy [-h] [--days DAYS]
+
+      Display SMHI weather forecasts on the command line.
+
+      optional arguments:
+        -h, --help   show this help message and exit
+        --days DAYS  Number of days (< 10) to display
+      #+END_SRC
+
+      
+
+[fn:9] See https://docs.python.org/3.6/library/datetime.html#strftime-strptime-behavior for full reference.
+
+** Summary
+*** The Python standard library
+    - Contributes a lot to the effectiveness of Python
+    - Don't try to reinvent the wheel: A lot of thinking went
+      into designing it, so use it.
+    - Too complex to cover completely here, so keep your eyes
+      open.
+      
+
+** Summary
+*** Advantages of the standard library
+    - Platform independence
+    - No need to install external packages
+    - Proven solutions
+    - Helps you get more done with less code
