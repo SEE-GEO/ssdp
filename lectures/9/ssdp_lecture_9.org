@@ -149,12 +149,21 @@
    - Exercise 1 from exercise sheet
    - Time: 5 minutes
 
+** Exercise 1
+
+*** The problem with mutable default values
+
+    - Default values are created once, when the function definition is parsed.
+    - \textbf{The default values are shared between different invocations of a function}.
+    - If a mutable default value is changed, these changes affect subsequent calls
+      of the function.
+
 ** Namedtuples vs. Dataclasses 
 
 *** Namedtuples
     - Immutable:
       - Can be used as key in dict.
-    - Smaller memory footprint
+    - Smaller memory footprint than dataclasses
 
 *** Dataclasses
     - More intuitive syntax than named tuples.
@@ -190,19 +199,21 @@
 ** Dictionaries
 *** Dictionary
     - Container that maps a /key/ object to a /value/ object.
-    - The key object must be immutable (/hashable/)
+    - Key object must be immutable (/hashable/)
     - Highly optimized data structure:
+      - Should always be used when certain non-=int= values need to be mapped to arbitrary
+        other values.
       - Used internally by all Python objects that support dynamic
         attributes and accessible through the =__dict__= special attribute:
 
-      #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
-      #+BEGIN_SRC Python
-      def a_function():
-          pass
-      a_function.attribute = "some value"
-      print(a_function.attribute) # Prints: some value
-      print(a_function.__dict__)  # Prints: {"attribute" : "some_value"}
-      #+END_SRC
+  #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+  #+BEGIN_SRC Python
+  def a_function():
+      pass
+  a_function.attribute = "some value"
+  print(a_function.attribute) # Prints: some value
+  print(a_function.__dict__)  # Prints: {"attribute" : "some_value"}
+  #+END_SRC
 
 ** Dictionaries
 *** Useful functions
@@ -211,11 +222,56 @@
     - =setdefault(key, default=None)=: Like =get= but also adds =key=  with =default= as value
       to the =dict= if not already present.
     - Iterating over =dict= content: =keys()=, =values()= =items()=
+
+*** Example
+
+  #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+  #+BEGIN_SRC Python
+  scores = {}
+  current_score = scores.setdefault("player_1", 0)
+  scores["player_1"] = current_score + 1
+  print(scores) # Prtins: {'player_1': 1}
+  #+END_SRC
+
+** Dictionaries
 *** Other features
     - Since Python 3.7: Iterators return elements in order of insertion
       - Use =collections.OrderedDict= in older code if required
     - Other specialized dictionary types: =defaultdict= and =Counter= in =collections=
       module[fn:4].
+
+[fn:4] Check docs for more info: https://docs.python.org/3.8/library/collections.html
+
+** Dictionaries
+
+*** Example
+    - Download text from wikipedia:
+
+  #+attr_latex: :options fontsize=\tiny, bgcolor=dark
+  #+BEGIN_SRC Python
+  import urllib.parse
+  import urllib.request
+  import json
+  url = "https://en.wikipedia.org/w/api.php"
+  values = {"action": "parse",
+            "page": "Das Kapital",
+            "format": "json",
+            "prop": "wikitext"}
+  data = urllib.parse.urlencode(values)
+  request = urllib.request.Request(url, data.encode())
+  with urllib.request.urlopen(request) as response:
+    data = json.load(response)
+  text = data["parse"]["wikitext"]["*"]
+  #+END_SRC
+
+    - Count letters:
+  #+attr_latex: :options fontsize=\tiny, bgcolor=dark
+  #+BEGIN_SRC Python
+  from collections import Counter
+  counter = Counter(text)
+  print(counter.most_common(5))
+  # Prints: [(' ', 3962), ('e', 2540), ('a', 2102), ('t', 2064), ('i', 2058)]
+  #+END_SRC
 
 [fn:4] Check docs for more info: https://docs.python.org/3.8/library/collections.html
 
@@ -294,9 +350,19 @@
    - Exercise 2 on exercise sheet.
    - Time: 10 minutes
 
+** Summary
+*** Classes vs. data structures
+    - If data has associated behaviour, make it a class
+    - Else use a  data structure.
+
+** Summary
+*** Data structure overview
+    \vspace{1cm}
+    \includegraphics[width=\textwidth]{figures/data_structures}
+
 * A brief tour of the standard library
 ** The Python standard library
-   - Python comes with ax extensive standard library,[fn:6] which
+   - Python comes with an extensive standard library,[fn:6] which
      is available on any system without the need to install any additional packages.
 
    - Offers solutions for common programming problems.
@@ -364,6 +430,8 @@
       #+END_SRC
 
 [fn:8] I use this to automatically generate titles for subplots.
+
+** Exercise 3
 
 ** Regular expressions
 *** Regular expressions
