@@ -62,9 +62,9 @@ the course lectures in PDF format.
   +------------+--------------------------------------------------+--------------------------------------------------------------------------+
   | 2020-10-14 | Object oriented programming with Python, part 2  | ssdp_lecture_7_, ssdp_lecture_7_exercise_                                |
   +------------+--------------------------------------------------+--------------------------------------------------------------------------+
-  | 2020-10-21 | Design patterns                                  | ssdp_lecture_8_, ssdp_lecture_8_exercise_                                |
+  | 2020-10-21 | Design patterns                                  | ssdp_lecture_8_, ssdp_lecture_8_exercise_, ssdp_lecture_8_solution_      |
   +------------+--------------------------------------------------+--------------------------------------------------------------------------+
-  | 2020-10-28 | The Python standard library                      | ssdp_lecture_9                                                           |
+  | 2020-10-28 | The Python standard library                      | ssdp_lecture_9_, ssdp_lecture_9_exercise_                                |
   +------------+--------------------------------------------------+--------------------------------------------------------------------------+
   | 2020-11-04 | Advanced Python concepts                         | ssdp_lecture_10                                                          |
   +------------+--------------------------------------------------+--------------------------------------------------------------------------+
@@ -97,3 +97,7 @@ the course lectures in PDF format.
 .. _ssdp_lecture_7_exercise:  https://github.com/SEE-MOF/ssdp/raw/main/lectures/7/ssdp_lecture_7_exercise.pdf
 .. _ssdp_lecture_8:  https://github.com/SEE-MOF/ssdp/raw/main/lectures/8/ssdp_lecture_8.pdf
 .. _ssdp_lecture_8_exercise:  https://github.com/SEE-MOF/ssdp/blob/main/lectures/8/ssdp_lecture_8_exercise.ipynb
+.. _ssdp_lecture_8_solution:  https://github.com/SEE-MOF/ssdp/blob/main/lectures/8/ssdp_lecture_8_solution.ipynb
+.. _ssdp_lecture_9:  https://github.com/SEE-MOF/ssdp/raw/main/lectures/9/ssdp_lecture_9.pdf
+.. _ssdp_lecture_9_exercise:  https://github.com/SEE-MOF/ssdp/blob/main/lectures/9/ssdp_lecture_9_exercise.ipynb
+.. _ssdp_lecture_9_solution:  https://github.com/SEE-MOF/ssdp/blob/main/lectures/9/ssdp_lecture_9_solution.ipynb
