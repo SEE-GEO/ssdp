@@ -67,7 +67,12 @@
     from collections import namedtuple
     record_class = namedtuple("Record", ["id" ,"name", "properties"])
     record = record_class(1, "name", [])
-    print(record) # Prints: Record(id=1, name='name', properties=[])
+    print(record)    # Prints: Record(id=1, name='name', properties=[])
+    
+    # Field access
+    print(record.id)         # Prints: 1
+    print(record.name)       # Prints: name
+    print(record.properties) # Prints: []
     #+END_SRC 
 
 ** Named tuples
@@ -185,7 +190,7 @@
           def __add__(self, other):
               """ A not very meaningfull addition operator. """
               if isinstance(other, Record):
-                  Record(self.id, self.name, self.properties + other.properties)
+                  return Record(self.id, self.name, self.properties + other.properties)
               # Should return NotImplemented if we can't handle type.
               return NotImplemented
 
@@ -285,7 +290,7 @@
       #+END_SRC
 *** Some useful member functions:
      - =append(x)=: Append =x= to list.
-     - =insert(x, i)=: Insert =x= at index =i=.
+     - =insert(i, x)=: Insert =x= at index =i=.
      - =remove(x)=: Remove first occurrence of =x=
      - =index(x)=: Zero-based index of first element equal to =x=
      - =sort()=: Sort list
@@ -350,6 +355,11 @@
 
    - Exercise 2 on exercise sheet.
    - Time: 10 minutes
+
+** Exercise 2
+   
+   \centering
+   \includegraphics[width=\textwidth]{figures/timings}
 
 ** Summary
 *** Classes vs. data structures
@@ -439,6 +449,7 @@
 
 ** Exercise 3
 *** Manipulating module variables with user input:
+    - Python allows you to 
 
      \vspace{1cm}
       \centering
@@ -632,7 +643,6 @@
 ** Exercise 4
    - Exercise 4
    - Time: 15 minutes
-
 ** Manipulating file system paths
 *** The problem   
     - File system paths look different Windows and Linux:
