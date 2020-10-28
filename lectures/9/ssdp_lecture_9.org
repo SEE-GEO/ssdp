@@ -20,6 +20,7 @@
 #+LATEX_HEADER: \newcommand{\redcross}{{\color{red}\ding{55}}}
 #+LATEX_HEADER: \newcommand{\question}{{\color{yellow}\textbf{???}}}
 #+LATEX_HEADER: \addbibresource{literature.bib}
+#+LATEX_HEADER: \newmintinline[pyil]{Python}{style=default, bgcolor=light}
 #+BEAMER_HEADER: \AtBeginSection[]{\begin{frame}<beamer>\frametitle{Agenda}\tableofcontents[currentsection]\end{frame}}
 
 * Overview
@@ -433,16 +434,27 @@
 
 ** Exercise 3
 
+   - Exercise 3 on exercise sheet.
+   - Time: 10 minutes
+
+** Exercise 3
+*** Manipulating module variables with user input:
+
+     \vspace{1cm}
+      \centering
+      \includegraphics[width=0.5\textwidth]{figures/rake}
+
+
 ** Regular expressions
 *** Regular expressions
     - pattern matching language useful to extract sequences from text
     - A regular expression is a string consisting of
       - Regular letters
       - Any of the special characters:
-      #+attr_latex: :options bgcolor=dark
+      #+attr_latex: :options bgcolor=light
       #+BEGIN_SRC bash
        . ^ $ * + ? { } [ ] \ | ( )
-      #+END_SRC bash
+      #+END_SRC
 
 ** Regular expressions
 *** Example: Matching filenames
@@ -479,20 +491,20 @@
 ** Regular expressions
 *** Example: Matching filenames
     - Next, we need to match 3 alphabetic characters
-    - For, this we need to learn to additional features of regexps:
-      - How to match classes or sets of characters
-      - How to match repeated characters
+    - For, this we need to learn two additional features of regexps:
+      - How to match \textbf{classes or sets of characters}
+      - How to match \textbf{repeated characters}
     
 ** Regular expressions
 *** Character classes
     - The following special sequences match classes of characters in regular expressions:
-      - =.=: Matches any character (except newline)
-      - =\d=: Any digit
-      - =\D=: Anything /not matched/ by =\d=
-      - =\s=: Any whitespace character
-      - =\S=: Anything /not matched/ by =\s=
-      - =\w=: Any alphanumeric (letter or digit) character
-      - =\W=: Anything /not matched/ by =\w=
+      - \pyil{.}  :: (dot) Matches any character (except newline)
+      - \pyil{\d} :: Any digit
+      - \pyil{\D} :: Anything /not matched/ by =\d=
+      - \pyil{\s} :: Any whitespace character
+      - \pyil{\S} :: Anything /not matched/ by =\s=
+      - \pyil{\w} :: Any alphanumeric (letter or digit) character
+      - \pyil{\W} :: Anything /not matched/ by =\w=
 
 ** Regular expressions
 *** Character classes
@@ -600,13 +612,13 @@
 
 ** Regular expressions
 *** Extracting substrings
-    - Parentheses =(...)=  can be used to defined groups in a match:
+    - Parentheses =(...)=  can be used to define groups in a match:
     - Example:
       #+attr_latex: :options bgcolor=light, escapeinside=<>
       #+BEGIN_SRC text
       <{\color{green}file\_}{\color{red}([a-zA-Z]\{3\})}{\color{green}\_}{\color{blue}({\textbackslash}d+)}{\color{green}.txt}>
       #+END_SRC
-      - Defines groups identified by indices @@latex:{\color{red}1}@@ and @@latex:{\color{blue}2}@@.
+      - Defines two groups identified by indices @@latex:{\color{red}1}@@ and @@latex:{\color{blue}2}@@.
     - Can be used to extract substrings from match:
     #+attr_latex: :options bgcolor=dark
     #+BEGIN_SRC python
@@ -616,6 +628,10 @@
     print(match.group(1)) # Prints: art
     print(match.group(2)) # Prints: 2353
     #+END_SRC
+
+** Exercise 4
+   - Exercise 4
+   - Time: 15 minutes
 
 ** Manipulating file system paths
 *** The problem   
