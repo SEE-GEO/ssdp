@@ -1,0 +1,458 @@
+#+TITLE: Scientific Software Development with Python
+#+SUBTITLE: Python recipes
+#+AUTHOR: Simon Pfreundschuh
+#+OPTIONS: H:2 toc:nil
+#+LaTeX_HEADER: \institute{Department of Space, Earth and Environment}
+#+LaTeX_HEADER: \setbeamerfont{title}{family=\sffamily, series=\bfseries, size=\LARGE}
+#+LATEX_HEADER: \usepackage[style=authoryear]{biblatex}
+#+LATEX_HEADER: \usepackage{siunitx}
+#+LaTeX_HEADER: \usetheme{chalmers}
+#+LATEX_HEADER: \usepackage{subcaption}
+#+LATEX_HEADER: \usepackage{amssymb}
+#+LATEX_HEADER: \usepackage{dirtree}
+#+LATEX_HEADER: \usemintedstyle{monokai}
+#+LATEX_HEADER: \usepackage{pifont}
+#+LATEX_HEADER: \definecolor{light}{HTML}{CCCCCC}
+#+LATEX_HEADER: \definecolor{dark}{HTML}{353535}
+#+LATEX_HEADER: \definecolor{green}{HTML}{008800}
+#+LATEX_HEADER: \definecolor{source_file}{rgb}{0.82, 0.1, 0.26}
+#+LATEX_HEADER: \newcommand{\greencheck}{{\color{green}\ding{51}}}
+#+LATEX_HEADER: \newcommand{\redcross}{{\color{red}\ding{55}}}
+#+LATEX_HEADER: \newcommand{\question}{{\color{yellow}\textbf{???}}}
+#+LATEX_HEADER: \addbibresource{literature.bib}
+#+LATEX_HEADER: \newmintinline[pyil]{Python}{style=default, bgcolor=light}
+#+BEAMER_HEADER: \AtBeginSection[]{\begin{frame}<beamer>\frametitle{Agenda}\tableofcontents[currentsection]\end{frame}}
+
+* Overview
+** Overview
+  \centering
+  \includegraphics[width=0.6\textwidth]{figures/dimensions_of_software_development_part_2}
+
+* Context managers
+** The need for context managers
+*** The problem
+    - Some code may require specific /setup/ and 
+      /tear down/ actions.
+*** Example
+    - Opening and closing of files:
+      - File needs to be closed to ensure that all data is written to it.[fn:1]
+
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+    #+BEGIN_SRC Python
+    f1 = open("test_file.txt", "w")
+    f1.write("hi!")
+
+    f2 = open("test_file.txt", "r")
+    content = f2.read()
+    print(content) # Prints: ''
+    #+END_SRC 
+
+[fn:1]  This is called /buffering/ and implemented to minimize the number of slow hard disc accesses.
+
+** The need for context managers
+
+   - To obtain the correct result, the file must be closed by calling the =close= method:
+
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+    #+BEGIN_SRC Python
+    f1 = open("test_file.txt", "w")
+    f1.write("hi!")
+    f1.close()
+
+    f2 = open("test_file.txt", "r")
+    content = f2.read()
+    print(content) # Prints: 'hi!'
+    #+END_SRC
+
+*** Problems with this approach
+    - The file is not closed if an exception is thrown
+      between the opening and the closing of the file
+
+** The need for context manager
+
+   - Python, of course, takes care of that for you:
+
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+    #+BEGIN_SRC Python
+    with open("test_file.txt", "w") as f1:
+        f1.write("hi!")
+
+    f2 = open("test_file.txt", "r")
+    content = f2.read()
+    print(content) # Prints: 'hi!'
+    #+END_SRC
+
+** Context manager classes
+*** How does this work
+    - The =with= statement is only /syntactic sugar/ for two special methods:
+      - =__enter__=: Is called when the =with= block is entered
+      - =__exit__=: Is called when the =with= block is left
+
+*** Example
+
+    #+attr_latex: :options fontsize=\tiny, bgcolor=dark
+    #+BEGIN_SRC Python
+    class MyContextManager:
+        def __init__(self):
+            print("1: Context manager created.")
+
+        def __enter__(self):
+            print("2: Entering with block.")
+
+        def __exit__(self, exc_type, exc, exc_tb):
+            print("4: Leaving with block.")
+
+    with MyContextManager():
+        print("3: Inside with block.")
+    #+END_SRC
+            
+** Context manager classes
+
+*** Example usage
+
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+    #+BEGIN_SRC Python
+    with MyContextManager():
+        print("3: Inside with block.")
+    #+END_SRC
+
+*** Output
+
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=light
+    #+BEGIN_SRC text
+    1: Context manager created.
+    2: Entering with block.
+    3: Inside with block.
+    4: Leaving with block.
+    #+END_SRC
+
+** Context manager classes
+
+*** Example usage
+    - Note that the =__exit__= method is called even when an exception
+      is raised.
+
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+    #+BEGIN_SRC Python
+    with MyContextManager():
+        raise Exception("Uh oh. Something went wrong.)
+        print("3: Inside with block.")
+    #+END_SRC
+
+*** Output
+
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=light
+    #+BEGIN_SRC text
+    1: Context manager created.
+    2: Entering with block.
+    4: Leaving with block.
+    -----------------------------------------------------------------------
+    Exception                                 Traceback (most recent ...)
+    ...
+    Exception: Uh oh. Something went wrong.
+    #+END_SRC
+
+** Context manager classes
+
+*** Error handling
+    - The arguments of the  =__exit__= method can be used to handle errors
+      occurring in the =with= block:
+      - =exc_type=: The type of the thrown exception
+      - =exc=: The thrown exception object
+      - =exc_tb=: The traceback describing the program state
+    - To avoid an exception from propagating upwards, the =__exit__= method
+      should return =True=
+
+** Context manager classes
+
+*** Error handling
+
+    #+attr_latex: :options fontsize=\tiny, bgcolor=dark
+    #+BEGIN_SRC python
+    class NotSoSeriousException(Exception):
+        pass
+
+    class MyContextManager:
+        def __init__(self):
+            print("1: Context manager created.")
+
+        def __enter__(self):
+            print("2: Entering with block.")
+
+        def __exit__(self, exc_type, exc, exc_tb):
+            print("4: Leaving with block.")
+            if exc_type == NotSoSeriousException:
+                print("5: Something happened but it's not so bad.")
+                return True
+    #+END_SRC
+
+** Context manager classes
+
+*** Error handling
+
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+    #+BEGIN_SRC python
+    with MyContextManager():
+        raise NotSoSeriousException("Uh oh. Something went wrong.")
+        print("3: Inside with block.")
+    #+END_SRC
+
+*** Output
+
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=light
+    #+BEGIN_SRC text
+    1: Context manager created.
+    2: Entering with block.
+    4: Leaving with block.
+    5: Something happene but it's not so bad.
+    #+END_SRC
+
+
+** Context manager classes
+
+*** The =contextlib= module
+    - Provides abstract base classes for defining context managers.
+    - Also defines a decorator function to simplify the definition of
+      context managers
+
+*** Using the =contextmanager= decorator
+
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+    #+BEGIN_SRC python
+    from contextlib import contextmanager
+
+    @contextmanager
+    def my_context_manager():
+        print("2: Entering with block.")
+        try:
+            yield
+        finally:
+            print("4: Leaving with block.")
+    #+END_SRC
+   
+** Context manager classes
+
+*** Using the =contextmanager= decorator
+
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+    #+BEGIN_SRC python
+    with my_context_manager():
+        print("3: Inside with block.")
+    #+END_SRC
+
+*** Output
+
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=light
+    #+BEGIN_SRC text
+    2: Entering with block.
+    3: Inside with block.
+    4: Leaving with block.
+    #+END_SRC
+
+** Exercise 1
+
+   - Exercise 1 in exercise notebook
+   - Time: 10 minutes
+
+
+* Error handling
+** Exceptions  
+*** Raising exception
+    - Exceptions are special objects used to signal an error occurring
+      in a program
+    - Exceptions are /raised/ using the =raise= keyword:
+
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+    #+BEGIN_SRC python
+    raise Exception("Uh oh, something went wrong.")
+    #+END_SRC
+
+    - When an exception is raised,  execution of the current function and any calling functions
+      stops. The exception propagates upwards in the call stack until it is either caught or program
+      execution is aborted.
+
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+    #+BEGIN_SRC python
+    def a_fragile_function():
+        print("This will be printed.")
+        raise Exception("Uh oh, something went wrong.")
+        print("This will not be printed.")
+    #+END_SRC
+
+** Exceptions  
+*** Tracebacks
+
+    - When an exception propagates all the way up to the interpreter it is printed
+      together with a traceback of the call stack, which helps to identify the problem:
+
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=light
+    #+BEGIN_SRC text
+    ~/ssdp/lectures/10/test_module.py in a_fragile_function()
+          1 def a_fragile_function():
+    ----> 2     raise Exception("Uh oh, something went wrong.")
+
+    Exception: Uh oh, something went wrong.
+    #+END_SRC
+
+** Handling exceptions
+*** Handling exceptions
+    - Error are handled using special blocks =try, except, else, finally=.
+*** Basic error handling
+    - If we want to try something but don't care if it works
+    - The =try= block designates a region of codes in which an error may occur.
+    - The =except= keyword is followed by the exception type that we want to catch.
+
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+    #+BEGIN_SRC python
+    try:
+        a_fragile_function()
+    except Exception:
+        pass
+    #+END_SRC
+
+** Handling exceptions
+*** The problem with excepting too general exceptions
+    - The =Exception= class is the base class for all built-in exceptions.
+    - =except Exception= therefore handles /all possible exceptions/, which is seldomly
+      what we want to achieve.
+*** Example
+    - In the example below I wouldn't even realize, that there is a spelling error
+      in the function I intended to call:
+
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+    #+BEGIN_SRC python
+    try:
+        a_fagile_function()
+    except Exception:
+        pass
+    print("This codes executes correctly despite the spelling error.")
+    #+END_SRC
+
+** Handling exceptions
+   \begin{alertblock}{Excepting too general exceptions}
+   \texttt{except} blocks that specity a very general exception class
+   (or no exception class at all) are considered bad practice.
+   \end{alertblock}
+
+** A better approach
+
+   - When you raise an exception, define a custom exception class:
+
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+    #+BEGIN_SRC python
+    class ExampleError(exception): pass
+
+    def a_fragile_function():
+        """
+        This function throws an error.
+
+        Raises:
+            ExampleError: Raised when the funciton is called.
+        """
+        print("This will be printed.")
+        raise ExampleError("Uh oh, something went wrong.")
+        print("This will not be printed.")
+    #+END_SRC
+
+   - \textbf{Note}: Exceptions raised by a function must be documented.
+
+** A better approach
+
+   - Calling code can now handle the  exceptions that it really intends to handle:
+
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+    #+BEGIN_SRC python
+    try:
+        a_fagile_function()
+    except ExampleError:
+        pass
+    #+END_SRC
+
+   - The exception caused by the misspelled function name now propagates up as expected:
+
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=light
+    #+BEGIN_SRC text
+    NameError: name 'a_fagile_function' is not defined
+    #+END_SRC
+
+** Handling exceptions
+
+   - A =try= block can be followed by multiple =except= blocks:
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+    #+BEGIN_SRC python
+    from test_module import a_fragile_function, ExampleError
+    try:
+        a_fagile_function()
+    except ExampleError:
+        pass
+    except NameError:
+        print("You made a spelling mistake!")
+        
+    #+END_SRC
+
+   - The exception caused by the misspelled function name now propagates up as expected:
+
+*** Output
+
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=light
+    #+BEGIN_SRC text
+    You made a spelling mistake!
+    #+END_SRC
+
+** Handling exceptions
+*** The =else= and =finally= blocks
+    - The =except= blocks can be followed by an =else= and a =finally= block:
+      - The =else= block:
+        - Executed only if no exception was encountered in =try= block.
+      - The =finally= block:
+        - Executed independent of outcome from =try= block
+        - Useful to perform clean up operations (like =__exit__= in a context manager)
+
+** Handling exceptions
+*** Example
+
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+    #+BEGIN_SRC python
+    from test_module import a_fragile_function, ExampleError
+    try:
+        get_resources()
+        input = get_input()
+    except ExampleError:
+        pass
+    except NameError:
+        print("You made a spelling mistake!")
+    else:
+        check_input()
+    finally:
+        release_resources()
+        
+    #+END_SRC
+
+** Handling exceptions
+*** What's the =else= block for?
+    - Code that should execute /before the/ =finally= block
+      but for which you don't want to catch error should go in the
+      =else= block
+    - This is better than adding more statements to the =try= block
+      because it avoids exception from being /swallowed/.
+
+** Custom exceptions
+*** Define a root exception for you module
+    - If you define custom exceptions in your package, it is
+      \textbf{good practice} to define a root exception.
+    - The root exception should be the base class for all
+      exception classes defined in your package
+    - This allows calling code distinguish exception from your
+      code from other exceptions.
+      
+* Serializing objects
+
+** Pickle
+
+
+** JSON
+
+  
+* Log messages
+
+* Circular dependencies
