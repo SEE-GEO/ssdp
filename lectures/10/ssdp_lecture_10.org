@@ -446,13 +446,235 @@
       code from other exceptions.
       
 * Serializing objects
+** Serializing objects
+*** The problem
+    - How do we store custom classes to disk?
+    - Serialization: Converting a class hierarchy to a 1-dimensional
+      data stream
+      
+*** Naive approach
+    - Define load and save methods that stores and reads leach object to and from disk
+      using primitive data types (numbers and strings).
+
+** Serializing objects
+
+*** The pythonic approach: =pickle=
+
+    - The =pickle= module allows storing /most/ Python classes
+      as binary data.
+    
+    #+attr_latex: :options fontsize=\tiny, bgcolor=dark
+    #+BEGIN_SRC python
+    import random
+    import pickle
+
+    class MyClass:
+        def __init__(self, n):
+            self.data = list(range(n))
+
+    my_object = MyClass(10)
+    print(my_object.data)        # Prints: [0, ..., 9]
+
+    # Note: Need to open file in binary mode ("wb")!
+    with open("my_class.pckl", "wb") as file:
+        pickle.dump(my_object, file)
+
+    # Note: Need to open file in binary mode ("rb")!
+    with open("my_class.pckl", "rb") as file:
+        my_loaded_object = pickle.load(file)
+
+    print(my_loaded_object.data) # Prints: [0, ..., 9]
+    #+END_SRC
+
+** Excercise 2
+   - Exercise 2 on exercise sheet
+   - Time: 10 minutes
 
 ** Pickle
+*** Restrictions
+    - Functions and classes are pickled by name reference
+      - Pickle only stores class data, not the the code defining the class
+      - They must be importable from the environment where the unpickling
+        is performed
+    - Certain types that interact with the computing environment cannot be
+      pickled
 
+** Pickle
+*** Example
+#+attr_latex: :options fontsize=\tiny, bgcolor=dark
+#+BEGIN_SRC python
+class MyClass:
+
+    def __init__(self, filename):
+        self.file_handle = open(filename, "w")
+
+    def __del__(self):
+        if (self.file_handle):
+            self.file_handle.close()
+            self.file_handle = None
+
+my_object = MyClass("some_file.txt")
+
+with open("my_object.pckl", "wb") as file:
+    pickle.dump(my_object, file)
+#+END_SRC
+
+*** Output
+
+  #+attr_latex: :options fontsize=\tiny, bgcolor=light
+  #+BEGIN_SRC text
+  TypeError: cannot serialize '_io.TextIOWrapper' object
+  #+END_SRC
+  
+** Pickle
+*** Customizing pickling behavior
+    - To avoid these problems pickling behavior can be customized
+      using the =__setstate__= and =__getstate__= special methods.
+#+attr_latex: :options fontsize=\tiny, bgcolor=dark
+#+BEGIN_SRC python
+class MyClass:
+
+    def __init__(self, filename):
+        self.filename = filename
+        self.file_handle = open(filename, "w")
+
+    def __setstate__(self, state):
+        self.file_handle = open(state["filename"])
+
+    def __getstate__(self):
+        return {"filename": self.filename}
+
+    def __del__(self):
+        if (self.file_handle):
+            self.file_handle.close()
+            self.file_handle = None
+#+END_SRC
+
+** Pickle
+   \begin{alertblock}{Warning}
+   Unpickling data is a security risk. Only unpickle data from
+   trusted sources.
+   \end{alertblock}
+   
+** Exercise
+
+   - Exercise 3 on exercise sheet
+   - Time: 10 minutes
 
 ** JSON
+*** Serialization using =json=
+    - Uses JavaScript Object Notation (JSON) format
+    - Stores data in (human-readable) text files
+    - Cross-language compatibility
+    - Works only for lists, dicts and primitive types
+    - Considered save
 
-  
+    #+attr_latex: :options fontsize=\tiny, bgcolor=dark
+    #+BEGIN_SRC python
+    import json
+
+    data = [1, 2, "data"]
+
+    with open("data.json", "w") as file:
+        json.dump(data, file)
+
+    with open("data.json", "rt") as file:
+        data_loaded = json.load(file)
+
+    print(data_loaded)
+    #+END_SRC
+
 * Log messages
+** Log messages
+*** The problem
+    - For diagnostic purposes it is often useful to provide
+      messages from different parts of a program
+*** The solution
+    - The =logging= module provides a standardized solution
+      to handle logging of information
+
+** Log messages
+*** Types of messages
+    - =DEBUG= :: Detailed information for diagnosing problems
+    - =INFO= :: General information
+    - =WARNING= :: Something unexpected happened but things still work.
+    - =ERROR= :: Something unexpected happened and the program was not able
+                 to perform a certain function[fn:3].
+    - =CRITICAL= :: A very serious error
+
+[fn:3] This should only be used when the program can resume execution. Otherwise throw an exception.
+
+** Log messages
+*** Example
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+    #+BEGIN_SRC python
+    import logging
+    logger = logging.getLogger("test_logger")
+    logger.debug("A debug message.")
+    logger.info("An info message.")
+    logger.warning("A warning.")
+    logger.error("An error.")
+    logger.critical("An critical error.")
+    #+END_SRC
+
+*** Output
+    - By default, only messages with levels higher or equal than
+      warning are printed.
+
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=light
+    #+BEGIN_SRC text
+    A warning.
+    An error.
+    An critical error.
+    #+END_SRC
+
+** Log messages
+*** Controlling the output level
+
+    - The logging behavior should be customized using the =basicConfig= function
+      upon program start.
+      
+
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+    #+BEGIN_SRC python
+    import logging
+    loggin.basicConfig(level=logging.DEBUG)
+    logger = logging.getLogger("test_logger")
+    logger.debug("A debug message.")
+    #+END_SRC
+
+*** Output
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=light
+    #+BEGIN_SRC text
+    DEBUG:test_logger:A debug message.
+    #+END_SRC
+
+
+** Log messages
+*** Logging to a file
+
+    - This will store log output to =log.txt=.
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+    #+BEGIN_SRC python
+    import logging
+    loggin.basicConfig(level=logging.DEBUG, filename="log.txt", mode="w")
+    logger = logging.getLogger("test_logger")
+    logger.debug("A debug message.")
+    #+END_SRC
+
+** Log messages
+*** Handling output from different modules
+    - It is useful to separate output from different modules by using
+      different logger objects[fn:4]:
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+    #+BEGIN_SRC python
+    import logging
+    logger = logging.getLogger(__name__)
+    #+END_SRC
+
+[fn:4] The =__name__= attribute of contains the filename of the current file.
+  
+
+
 
 * Circular dependencies
