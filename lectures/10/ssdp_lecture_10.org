@@ -614,7 +614,7 @@ class MyClass:
     logger.info("An info message.")
     logger.warning("A warning.")
     logger.error("An error.")
-    logger.critical("An critical error.")
+    logger.critical("A critical error.")
     #+END_SRC
 
 *** Output
@@ -650,6 +650,30 @@ class MyClass:
     #+END_SRC
 
 
+
+** Log messages
+*** Controlling message formatting
+
+    - The message format can be customized by providing
+      a custom format string:
+
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+    #+BEGIN_SRC python
+    import logging
+    format_string = "{name} ( {levelname:10} ) :: {message} "
+    loggin.basicConfig(level=logging.DEBUG,
+                       format=format_string,
+                       style="{")
+    logger = logging.getLogger("test_logger")
+    logger.debug("A debug message.")
+    #+END_SRC
+
+*** Output
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=light
+    #+BEGIN_SRC text
+    __main__ ( DEBUG      ) :: A debug message. 
+    #+END_SRC
+
 ** Log messages
 *** Logging to a file
 
@@ -674,7 +698,149 @@ class MyClass:
 
 [fn:4] The =__name__= attribute of contains the filename of the current file.
   
+** Log message
+*** Application example
+    - Finally, you can combine the =logging= module
+      with =argparse= to interactively control the logging
+      behavior of your command line application:
 
+    #+attr_latex: :options fontsize=\tiny, bgcolor=dark
+    #+BEGIN_SRC python
+    import argparse
+    import logging
 
+    parser = argparse.ArgumentParser(description='Logging example.')
+    parser.add_argument('--verbose', action='store_true')
 
-* Circular dependencies
+    args = parser.parse_args()
+    if args.verbose:
+        logging_level = logging.DEBUG
+    else:
+        logging_level = logging.WARNING
+
+    format_string = "{name} ( {levelname:10} ) :: {message} "
+    logging.basicConfig(level=logging_level, format=format_string, style="{")
+    logger = logging.getLogger(__name__)
+    logger.debug("A debug message.")
+    logger.info("An info message.")
+    logger.warning("A warning.")
+    ...
+    #+END_SRC
+
+** Log message
+*** Non-verbose output
+
+    #+attr_latex: :options fontsize=\tiny, bgcolor=light
+    #+BEGIN_SRC text
+    $ python logging_example.py 
+    __main__ ( WARNING    ) :: A warning. 
+    __main__ ( ERROR      ) :: An error. 
+    __main__ ( CRITICAL   ) :: A critical error. 
+    #+END_SRC
+
+*** Verbose output
+
+    #+attr_latex: :options fontsize=\tiny, bgcolor=light
+    #+BEGIN_SRC text
+    $ python logging_example.py --verbose
+    __main__ ( DEBUG      ) :: A debug message. 
+    __main__ ( INFO       ) :: An info message. 
+    __main__ ( WARNING    ) :: A warning. 
+    __main__ ( ERROR      ) :: An error. 
+    #+END_SRC
+
+* Type annotations
+** Type annotations
+*** Example from last lecture
+    - Python supports type hints since version 3.5:
+
+    #+attr_latex: :options fontsize=\tiny, bgcolor=dark
+    #+BEGIN_SRC python
+    from dataclasses import dataclass
+    @dataclass
+    class Record:
+    id: int
+    name: str
+    properties: list
+    record = Record(1, "name", [])
+    #+END_SRC
+
+** Type annotations
+*** Example from last lecture
+    - However, type annotation are not enforced:
+
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+    #+BEGIN_SRC python
+    # This is valid although the first to arguments
+    # are swapped.
+    record = Record("name", 1, [])
+    #+END_SRC
+
+** Type annotations
+*** Checking types with =mypy=
+    - To check types an external tool such as =mypy= is required:
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=light
+    #+BEGIN_SRC text
+    pip install mypy
+    #+END_SRC
+    - Then types can be checked as follows:
+    #+attr_latex: :options fontsize=\tiny, bgcolor=light
+    #+BEGIN_SRC text
+    python -m mypy type_example.py 
+    type_example.py:9: error: Argument 1 to "Record" has incompatible type "str"; expected "int"
+    type_example.py:9: error: Argument 2 to "Record" has incompatible type "int"; expected "str"
+    Found 2 errors in 1 file (checked 1 source file)
+    #+END_SRC
+
+** Type annotations
+*** Annotating functions
+    - Types hints can be used to specify types
+      for arguments as well as return type
+    - Example from Python docs[fn:5]:
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+    #+BEGIN_SRC python
+    Vector = list[float] # Type alias
+
+    def scale(scalar: float, vector: Vector) -> Vector:
+        return [scalar * num for num in vector]
+    #+END_SRC
+
+[fn:5] https://docs.python.org/3/library/typing.html
+      
+** Type annotations
+*** Advanced type annotations
+    - The =typing= module provides special type objects
+      to specify types for e.g. callables and sequences
+
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+    #+BEGIN_SRC python
+    from typing import List, Sequence, Callable
+
+    Vector = List[float]
+    Functional = Callable[[Vector], float]
+
+    def dot_product(x: Vector, y: Vector) -> float:
+        return sum([a * b for a, b in zip(x, y)])
+
+    def apply(f: Functional, vectors: Sequence[Vector]) -> Sequence[float]:
+        return [f(v) for v in vectors]
+
+    apply(dot_product, [[1.0, 0.0], [0.0, 1.0]]) # Doesn't pass type check.
+    apply(lambda x: dot_product(x, x), [[1.0, 0.0], [0.0, 1.0]])
+    #+END_SRC
+
+** Type annotations
+*** Advantages
+    - Type hints allow static type checkers to catch logical
+      errors such as this one[fn:6]:
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+    #+BEGIN_SRC python
+    from typing import List, Sequence, Callable
+
+    def do_something(input List[int]):
+        for i in input:
+            i.something() #
+    #+END_SRC
+    - Type hints make your code easier to understand
+[fn:6] Using =mypy= in your IDE will thus help you catch logical errors while programming.
+  
