@@ -108,9 +108,11 @@
 
         def __enter__(self):
             print("2: Entering with block.")
+            return self
 
         def __exit__(self, exc_type, exc, exc_tb):
             print("4: Leaving with block.")
+            return False
 
     with MyContextManager():
         print("3: Inside with block.")
@@ -188,12 +190,14 @@
 
         def __enter__(self):
             print("2: Entering with block.")
+            return self
 
         def __exit__(self, exc_type, exc, exc_tb):
             print("4: Leaving with block.")
             if exc_type == NotSoSeriousException:
                 print("5: Something happened but it's not so bad.")
                 return True
+            return False
     #+END_SRC
 
 ** Context manager classes
@@ -639,6 +643,7 @@ class MyClass:
         def default(self, obj):
             if isinstance(obj, MyClass):
                 return {"MyClass": obj.filename}
+            return JSONEncoder.default(self, obj)
     #+END_SRC
 
 ** JSON
