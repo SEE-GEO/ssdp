@@ -66,7 +66,7 @@ the course lectures in PDF format.
   +------------+--------------------------------------------------+--------------------------------------------------------------------------+
   | 2020-10-28 | The Python standard library                      | ssdp_lecture_9_, ssdp_lecture_9_exercise_, ssdp_lecture_9_solution_      |
   +------------+--------------------------------------------------+--------------------------------------------------------------------------+
-  | 2020-11-04 | Advanced Python concepts                         | ssdp_lecture_10                                                          |
+  | 2020-11-04 | Advanced Python concepts                         | ssdp_lecture_10_, ssdp_lecture_10_exercise_                              |
   +------------+--------------------------------------------------+--------------------------------------------------------------------------+
   | 2020-11-11 | **2nd Retrospective**: Results from first sprint                                                                            |
   +------------+--------------------------------------------------+--------------------------------------------------------------------------+
@@ -101,3 +101,5 @@ the course lectures in PDF format.
 .. _ssdp_lecture_9:  https://github.com/SEE-MOF/ssdp/raw/main/lectures/9/ssdp_lecture_9.pdf
 .. _ssdp_lecture_9_exercise:  https://github.com/SEE-MOF/ssdp/blob/main/lectures/9/ssdp_lecture_9_exercise.ipynb
 .. _ssdp_lecture_9_solution:  https://github.com/SEE-MOF/ssdp/blob/main/lectures/9/ssdp_lecture_9_solution.ipynb
+.. _ssdp_lecture_10:  https://github.com/SEE-MOF/ssdp/raw/main/lectures/10/ssdp_lecture_10.pdf
+.. _ssdp_lecture_10_exercise:  https://github.com/SEE-MOF/ssdp/blob/main/lectures/10/ssdp_lecture_10_exercise.ipynb
