@@ -28,6 +28,16 @@
   \centering
   \includegraphics[width=0.6\textwidth]{figures/dimensions_of_software_development_part_2}
 
+** Lecture content
+*** Lecture content
+   - Pythonic approaches to handling common programming tasks
+     - Acquiring and releasing of resources
+     - Error handling
+     - Storing data
+     - Logging
+     - Type annotations
+   - Some /real/ hacking (exercises)
+
 * Context managers
 ** The need for context managers
 *** The problem
@@ -66,7 +76,7 @@
 
 *** Problems with this approach
     - The file is not closed if an exception is thrown
-      between the opening and the closing of the file
+      between the opening and the closing of the first file
 
 ** The need for context manager
 
@@ -252,7 +262,7 @@
 ** Exercise 1
 
    - Exercise 1 in exercise notebook
-   - Time: 10 minutes
+   - Time: 15 minutes
 
 
 * Error handling
@@ -330,7 +340,7 @@
 
 ** Handling exceptions
    \begin{alertblock}{Excepting too general exceptions}
-   \texttt{except} blocks that specity a very general exception class
+   \texttt{except} blocks that specify a very general exception class
    (or no exception class at all) are considered bad practice.
    \end{alertblock}
 
@@ -368,7 +378,7 @@
         pass
     #+END_SRC
 
-   - The exception caused by the misspelled function name now propagates up as expected:
+   - The exception caused by the misspelled function name now propagates upwards as expected:
 
     #+attr_latex: :options fontsize=\scriptsize, bgcolor=light
     #+BEGIN_SRC text
@@ -415,6 +425,8 @@
     #+BEGIN_SRC python
     from test_module import a_fragile_function, ExampleError
     try:
+        # Acquire resources and try to obtain input. If that
+        # doesn't work, continue.
         get_resources()
         input = get_input()
     except ExampleError:
@@ -422,10 +434,12 @@
     except NameError:
         print("You made a spelling mistake!")
     else:
+        # If we have obtained erroneous input propagations should
+        # propagate upwards.
         check_input()
     finally:
+        # Always release resources again.
         release_resources()
-        
     #+END_SRC
 
 ** Handling exceptions
@@ -434,10 +448,10 @@
       but for which you don't want to catch error should go in the
       =else= block
     - This is better than adding more statements to the =try= block
-      because it avoids exception from being /swallowed/.
+      because it avoids exceptions from being /swallowed/.
 
 ** Custom exceptions
-*** Define a root exception for you module
+*** Define a root exception for your module
     - If you define custom exceptions in your package, it is
       \textbf{good practice} to define a root exception.
     - The root exception should be the base class for all
@@ -445,6 +459,15 @@
     - This allows calling code distinguish exception from your
       code from other exceptions.
       
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+    #+BEGIN_SRC python
+    class TestModuleException(Exception):
+        """Base class for all exceptions from the ``test_module``."""
+
+    class ExampleError(TestModuleException):
+        """Example error raised from the ``test_modul``."""
+    #+END_SRC
+
 * Serializing objects
 ** Serializing objects
 *** The problem
@@ -453,7 +476,7 @@
       data stream
       
 *** Naive approach
-    - Define load and save methods that stores and reads leach object to and from disk
+    - Define =load= and =save= methods which store and read objects to and from disk
       using primitive data types (numbers and strings).
 
 ** Serializing objects
@@ -486,9 +509,6 @@
     print(my_loaded_object.data) # Prints: [0, ..., 9]
     #+END_SRC
 
-** Excercise 2
-   - Exercise 2 on exercise sheet
-   - Time: 10 minutes
 
 ** Pickle
 *** Restrictions
@@ -553,13 +573,9 @@ class MyClass:
 ** Pickle
    \begin{alertblock}{Warning}
    Unpickling data is a security risk. Only unpickle data from
-   trusted sources.
+   trusted sources.\footnote{We'll see more of this later.}
    \end{alertblock}
    
-** Exercise
-
-   - Exercise 3 on exercise sheet
-   - Time: 10 minutes
 
 ** JSON
 *** Serialization using =json=
@@ -567,7 +583,7 @@ class MyClass:
     - Stores data in (human-readable) text files
     - Cross-language compatibility
     - Works only for lists, dicts and primitive types
-    - Considered save
+    - Considered safe
 
     #+attr_latex: :options fontsize=\tiny, bgcolor=dark
     #+BEGIN_SRC python
@@ -583,6 +599,78 @@ class MyClass:
 
     print(data_loaded)
     #+END_SRC
+
+
+** JSON
+*** Serializing custom classes with =json=
+    - Can define custom /encoder/ and /decoder/ classes
+    - Provided to =dump= and =load= methods using the =cls= argument.
+    
+    #+attr_latex: :options fontsize=\tiny, bgcolor=dark
+    #+BEGIN_SRC python
+    import json
+    from json import JSONEncoder, JSONDecoder
+
+    class MyClassEncoder(JSONEncoder):
+        ...
+
+    class MyClassDecoder(JSONDecoder):
+        ...
+
+    my_object = MyClass("some_file.txt")
+    with open("my_object.json", "w") as file:
+        json.dump(my_object, file, cls=MyClassEncoder)
+
+    with open("my_object.json", "r") as file:
+        my_object = json.load(file, cls=MyClassDecoder)
+    #+END_SRC
+
+** JSON
+*** The custom encoder
+    - Should from =JSONEncoder= base class
+    - Should override =default(obj)= method, which turns an object
+      into a representation of =json= serializable datatypes.
+    - Should handle objects of targeted class and delegate reset
+      to base class implementation.
+    
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+    #+BEGIN_SRC python
+    class MyClassEncoder(JSONEncoder):
+        def default(self, obj):
+            if isinstance(obj, MyClass):
+                return {"MyClass": obj.filename}
+    #+END_SRC
+
+** JSON
+*** The custom decoder
+    - Should inherit from =JSONDecoder= base class.
+    - Should provide custom =object_hook= to =__init__= call
+      of base class.
+    - =object_hook= should check if a loaded =json= object
+      should be turned into an object of the custom class.
+    
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+    #+BEGIN_SRC python
+    class MyClassDecoder(JSONDecoder):
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, object_hook=self.object_hook, **kwargs)
+
+        def object_hook(self, obj):
+            if "MyClass" in obj:
+                return MyClass(obj["MyClass"])
+            return obj
+    #+END_SRC
+
+** Notes on =pickle= and =json=
+*** Notes on =pickle= and =json=
+    - Both =pickle= and =json= also provide the =dumps= and =loads=
+      methods, which write and read data to and from stream object instead
+      of file handles, respectively.
+    - Prefer specialized data formats when storing large data (NetCDF, HDF5).
+
+** Excercise 2
+   - Exercise 2 on exercise sheet
+   - Time: 15 minutes
 
 * Log messages
 ** Log messages
@@ -759,10 +847,10 @@ class MyClass:
     from dataclasses import dataclass
     @dataclass
     class Record:
-    id: int
-    name: str
-    properties: list
-    record = Record(1, "name", [])
+      id: int
+      name: str
+      properties: list
+      record = Record(1, "name", [])
     #+END_SRC
 
 ** Type annotations
@@ -781,7 +869,7 @@ class MyClass:
     - To check types an external tool such as =mypy= is required:
     #+attr_latex: :options fontsize=\scriptsize, bgcolor=light
     #+BEGIN_SRC text
-    pip install mypy
+    $ pip install mypy
     #+END_SRC
     - Then types can be checked as follows:
     #+attr_latex: :options fontsize=\tiny, bgcolor=light
@@ -839,8 +927,26 @@ class MyClass:
 
     def do_something(input List[int]):
         for i in input:
-            i.something() #
+            i.something() # Error: int has not attribute something.
     #+END_SRC
     - Type hints make your code easier to understand
 [fn:6] Using =mypy= in your IDE will thus help you catch logical errors while programming.
+
+** Excercise 3
+   - Exercise 3 on exercise sheet
+   - Time: 15 minutes
   
+** Summary
+*** What we have learned
+    - Special syntax to handle errors and context
+    - Object oriented approaches to storing data, logging
+    - Using types hints for /gradual typing/
+
+** Conclusions
+*** Conclusions
+    - Python is complex and keeps changing
+      - There is a lot to learn
+    - General principles:
+      - Object orientation
+      - Customizing behavior using special methods
+      
