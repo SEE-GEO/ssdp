@@ -30,7 +30,7 @@
 
 ** Lecture content
 *** Lecture content
-   - Pythonic approaches to handling common programming tasks
+   - Pythonic approaches to handling common programming tasks:
      - Acquiring and releasing of resources
      - Error handling
      - Storing data
@@ -76,7 +76,7 @@
 
 *** Problems with this approach
     - The file is not closed if an exception is thrown
-      between the opening and the closing of the first file
+      between the opening and the closing of the first file.
 
 ** The need for context manager
 
@@ -269,7 +269,7 @@
 ** Exceptions  
 *** Raising exception
     - Exceptions are special objects used to signal an error occurring
-      in a program
+      in a program.
     - Exceptions are /raised/ using the =raise= keyword:
 
     #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
