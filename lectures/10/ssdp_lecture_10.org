@@ -1,4 +1,4 @@
-#+TITLE: Scientific Software Development with Python
++TITLE: Scientific Software Development with Python
 #+SUBTITLE: Python recipes
 #+AUTHOR: Simon Pfreundschuh
 #+OPTIONS: H:2 toc:nil

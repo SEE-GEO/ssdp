@@ -1,0 +1,721 @@
+#+TITLE: Scientific Software Development with Python
+#+SUBTITLE: High performance computing with python
+#+LaTeX_CLASS_OPTIONS: [10pt]
+#+AUTHOR: Simon Pfreundschuh
+#+OPTIONS: H:2 toc:nil
+#+LaTeX_HEADER: \institute{Department of Space, Earth and Environment}
+#+LaTeX_HEADER: \setbeamerfont{title}{family=\sffamily, series=\bfseries, size=\LARGE}
+#+LATEX_HEADER: \usepackage[style=authoryear]{biblatex}
+#+LATEX_HEADER: \usepackage{siunitx}
+#+LaTeX_HEADER: \usetheme{chalmers}
+#+LATEX_HEADER: \usepackage{subcaption}
+#+LATEX_HEADER: \usepackage{amssymb}
+#+LATEX_HEADER: \usepackage{dirtree}
+#+LATEX_HEADER: \usemintedstyle{monokai}
+#+LATEX_HEADER: \definecolor{light}{HTML}{CCCCCC}
+#+LATEX_HEADER: \definecolor{dark}{HTML}{353535}
+#+LATEX_HEADER: \definecolor{green}{HTML}{008800}
+#+LATEX_HEADER: \definecolor{source_file}{rgb}{0.82, 0.1, 0.26}
+#+LATEX_HEADER: \newmintinline[pyil]{Python}{style=default, bgcolor=light}
+#+BEAMER_HEADER: \AtBeginSection[]{\begin{frame}<beamer>\frametitle{Agenda}\tableofcontents[currentsection]\end{frame}}
+
+
+* Computer architecture
+** A (rough) model of a computer system
+- Main components: Central processing unit (CPU) and main memory
+- External components: Hard drive, external storage, ...
+
+
+\vspace{0.5cm}
+\centering  
+\includegraphics[width=0.35\textwidth]{figures/computer_architecture_0}
+
+** Why does computing take time?
+   1. Data needs to be loaded
+      - Data needs to be transferred from external storage into main memory
+   2. Data needs to be processed
+      - Data is moved from main memory into CPU registers
+      - CPU performs calculation
+      - Results are stored back into main memory
+
+** Loading data
+   - Modern CPUs use a hierarchy of caches to speed up memory transfer between  main
+     memory CPU
+   - Loading data from external drives (even hard disk) is extremely slow.
+   
+\vspace{0.5cm}
+\centering  
+\includegraphics[width=0.4\textwidth]{figures/computer_architecture_1}
+
+** Processing data
+   
+*** TODO Text                                               :BMCOL:B_example:
+    :PROPERTIES:
+    :BEAMER_col: 0.5
+    :END:
+
+    - The CPU (generally) performs all calculations
+    - Instructions and input data are both read from main
+      memory
+    - Instructions must given as /machine code/ and adhere
+      to the procecessors /instruction set/.
+    - The number of instructions that can be processed per time
+      is limited by the CPUs clock rate.
+    - A lot of complicated things going on to make processing
+      fast: Pipelining, vectorization, branch prediction, ...
+      
+    
+
+*** Figure                                                  :BMCOL:B_example:
+    :PROPERTIES:
+    :BEAMER_col: 0.5
+    :END:
+
+
+    \vspace{0.5cm}
+    \centering  
+    \includegraphics[width=\textwidth]{figures/cpu}
+
+** Multitasking and multiprocessing
+*** Multitasking
+*** A block                                           :B_ignoreheading:BMCOL:
+    :PROPERTIES:
+    :BEAMER_col: 0.6
+    :END:
+    - Modern operating systems organize program execution into
+      processes and threads that are executed intermittently.
+    - Each process has its own memory and resources.
+    - Threads of a common process share memory and resources.
+    - Multitasking improves performance even on single-core computers because
+      because other threads execute while waiting for data.
+    
+
+*** A screenshot                                            :BMCOL:B_example:
+    :PROPERTIES:
+    :BEAMER_col: 0.4
+    :END:
+
+    \includegraphics[width=\textwidth]{figures/multitasking}
+
+** Multitasking and multiprocessing
+*** Multiprocessing
+*** A block                                           :B_ignoreheading:BMCOL:
+    :PROPERTIES:
+    :BEAMER_col: 0.6
+    :END:
+      
+    - Modern CPUs typically have multiple cores that allow parallel
+      processing of multiple instruction streams.
+    - This will improve performance for /compute-limited/ problems.
+
+*** A screenshot                                            :BMCOL:B_example:
+    :PROPERTIES:
+    :BEAMER_col: 0.4
+    :END:
+
+    \includegraphics[width=\textwidth]{figures/multiprocessing}
+
+
+** Moore's law
+
+*** Multiprocessing
+*** A block                                           :B_ignoreheading:BMCOL:
+    :PROPERTIES:
+    :BEAMER_col: 0.5
+    :END:
+   - Moore's law: The number of transistors per microprocessor (green) has been increasing
+     exponentially since the 70s.
+   - But: Clock rate (blue) has been stalling since the 2000s.
+   - Current computing trends: Massively parallel
+     - Need to go parallel to go faster.
+
+*** A screenshot                                            :BMCOL:B_example:
+    :PROPERTIES:
+    :BEAMER_col: 0.5
+    :END:
+ \includegraphics[width=\textwidth]{figures/moores_law}
+
+* Example: Solving the heat equation
+** The 2D heat equation
+
+*** The 2D heat equation
+
+    -  Let $u(t, x, y)$ describe a time-dependent distribution of heat
+        on a two dimensional euclidean coordinate system.
+   - Its temporal evolution is described by the /heat equation/:
+
+   \begin{align}\label{eq:heat}
+   \frac{\partial u}{\partial t} = \alpha \left (
+    \frac{\partial^2 u}{\partial^2 x} + \frac{\partial^2 u}{\partial^2 y}
+    \right )
+    \end{align}
+
+    - Given $u$ at $t=0$ we can use (\ref{eq:heat}) to compute $u$ at arbitrary
+      time $t = T$.
+
+** The 2D heat equation
+
+*** Numerical solution
+
+    1. At each time step $t$ we approximate $u$ using a
+      two dimensional array $U^t_{i,j}$ (\textbf{domain discretization}):
+      \begin{align}
+      U^t_{i, j} = u(t, i \cdot \Delta x, j \cdot \Delta y)
+      \end{align}
+    2. Replace derivatives with finite
+       differences (\textbf{finite difference approximation}):
+      \begin{align}
+      \frac{U^{t+1}_{i,j} - U^t_{i,j}}{\Delta t}  = \alpha \left (
+       \frac{U^{t}_{i,j+1} - 2 U^t_{i, j} + U^t_{i,j-1}}{\Delta x^2}
+       + \frac{U^{t}_{i+1,j} - 2 U^t_{i,j} + U^t_{i-1,j}}{\Delta y^2}
+      \right )
+      \end{align}
+
+
+** The 2D heat equation
+
+*** Numerical solution
+    Finally, we can solve for $U^{t+1}_{i, j}$:
+
+      \begin{align}
+      U^{t+1}_{i,j}   = U^t_{i, j} + \Delta t \alpha \left (
+       \frac{U^{t}_{i,j+1} - 2 U^t_{i, j} + U^t_{i,j-1}}{\Delta x^2}
+       + \frac{U^{t}_{i+1,j} - 2 U^t_{i, j} + U^t_{i-1,j}}{\Delta y^2}
+      \right )
+      \end{align}
+       
+** The 2D heat equation
+   \centering
+   \includegraphics[width=0.8\textwidth]{figures/heat_example}
+   
+
+
+* Runtime profiling
+
+** On premature optimization
+
+  "Programmers waste enormous amounts of time thinking about, or worrying about,
+  the speed of noncritical parts of their programs, and these attempts at
+  efficiency actually have a strong negative impact when debugging and maintenance
+  are considered. We should forget about small efficiencies, say about 97% of the
+  time: \textbf{premature optimization is the root of all evil.} Yet we should not pass up
+  our opportunities in that critical 3%."
+  --- Donald Knuth
+
+  
+** On premature optimization
+*** To consider before optimizing your program:
+    - There's no point optimizing code that doesn't contribute significantly to the overall
+      runtime
+    - Don't rely on your intuition; use a profiler to determine what are the critical
+      parts of your code!
+    - Don't forget about usability, maintainability and readability!
+
+** Profiling Python programs
+*** The built-in Python profiler(s)
+    - A built-in profiler for Python programs is provided by the
+      =cProfile= module
+    - Profile function =my_function= from within script:
+      #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+      #+BEGIN_SRC Python
+      import cProfile
+      cProfle.run('my_function()')
+      #+END_SRC 
+
+    - Profile whole script from command line:
+      #+attr_latex: :options fontsize=\scriptsize, bgcolor=light
+      #+BEGIN_SRC bash
+      $ python -m cProfile my_script.py
+      #+END_SRC
+
+    - There's also the =profile= module, which provides the same
+      functionality but is slower for typical use cases.
+
+** Profiling Python programs
+*** Using the profiler
+      #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+      #+BEGIN_SRC Python
+      import cProfile
+      cProfile.run('calculate_heat(u)')
+      #+END_SRC
+*** Output
+      #+attr_latex: :options fontsize=\tiny, bgcolor=light
+      #+BEGIN_SRC text
+      ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+            1    0.000    0.000    2.600    2.600 <string>:1(<module>)
+            1    0.000    0.000    2.600    2.600 heat_equation.py:44(calculate_heat)
+          100    2.598    0.026    2.599    0.026 heat_equation.py:9(step)
+            1    0.000    0.000    2.600    2.600 {built-in method builtins.exec}
+          200    0.001    0.000    0.001    0.000 {built-in method numpy.zeros}
+            1    0.000    0.000    0.000    0.000 {method 'disable' of '_lsprof.Profiler' objects}
+      #+END_SRC
+
+** Profiling Python programs
+*** Using a line profiler
+    - The built-in profilers show execution only on function level, which
+      is not helpful for our application.
+    - The alternative is to use a line-by-line profiler such as =pprof=:
+
+      #+attr_latex: :options fontsize=\scriptsize, bgcolor=light
+      #+BEGIN_SRC bash
+      $ pip install pprofile
+      $ pprofile --exclude-syspath heat_equation.py
+      #+END_SRC
+      
+** Profiling Python programs
+*** Example output --- line profiler
+
+    #+attr_latex: :options fontsize=\tiny, bgcolor=light
+    #+BEGIN_SRC text
+    Command line: heat_equation.py
+    Total duration: 42.0227s
+    File: heat_equation.py
+    File duration: 41.0692s (97.73%)
+
+    Line #|      Hits|         Time| Time per hit|      %|Source code
+    ------+----------+-------------+-------------+-------+-----------
+        ...
+        13|       100|   0.00149155|  1.49155e-05|  0.00%|    l = np.zeros((n, n))
+        14|      9900|    0.0351388|  3.54938e-06|  0.08%|    for i in range(1, n-1):
+        15|    970200|      3.46738|  3.57388e-06|  8.25%|        for j in range(1, n-1):
+        16|    960400|      3.66515|  3.81627e-06|  8.72%|            down = u[i - 1, j]
+        17|    960400|      3.69363|  3.84593e-06|  8.79%|            up = u[i + 1, j]
+        18|    960400|      3.70861|  3.86153e-06|  8.83%|            left = u[i, j - 1]
+        19|    960400|      3.66988|   3.8212e-06|  8.73%|            right = u[i, j + 1]
+        20|    960400|      3.65751|  3.80832e-06|  8.70%|            center = u[i, j]
+        ...
+    #+END_SRC
+
+** Profiling Python progams
+*** Summary
+    - In more complex programs, profiling is necessary
+      to determine where compute time is spent
+    - Trade-off between overhead and accuracy
+    - Python hides away a lot of low-level functionality, which
+      may appear in profiling output and make it hard to interpret
+
+
+** Exercise 2
+   
+   - Exercise 2
+   - Time 10 minutes
+
+** Understanding Python performance
+
+*** Interpreted languages (Python, JavaScript, ...)
+    - Code is executed using an /interpreter/
+    - The interpreter reads the source code and executes
+      statements on-the-fly
+
+*** Compiled languages (C++, C, Fortran ...)
+    - Code is compiled into an executable
+    - The executable contains machine instructions that
+      can be executed on the target hardware
+      
+** Understanding Python performance
+
+*** The CPython[fn:1] execution model
+    - Python behaves like an interpreted language (no need for a compiler)
+    - But it actually does compile code to /byte code/ (contained in the =__pycache__=
+      folder)
+    - This code is executed on a virtual machine
+    - \textbf{Because of the VM, executing byte code is slower than directly executing machine code from
+      a compiled executable.}
+
+
+[fn:1] CPython is the reference and most popular implementation of Python, but there exists others
+   
+** Understanding Python performance
+
+*** What it means for performance
+    - Avoid deeply nested loops
+    - Instead, try to minimize the number of pure Python statements
+      in your code
+    - Therefore, a lot of packages call compiled libraries under the hood
+      (e.g. =numpy=)
+    - If performance matters think of Python as a glue language to tie
+      together calls to compiled and optimized libraries
+
+
+* Parallel computing
+** Levels of parallelism
+*** Processor level
+    - SIMD (Single instruction multiple data):
+      - Modern CPUs can perform multiple addition/multiplication
+        operations in a single cycle.
+*** Thread level
+    - Also referred to as Shared-memory parallelism
+    - Organizing  code in threads allows parts of
+      the program to be executed in parallel.
+    - Shared memory makes communication between thread easy.
+*** Process level
+    - Also referred to as distributed parallelism
+    - Processes may even run on different computers
+      - This is needed to scale computations to modern cluster systems 
+        (Vera @ C3SE)
+    - Inter-process communication is more complicated.
+    
+** Parallel computing in Python
+*** CPython: It's complicated
+    - The \textbf{global interpreter lock} (GIL): Only one thread may execute
+      Python byte code at a time.
+      - Python code essentially runs on a single-core VM.
+    - Need process-level parallelism to execute Python code in parallel
+    - However, IO-bound code can still benefit from thread-level parallelism
+
+** Parallel computing in Python
+*** Built-in tools: =threading.Threads=
+    - The =threading= module provides a low-level interface to execute code
+      in separate threads.
+    - Tasks to execute in a thread  are implemented as subclasses of
+      the =Thread= class.
+
+*** Example
+
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+    #+BEGIN_SRC Python
+    import threading
+    class MyThread(threading.Thread):
+        def __init__(self):
+            super().__init__()
+        def run(self):
+            name = self.name # or self.native_id in Python >= 3.8
+            print(f"Hi from thread {name}")
+
+    for i in range(5):
+        MyThread().start()
+    #+END_SRC 
+
+** Parallel computing in Python
+*** A more realistic example
+
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+    #+BEGIN_SRC Python
+    def get_temperature(lat, lon):
+        """
+        Get temperature for given location in Sweden from SMHI forecast.
+
+        Args:
+            lat(float): The latitude coordinate of the location.
+            lon(float): The longitude coordinate of the location.
+
+        Return:
+            The temperature at the requested location as a float.
+        """
+        url = (f"https://opendata-download-metfcst.smhi.se/api/category/pmp3g/"
+              f"version/2/geotype/point/lon/{lon}/lat/{lat}/data.json")
+        response = urllib.request.urlopen(url)
+        data = json.loads(response.read())
+        forecast = data["timeSeries"][0]
+        for parameter in forecast["parameters"]:
+            if parameter["name"] == "t":
+                temperature = parameter["values"][0]
+        return temperature
+    #+END_SRC 
+
+** Parallel computing in Python
+*** Sequential version
+
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+    #+BEGIN_SRC Python
+    CITIES = [("Malmo" , (55.36, 13.02)),
+              ("Goteborg", (57.42, 11.58)),
+              ("Stockholm", (59.19, 18.4)),
+              ("Umea" , (63.49, 20.15)),
+              ("Lulea", (65.35, 22.9))]
+
+    def get_temperatures_sequential():
+        for city, coords in CITIES:
+            temperature = get_temperature(*coords)
+            print(f"The temperature in {city} is {temperature} deg. C.")
+    #+END_SRC 
+
+*** Output
+    - Required time: 872 ms
+
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=light
+    #+BEGIN_SRC text
+    The temperature in Malmo is 11.8 deg. C.
+    The temperature in Goteborg is 11.3 deg. C.
+    The temperature in Stockholm is 8.6 deg. C.
+    The temperature in Umea is 7.5 deg. C.
+    The temperature in Lulea is 4.8 deg. C.
+    #+END_SRC
+
+** Parallel computing in Python
+*** Concurrent version
+
+
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+    #+BEGIN_SRC Python
+    class TemperatureGetter(threading.Thread):
+        """Thread class to request temperature."""
+        def __init__(self, city, coords):
+            super().__init__()
+            self.city = city
+            self.coords = coords
+
+        def run(self):
+            self.temperature = get_temperature(*self.coords)
+
+    def get_temperatures_threads():
+        threads = []
+        for city, coords in CITIES:
+            thread = TemperatureGetter(city, coords)
+            thread.start() 
+            threads.append(thread)
+
+        for thread in threads:
+            thread.join() # Wait for thread to finish execution
+
+        for thread in threads:
+            city = thread.city
+            temperature = thread.temperature
+            print(f"The temperature in {city} is {temperature} deg. C.")
+  #+END_SRC
+
+** Parallel computing in Python
+*** Output
+    - Required time: 286 ms
+
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=light
+    #+BEGIN_SRC text
+    The temperature in Malmo is 11.8 deg. C.
+    The temperature in Goteborg is 11.3 deg. C.
+    The temperature in Stockholm is 8.6 deg. C.
+    The temperature in Umea is 7.5 deg. C.
+    The temperature in Lulea is 4.8 deg. C.
+    #+END_SRC
+
+*** Result
+    - The threaded version is much faster although no code is executed
+      in parallel (remember the GIL)
+    - This is because a lot of the required time is spent waiting for
+      the result from SMHI and does not require any computing to be
+      performed
+
+** Parallel computing in Python
+*** Built-in tools: =concurrent.futures=
+    - The =concurrent= module provides a more elegant way of writing
+      concurrent code.
+    - Tasks can be created directly by passing a function to
+      an executor object.
+    - Depending on whether =ThreadPoolExecutor= or =ProcessPoolExecutor= is
+      used the code is run in separate threads or processes.
+
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+    #+BEGIN_SRC Python
+    from concurrent.futures import ThreadPoolExecutor
+
+    def say_hi(i):
+        print(f"Hi from task {i}!")
+
+    executor = ThreadPoolExecutor(max_workers=5)
+    results = []
+    for i in range(5):
+        results.append(executor.submit(say_hi, i))
+    #+END_SRC
+
+
+** Parallel computing in Python
+*** The =get_temperature= example
+
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+    #+BEGIN_SRC Python
+    from concurrent.futures import ThreadPoolExecutor
+
+    def get_temperatures_thread_pool():
+        executor = ThreadPoolExecutor(max_workers=5)
+        results = []
+        for city, coords in CITIES:
+            results.append(executor.submit(get_temperature, *coords))
+        for (city, _), result in zip(CITIES, results):
+            temperature = result.result()
+            print(f"The temperature in {city} is {temperature} deg. C.")
+    #+END_SRC
+
+*** Notes
+    - The =Executor.submit= method returns a =future=
+      object, which can be queried for the result and state
+      of the computation.
+
+** Exercise 3
+  - Time: 15 minutes 
+
+** Exercise 3
+*** Results 
+    - Because of the GIL, using parallelization using threads yields
+      no benefits for compute-limited tasks
+
+
+** Parallel computing in Python
+*** Built-in tools: =coroutines=
+    - Coroutines are defined using the =async= keyword.
+    - Calling a coroutine immediately returns a task object (somewhat similar to =Executor.submit=)
+    - A coroutine can wait for another coroutine using the =await= keyword.
+
+
+*** Example
+
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+    #+BEGIN_SRC Python
+    import asyncio
+
+    async def say_hi():
+        print("hi")
+
+    task = say_hi()
+    print("waiting ...")  # Prints: waiting ...
+    asyncio.run(say_hi()) # Prints: hi
+    #+END_SRC
+    
+** Parallel computing in Python
+*** The =get_temperature= example using coroutines
+
+    #+attr_latex: :options fontsize=\tiny, bgcolor=dark
+    #+BEGIN_SRC Python
+    import aiohttp
+    import asyncio
+
+    async def get_temperature(session, lat, lon):
+        url = (f"https://opendata-download-metfcst.smhi.se/api/category/pmp3g/"
+              f"version/2/geotype/point/lon/{lon}/lat/{lat}/data.json")
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url) as response:
+                data = json.loads(await response.read())
+                forecast = data["timeSeries"][0]
+                for parameter in forecast["parameters"]:
+                    if parameter["name"] == "t":
+                        temperature = parameter["values"][0]
+        return temperature
+
+    CITIES = [("Malmo" , (55.36, 13.02)),
+              ("Goteborg", (57.42, 11.58)),
+              ("Stockholm", (59.19, 18.4)),
+              ("Umea" , (63.49, 20.15)),
+              ("Lulea", (65.35, 22.9))]
+
+    async def print_temperatures():
+        session = aiohttp.ClientSession()
+        tasks = [get_temperature(session, *coords) for _, coords in CITIES]
+        for (city, _), task in zip(CITIES, tasks):
+            temperature = await task
+            print(f"The temperature in {city} is {temperature} deg. C.")
+        session.close()
+
+    asyncio.run(print_temperatures())
+    #+END_SRC
+
+** Parallel computing in Python
+*** Comments on coroutines
+    - Still a relatively new Python feature
+    - Mostly targeted at IO-limited tasks (server applications)
+
+** Parallel computing in Python
+*** How can we parallelize the heat equation?
+    - Compute-limited problem: Can't use threads in pure Python
+    - Process-based parallelization will require inter process communication
+    - Difficult solutions:
+      - Writing a C-extension and using multithreading
+      - Using MPI
+
+** Parallel computing in Python
+*** How can we parallelize the heat equation?
+    - Compute-limited problem: Can't use threads in pure Python
+    - Process-based parallelization will require inter process communication
+    - Difficult solutions:
+      - Writing a C-extension and using multithreading
+      - Using MPI
+
+
+** Parallel computing in Python
+*** The best of both worlds: Numba
+    - =numba= is a Python package that let's you compile specific Python
+      functions.
+    - It can automatically parallelize your applications.
+    - Just in time compilation (JIT): Functions are compiled the first time
+      they are used.
+
+*** Example
+    
+    #+attr_latex: :options fontsize=\tiny, bgcolor=dark
+    #+BEGIN_SRC Python
+    from numba import jit
+
+    @jit(nopython=True)
+    def sum(x):
+        result = 0.0
+        for i in range(x.shape[0]):
+            for j in range(y.shape[0]):
+                result += x[i, j]
+    #+END_SRC
+
+** Parallel computing in Python
+*** Parallel example
+    - To tell =numba= to try to parallelize a loop use
+      =prange= instead of the built-in =range= function:
+    
+    #+attr_latex: :options fontsize=\tiny, bgcolor=dark
+    #+BEGIN_SRC Python
+    from numba import jit, prange
+
+    @jit(nopython=True, parallel=True)
+    def sum(x):
+        result = 0.0
+        for i in range(x.shape[0]):
+            for j in range(y.shape[0]):
+                result += x[i, j]
+    #+END_SRC
+
+*** Timing results
+    
+    #+attr_latex: :options fontsize=\tiny, bgcolor=light
+    #+BEGIN_SRC test
+    numba (Serial):   2.36 ms
+    numba (Parallel): 6.05 ms
+    numpy (Serial):   1.79 ms
+    #+END_SRC
+    
+** Exercise 4
+   - Time 15 minutes
+
+** Parrallel
+*** How can we parallelize the heat equation?
+    - Compute-limited problem: Can't use threads in pure Python
+    - Process-based parallelization will require inter process communication
+    - Proposed solutions
+      - Using processes through =MPI=
+      - Use threads in a C-extension
+
+* Using hardware accelerators
+** Using hardware accelerators
+*** Hardware accelerators
+    - Hardware accelerators are specialized hardware to compute specific numeric tasks
+    - The most popular nowadays are Graphic Processing Units (GPUs)
+    - GPUs are massively parallel processors (> 1000 cores) that are very fast for performing
+      parallel numeric computations
+    - They are called GPUs because they were originally developed for computer graphics, but are
+      now used in most supercomputers
+
+** Using hardware accelerators
+*** Difficulties with using hardware accelerators
+    - They have separate memory
+    - They are often programmed using a different programming language
+    - Learning GPU programming is worth a course in itself
+
+*** Numba to the rescue
+
+    #+attr_latex: :options fontsize=\tiny, bgcolor=light
+    #+BEGIN_SRC test
+    @cuda.jit
+    def sum(x):
+        result = 0.0
+        for i in range(x.shape[0]):
+            for j in range(x.shape[1]):
+                result += x[i, j]
+    return result
+    #+END_SRC
+
+** GPU-accelerated heat equation
+
+** Summary
