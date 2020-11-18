@@ -360,7 +360,7 @@
     - Avoid deeply nested loops
     - Instead, try to minimize the number of pure Python statements
       in your code
-    -  A lot of packages call compiled C extension or libraries under the hood
+    -  A lot of packages call compiled C extensions or libraries under the hood
       (e.g. =numpy=). These will usually be fast.
     - When performance matters, think of Python as a glue language to tie
       together calls to compiled and optimized libraries.
@@ -684,7 +684,7 @@
     @jit(nopython=True, parallel=True)
     def sum(x):
         result = 0.0
-        for i in range(x.shape[0]):
+        for i in prange(x.shape[0]):
             for j in range(y.shape[0]):
                 result += x[i, j]
     #+END_SRC
