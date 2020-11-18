@@ -72,7 +72,7 @@ the course lectures in PDF format.
   +------------+--------------------------------------------------+--------------------------------------------------------------------------+
   | **Part 3**                                                                                                                               |
   +------------+--------------------------------------------------+--------------------------------------------------------------------------+
-  | 2020-11-18 | High-performance computing with Python           | ssdp_lecture_8                                                           |
+  | 2020-11-18 | High-performance computing with Python           | ssdp_lecture_12_, ssdp_lecture_12_exercise_                                                          |
   +------------+--------------------------------------------------+--------------------------------------------------------------------------+
   | 2020-11-25 | Big data processing with Python                  | ssdp_lecture_9                                                           | 
   +------------+--------------------------------------------------+--------------------------------------------------------------------------+
@@ -104,3 +104,5 @@ the course lectures in PDF format.
 .. _ssdp_lecture_10:  https://github.com/SEE-MOF/ssdp/raw/main/lectures/10/ssdp_lecture_10.pdf
 .. _ssdp_lecture_10_exercise:  https://github.com/SEE-MOF/ssdp/blob/main/lectures/10/ssdp_lecture_10_exercise.ipynb
 .. _ssdp_lecture_10_solution:  https://github.com/SEE-MOF/ssdp/blob/main/lectures/10/ssdp_lecture_10_solution.ipynb
+.. _ssdp_lecture_12:  https://github.com/SEE-MOF/ssdp/raw/main/lectures/12/ssdp_lecture_12.pdf
+.. _ssdp_lecture_12_exercise:  https://github.com/SEE-MOF/ssdp/blob/main/lectures/12/ssdp_lecture_12_exercise.ipynb

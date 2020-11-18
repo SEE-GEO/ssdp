@@ -1,5 +1,5 @@
 #+TITLE: Scientific Software Development with Python
-#+SUBTITLE: High performance computing with python
+#+SUBTITLE: High performance computing with Python
 #+LaTeX_CLASS_OPTIONS: [10pt]
 #+AUTHOR: Simon Pfreundschuh
 #+OPTIONS: H:2 toc:nil
@@ -18,6 +18,12 @@
 #+LATEX_HEADER: \definecolor{source_file}{rgb}{0.82, 0.1, 0.26}
 #+LATEX_HEADER: \newmintinline[pyil]{Python}{style=default, bgcolor=light}
 #+BEAMER_HEADER: \AtBeginSection[]{\begin{frame}<beamer>\frametitle{Agenda}\tableofcontents[currentsection]\end{frame}}
+
+
+* Overview
+** Overview
+  \centering
+  \includegraphics[width=0.6\textwidth]{figures/dimensions_of_software_development_part_3}
 
 
 * Computer architecture
@@ -60,7 +66,8 @@
     - Instructions must given as /machine code/ and adhere
       to the procecessors /instruction set/.
     - The number of instructions that can be processed per time
-      is limited by the CPUs clock rate.
+      is limited by the CPUs clock rate and how many operations
+      it can perform in parallel.
     - A lot of complicated things going on to make processing
       fast: Pipelining, vectorization, branch prediction, ...
       
@@ -115,6 +122,21 @@
 
     \includegraphics[width=\textwidth]{figures/multiprocessing}
 
+
+** Some terminology
+   - Sequential: :: Code that is executed in the order in which it is written. This is
+                   (luckily) the standard behavior.
+   - Concurrent: :: Code that  has been designated  to be executed in arbitrary
+                   order.
+   - Parallelism: :: Parallelism is achieved when a concurrent program is executed on a multi-
+                    core CPU.
+   - CPU-bound / Compute-bound: :: Code whose performance is limited by how many calculations can
+        be performed in the CPU
+   -  IO-bound: ::  Code that is limited by loading of data from disk or interactions with the
+                  OS, both of which are very slow.
+   - Embarassingly parallel: :: A problem that can be parallelized by simply splitting the input
+       space. Can be parallelized by simply running it with different input in different
+       processes.
 
 ** Moore's law
 
@@ -173,7 +195,7 @@
 
 
 ** The 2D heat equation
-
+   
 *** Numerical solution
     Finally, we can solve for $U^{t+1}_{i, j}$:
 
@@ -239,6 +261,7 @@
       cProfile.run('calculate_heat(u)')
       #+END_SRC
 *** Output
+    
       #+attr_latex: :options fontsize=\tiny, bgcolor=light
       #+BEGIN_SRC text
       ncalls  tottime  percall  cumtime  percall filename:lineno(function)
@@ -252,8 +275,8 @@
 
 ** Profiling Python programs
 *** Using a line profiler
-    - The built-in profilers show execution only on function level, which
-      is not helpful for our application.
+    - The built-in profilers show execution only on function level.
+    - Basically all time is spent in the step function (surprise)
     - The alternative is to use a line-by-line profiler such as =pprof=:
 
       #+attr_latex: :options fontsize=\scriptsize, bgcolor=light
@@ -286,14 +309,16 @@
         ...
     #+END_SRC
 
+    - No single critical step.
+    - Rather, all steps in the inner loop seem to contribute equally.
+
 ** Profiling Python progams
 *** Summary
     - In more complex programs, profiling is necessary
-      to determine where compute time is spent
-    - Trade-off between overhead and accuracy
+      to determine where compute time is spent.
+    - Trade-off between overhead and accuracy.
     - Python hides away a lot of low-level functionality, which
-      may appear in profiling output and make it hard to interpret
-
+      may appear in profiling output and make it hard to interpret.
 
 ** Exercise 2
    
@@ -303,14 +328,15 @@
 ** Understanding Python performance
 
 *** Interpreted languages (Python, JavaScript, ...)
-    - Code is executed using an /interpreter/
+    - Code is executed using an /interpreter/.
     - The interpreter reads the source code and executes
-      statements on-the-fly
+      statements on-the-fly.
 
 *** Compiled languages (C++, C, Fortran ...)
-    - Code is compiled into an executable
+    - Code is compiled into an executable.
     - The executable contains machine instructions that
-      can be executed on the target hardware
+      can be executed on the target hardware.
+
       
 ** Understanding Python performance
 
@@ -319,22 +345,25 @@
     - But it actually does compile code to /byte code/ (contained in the =__pycache__=
       folder)
     - This code is executed on a virtual machine
-    - \textbf{Because of the VM, executing byte code is slower than directly executing machine code from
-      a compiled executable.}
+    - \textbf{Because of the VM, executing byte code is slower than directly executing machine code from a compiled executable.}
 
+*** Libraries and C-extensions
+    - Modules can also be written in C and compiled into machine code.
+    - Python code can call functions from other libraries written in any other language.
+      In this case performance is no different than calling it from any other language.
 
 [fn:1] CPython is the reference and most popular implementation of Python, but there exists others
-   
+
 ** Understanding Python performance
 
 *** What it means for performance
     - Avoid deeply nested loops
     - Instead, try to minimize the number of pure Python statements
       in your code
-    - Therefore, a lot of packages call compiled libraries under the hood
-      (e.g. =numpy=)
-    - If performance matters think of Python as a glue language to tie
-      together calls to compiled and optimized libraries
+    -  A lot of packages call compiled C extension or libraries under the hood
+      (e.g. =numpy=). These will usually be fast.
+    - When performance matters, think of Python as a glue language to tie
+      together calls to compiled and optimized libraries.
 
 
 * Parallel computing
@@ -361,7 +390,7 @@
       Python byte code at a time.
       - Python code essentially runs on a single-core VM.
     - Need process-level parallelism to execute Python code in parallel
-    - However, IO-bound code can still benefit from thread-level parallelism
+    - However, IO-bound code can still benefit from thread-level parallelism.
 
 ** Parallel computing in Python
 *** Built-in tools: =threading.Threads=
@@ -489,10 +518,10 @@
 
 *** Result
     - The threaded version is much faster although no code is executed
-      in parallel (remember the GIL)
+      in parallel (remember the GIL).
     - This is because a lot of the required time is spent waiting for
       the result from SMHI and does not require any computing to be
-      performed
+      performed.
 
 ** Parallel computing in Python
 *** Built-in tools: =concurrent.futures=
@@ -540,12 +569,13 @@
       of the computation.
 
 ** Exercise 3
+  - Exercise 3 in notebook
   - Time: 15 minutes 
 
 ** Exercise 3
 *** Results 
     - Because of the GIL, using parallelization using threads yields
-      no benefits for compute-limited tasks
+      no benefits for compute-bound tasks.
 
 
 ** Parallel computing in Python
@@ -614,20 +644,12 @@
 ** Parallel computing in Python
 *** How can we parallelize the heat equation?
     - Compute-limited problem: Can't use threads in pure Python
-    - Process-based parallelization will require inter process communication
+    - Process-based parallelization will require inter-process communication (remember: no shared memory)
     - Difficult solutions:
       - Writing a C-extension and using multithreading
       - Using MPI
 
-** Parallel computing in Python
-*** How can we parallelize the heat equation?
-    - Compute-limited problem: Can't use threads in pure Python
-    - Process-based parallelization will require inter process communication
-    - Difficult solutions:
-      - Writing a C-extension and using multithreading
-      - Using MPI
-
-
+        
 ** Parallel computing in Python
 *** The best of both worlds: Numba
     - =numba= is a Python package that let's you compile specific Python
@@ -638,7 +660,7 @@
 
 *** Example
     
-    #+attr_latex: :options fontsize=\tiny, bgcolor=dark
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
     #+BEGIN_SRC Python
     from numba import jit
 
@@ -655,7 +677,7 @@
     - To tell =numba= to try to parallelize a loop use
       =prange= instead of the built-in =range= function:
     
-    #+attr_latex: :options fontsize=\tiny, bgcolor=dark
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
     #+BEGIN_SRC Python
     from numba import jit, prange
 
@@ -670,52 +692,23 @@
 *** Timing results
     
     #+attr_latex: :options fontsize=\tiny, bgcolor=light
-    #+BEGIN_SRC test
-    numba (Serial):   2.36 ms
-    numba (Parallel): 6.05 ms
+    #+BEGIN_SRC text
+    numba (Serial):   6.05 ms
+    numba (Parallel): 2.36 ms
     numpy (Serial):   1.79 ms
     #+END_SRC
     
 ** Exercise 4
+   - Exercise 3 in notebook
    - Time 15 minutes
 
-** Parrallel
-*** How can we parallelize the heat equation?
-    - Compute-limited problem: Can't use threads in pure Python
-    - Process-based parallelization will require inter process communication
-    - Proposed solutions
-      - Using processes through =MPI=
-      - Use threads in a C-extension
-
-* Using hardware accelerators
-** Using hardware accelerators
-*** Hardware accelerators
-    - Hardware accelerators are specialized hardware to compute specific numeric tasks
-    - The most popular nowadays are Graphic Processing Units (GPUs)
-    - GPUs are massively parallel processors (> 1000 cores) that are very fast for performing
-      parallel numeric computations
-    - They are called GPUs because they were originally developed for computer graphics, but are
-      now used in most supercomputers
-
-** Using hardware accelerators
-*** Difficulties with using hardware accelerators
-    - They have separate memory
-    - They are often programmed using a different programming language
-    - Learning GPU programming is worth a course in itself
-
-*** Numba to the rescue
-
-    #+attr_latex: :options fontsize=\tiny, bgcolor=light
-    #+BEGIN_SRC test
-    @cuda.jit
-    def sum(x):
-        result = 0.0
-        for i in range(x.shape[0]):
-            for j in range(x.shape[1]):
-                result += x[i, j]
-    return result
-    #+END_SRC
-
-** GPU-accelerated heat equation
-
+* Summary
 ** Summary
+   - Compared to a compiled language, pure Python is slow
+   - But Python can still be fast for:
+     - IO-bound problems.
+     - When functions from a C-extension or library are called.
+     - When you use the right tools (numba, jax, torch, tensorflow ...)
+     
+     
+     
