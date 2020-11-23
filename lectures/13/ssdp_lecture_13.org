@@ -1,0 +1,197 @@
+#+TITLE: Scientific Software Development with Python
+#+SUBTITLE: High performance compuging and big data
+#+LaTeX_CLASS_OPTIONS: [10pt]
+#+AUTHOR: Simon Pfreundschuh
+#+OPTIONS: H:2 toc:nil
+#+LaTeX_HEADER: \institute{Department of Space, Earth and Environment}
+#+LaTeX_HEADER: \setbeamerfont{title}{family=\sffamily, series=\bfseries, size=\LARGE}
+#+LATEX_HEADER: \usepackage[style=authoryear]{biblatex}
+#+LATEX_HEADER: \usepackage{siunitx}
+#+LaTeX_HEADER: \usetheme{chalmers}
+#+LATEX_HEADER: \usepackage{subcaption}
+#+LATEX_HEADER: \usepackage{amssymb}
+#+LATEX_HEADER: \usepackage{dirtree}
+#+LATEX_HEADER: \usemintedstyle{monokai}
+#+LATEX_HEADER: \definecolor{light}{HTML}{CCCCCC}
+#+LATEX_HEADER: \definecolor{dark}{HTML}{353535}
+#+LATEX_HEADER: \definecolor{green}{HTML}{008800}
+#+LATEX_HEADER: \definecolor{source_file}{rgb}{0.82, 0.1, 0.26}
+#+LATEX_HEADER: \newmintinline[pyil]{Python}{style=default, bgcolor=light}
+#+BEAMER_HEADER: \AtBeginSection[]{\begin{frame}<beamer>\frametitle{Agenda}\tableofcontents[currentsection]\end{frame}}
+#+LATEX_HEADER: \newcommand\blfootnote[1]{\begingroup \renewcommand\thefootnote{}\footnote{#1} \addtocounter{footnote}{-1} \endgroup}
+
+
+* Overview
+** Overview
+  \centering
+  \includegraphics[width=0.6\textwidth]{figures/dimensions_of_software_development_part_3}
+
+
+* Programming hardware accelerators
+** Hardware accelerators
+\blfootnote{Image source: nvidia.com}
+*** A block                                           :B_ignoreheading:BMCOL:
+    :PROPERTIES:
+    :BEAMER_col: 0.6
+    :END:
+   - Hardware accelerators are special computer hardware designed to
+     speed up specific tasks
+   - Most commonly used today: Graphic processing units (GPUs)
+   - Originally designed to display 3D graphics
+   - Example: Nvidia T4 (Available on Vera@C3SE)
+     - More than 2500 cores
+     - 320 of which special 'tensor' cores for machine learning
+
+*** A block                                           :B_ignoreheading:BMCOL:
+    :PROPERTIES:
+    :BEAMER_col: 0.4
+    :END:
+\centering
+\includegraphics[width=0.6\textwidth]{figures/nvidia.png}
+
+** Hardware accelerators
+*** Difficulties
+    - Usually have their own separate memory (transfer bottleneck)
+    - Require special programming techniques to program
+
+      \vspace{0.5cm}
+\centering
+\includegraphics[width=0.6\textwidth]{figures/hardware_accelerators}
+
+** Hardware accelerators
+*** GPU programming with Python
+    - Python won't run directly on GPU.
+    - GPUs used through some kind of special array or tensor type
+    - Wide range of packages that allow almost platform agnostic[fn:2]
+      computing across different hardware
+    - Many of them are behind the recent consolidation of applicaitons
+      of deep learning in science.
+
+\vspace{0.4cm}
+\includegraphics[width=\textwidth]{figures/packages}      
+
+[fn:2] Platform agnostic: Same code can run on CPU, GPU or whatever hardware is available.
+      
+** GPU programming with CuPy
+*** Introducing CuPy
+    - CUDA is NVIDIA[fn:3]'s computing and programming platform
+    - CuPY provides drop-in replacement for numpy arrays to accelerate
+      array operations.
+    - Not all numpy operations implemented but this is probably
+      the easiest way to perform calculations on GPU.
+
+*** A block                                           :B_ignoreheading:BMCOL:
+    :PROPERTIES:
+    :BEAMER_col: 0.6
+    :END:
+**** Installation
+      #+attr_latex: :options fontsize=\scriptsize, bgcolor=light
+      #+BEGIN_SRC text
+      pip install cupy
+      #+END_SRC 
+
+*** A block                                           :B_ignoreheading:BMCOL:
+    :PROPERTIES:
+    :BEAMER_col: 0.4
+    :END:
+
+\centering
+\includegraphics[width=0.8\textwidth]{figures/cupy}      
+
+[fn:3] NVIDIA is essentially the Intel of GPUs
+
+** GPU programming with CuPy
+*** Matrix multiplication example
+    
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+    #+BEGIN_SRC Python
+    n = 2048
+    # Create matrix and vector on host.
+    matrix = np.random.rand(n, n)
+    vector = np.random.rand(n)
+
+    # Transfer matrix and vector to GPU.
+    matrix_gpu = cp.asarray(matrix)
+    vector_gpu = cp.asarray(vector)
+    
+    result = np.dot(matrix, vector
+    result_gpu = cp.do(matrix_gpu, vector_gpu)
+    #+END_SRC 
+
+** GPU programming with CuPy
+*** Platform agnostic matrix multiplication
+    
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+    #+BEGIN_SRC Python
+    def matrix_multiplication(matrix, vector):
+        xp = cp.get_array_module(matrix)
+        return xp.dot(matrix, vector)
+
+    result = matrix_multiplication(matrix, vector)
+    result_gpu = matrix_multiplication(matrix_gpu, vector_gpu)
+    #+END_SRC 
+
+**** Performance exmample
+    - NVIDIA Tesla T4 vs. Intel Xeon (2 cores)
+    - Task probably not heavy enough to show full potential of GPUs.
+     
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=light
+    #+BEGIN_SRC text
+    %timeit matrix_multiplication(matrix, vector)
+    >>> 1000 loops, best of 3: 1.51 ms per loop
+    %timeit matrix_multiplication(matrix_gpu, vector_gpu)
+    >>> 10000 loops, best of 3: 139 µs per loop
+    #+END_SRC 
+
+** Exercise 1
+*** Exercise 1
+    - Time: 15 minutes
+
+* The heat equation revisited
+** The heat equation revisited
+ 
+*** The heat equation
+   \begin{align}\label{eq:heat}
+   \frac{\partial u}{\partial t} = \alpha \left (
+    \frac{\partial^2 u}{\partial^2 x} + \frac{\partial^2 u}{\partial^2 y}
+    \right )
+    \end{align}
+
+    - For the simple case of $\alpha = 1$, the heat equation can be solved explicitly.
+
+
+** The heat equation revisited
+    1. Assuming that $u$ can be written as a function of the form
+     \begin{align}
+     u(t, x, y) = T(t) \cdot X(x) \cdot Y(y)
+     \end{align}
+    2. The problem can be transformed to a system of coupled /ordinary/ differential equations:
+     \begin{align}
+     \frac{\partial^2 X}{\partial^2 x} = A \cdot X \\
+     \frac{\partial^2 Y}{\partial^2 y} = B \cdot Y \\
+     \frac{\partial T}{\partial t} = (A + B) \cdot Y
+     \end{align}
+
+** The heat equation revisited
+
+   - From this we find that a general solution of the heat equation is given
+     by:
+
+     \begin{align}
+     u(t, x, y) = \sum_{m, n} A_{m, n} \ e^{i\frac{2 \pi m}{N}x} \ e^{i\frac{2 \pi n}{N}} \ e^{- \frac{4\pi^2(n^2 + m^2)}{N^2}}
+     \end{align}
+
+   - We can thus also solve the heat equation as follows:
+     1. Use a 2D Fourier transform to calculate the Fourier coefficients  $A_{m, n}(0)$ from the initial
+        heat distribution $u(0, x, y)$.
+
+     2. Multiply coefficients $A_{m, n}(0)$ by $e^{-\frac{4 \pi^2(n^2 + m^2)}{N^2}}$ to
+        obtain coefficients $A_{m, n}(t)$
+     3. Calculate $u(t, x, y)$ by calculating the inverse transform of $A_{m, n}(t)$
+        
+** Exercise 2
+
+* Distributed computing with ipyparallel
+
+* Programming hardware accelerators
+
