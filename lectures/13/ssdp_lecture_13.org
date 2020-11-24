@@ -77,7 +77,7 @@
     - CUDA is NVIDIA[fn:3]'s computing and programming platform
     - CuPY provides drop-in replacement for numpy arrays to accelerate
       array operations.
-    - Not all numpy operations implemented but this is probably
+    - Not all numpy operations implemented but this is 
       the easiest way to perform calculations on GPU.
 
 *** A block                                           :B_ignoreheading:BMCOL:
@@ -191,7 +191,304 @@
         
 ** Exercise 2
 
-* Distributed computing with ipyparallel
+* Distributed computing with IPython Parallel
 
-* Programming hardware accelerators
+** Distributed computing
+   - A program that executes concurrently across different computers
+   - Instances of the program typically do not share memory
+   - Special messaging functions required for communication
+   - Popular software packages:
+     - High performance computing: Message passing interface (MPI)
+     - Big data: Hadoop, Dask
+
+\vspace{0.5cm}
+\centering
+\includegraphics[width=\textwidth]{figures/distributed_computing}
+
+** Distributed computing
+*** Shared-memory parallelism
+   - Typically implemented using threads
+   - Processes can communicate through shared memory
+   - Low overhead
+   - Limited to one computer
+
+*** Distributed parallelism
+   - Typically implemented using processes
+   - Larger overhead than threads
+   - Can usually run on multiple computers
+
+\begin{alertblock}{Note}
+  It is not uncommon to see shared-memory parallelism combined, i.e. to have a programm
+  running multiple threads in multiple processes distributed across a compute cluster.
+\end{alertblock}
+
+** IPython Parallel
+*** IPython Parallel (=ipyparallel=) 
+    - Distributed-computing package for IPython
+    - Engines can run /locally/ or on different computers
+      (through e.g. SSH or MPI)
+    - Can be used interactively
+
+
+\vspace{1cm}
+\centering
+\includegraphics[width=\textwidth]{figures/ipyparallel}
+
+** IPython Parallel
+*** Engines
+    - A Python process to which you can send code for execution
+*** Controller
+    - Local process to which engines connect
+    - Interface through which communication with engines
+      takes place
+*** =Client= and =View=
+    - Python objects to connect to controller
+      and interact with engines.
+
+\vspace{1cm}
+\centering
+\includegraphics[width=0.7\textwidth]{figures/ipyparallel}
+
+** IPython Parallel
+*** Installation
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=light
+    #+BEGIN_SRC bash
+    pip install ipyparallel
+    #+END_SRC
+
+*** Starting controller and engines
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=light
+    #+BEGIN_SRC bash
+    ipcluster start -n 4 # Will start controller and 4 engines locally
+    #+END_SRC
+
+*** Connecting to the controller
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+    #+BEGIN_SRC Python
+    from ipyparallel import Client
+    client = Client()
+    print(client.ids) # Prints: [0, 1, 2, 3]
+    view = client.direct_view()
+    #+END_SRC
+
+** IPython Parallel
+*** Distributed hello world
+    - A view can be used to execute code on the engines.
+    - =apply= executes a method on all engines.
+    - However, since these engines run in different processes
+      no output is produced in the client application.
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+    #+BEGIN_SRC Python
+    def say_hi():
+        import os
+        print(f"Hi from process {os.getpid()}")
+
+    results = view.apply(say_hi) # Prints nothing.
+    #+END_SRC
+
+** IPython Parallel
+*** Distributed hello world
+    - However, the returned =AsyncResult= object let's us access
+      the output from each process:
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+    #+BEGIN_SRC Python
+    results.display_outputs()
+    #+END_SRC
+
+*** Output
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=light
+    #+BEGIN_SRC text
+    [stdout:0] Hi from process 10557
+    [stdout:1] Hi from process 10569
+    [stdout:2] Hi from process 10570
+    [stdout:3] Hi from process 10573
+    #+END_SRC
+
+** Exercise 3
+   - Complete exercise 3 from notebook
+   - Time: 15 minutes
+
+** IPython Parallel
+*** Blocking and non-blocking execution
+    - =apply= executes the given function /asynchonously/, i.e. it returns immediately
+      and returns an =AsyncResult= as place holder
+    - =apply_sync= is a blocking version of =apply= and returns results immediately
+
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+    #+BEGIN_SRC Python
+    def get_integer():
+        return int()
+
+    result = view.apply_sync(get_integer)
+    print(result) # Prints: [0, 0, 0, 0]
+    #+END_SRC
+
+    - Most other methods accept a =block= keyword arguments which defines
+      their behavior.
+    - I will use =blocking= behavior in the following example because it makes
+      effects directly visible.
+    - In general, however, asynchronous behavior is more powerful because it allows
+      monitoring the processing state.
+
+** IPython Parallel
+*** Complications
+    - The client program and the engines don't share state:
+
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+    #+BEGIN_SRC Python
+    import os
+
+    def say_hi():
+        print(f"Hi from process {os.getpid()}")
+
+    results = view.apply_async(say_hi)
+    #+END_SRC
+
+    #+attr_latex: :options fontsize=\tiny, bgcolor=light
+    #+BEGIN_SRC text
+    [0:apply]: 
+    ---------------------------------------------------------------------------
+    NameError                                 Traceback (most recent call last)<string> in <module>
+    <ipython-input-49-727b728ca0b2> in say_hi()
+    NameError: name 'os' is not defined
+
+    [1:apply]: 
+    ---------------------------------------------------------------------------
+    NameError                                 Traceback (most recent call last)<string> in <module>
+    <ipython-input-49-727b728ca0b2> in say_hi()
+    NameError: name 'os' is not defined
+
+    [2:apply]: 
+    ---------------------------------------------------------------------------
+    NameError                                 Traceback (most recent call last)<string> in <module>
+    <ipython-input-49-727b728ca0b2> in say_hi()
+    NameError: name 'os' is not defined
+    
+    ...
+    #+END_SRC
+
+** IPython Parallel
+*** A block                                           :B_ignoreheading:BMCOL:
+    :PROPERTIES:
+    :BEAMER_col: 0.5
+    :END:
+**** Normal code
+     \vspace{1cm}
+     \includegraphics[width=\textwidth]{figures/hotline_bling_normal}
+
+*** A block                                           :B_ignoreheading:BMCOL:
+    :PROPERTIES:
+    :BEAMER_col: 0.5
+    :END:
+**** =ipyparallel=
+     \vspace{1cm}
+     \includegraphics[width=\textwidth]{figures/hotline_bling_ipyparallel}
+
+
+** Handling imports on engines
+1. =sync_imports=:
+    - Works only with =DirectView= objects[fn:4]
+    - Can't assign aliases for imports
+    #+attr_latex: :options fontsize=\footnotesize, bgcolor=dark
+    #+BEGIN_SRC Python
+    with view.sync_imports():
+        import numpy
+    #+END_SRC
+
+2. =execute=:
+    - Executes code on engines.
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+    #+BEGIN_SRC Python
+    view.execute('import numpy as np')
+    #+END_SRC
+
+3. =require= decorator
+
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+    #+BEGIN_SRC Python
+    @ipp.require('os') # Or ipp.require(os) is os is already imported
+    def say_hi():
+        print(f"Hi from process {os.getpid()}")
+    #+END_SRC
+
+[fn:4] We'll see more details later.
+    
+
+** Transferring data to the engines
+
+1. =push= and =pull=
+   #+attr_latex: :options fontsize=\footnotesize, bgcolor=dark
+   #+BEGIN_SRC Python
+   view.push({a: 1, b: 2})
+   a = view.pull('a', block=True)
+   print(a) # Prints: [1, 1, 1, 1]
+   #+END_SRC
+
+2. Dictionary interface
+   #+attr_latex: :options fontsize=\footnotesize, bgcolor=dark
+   #+BEGIN_SRC Python
+   view['a'] = 2
+   a = view['a']
+   print(a) # Prints: [2, 2, 2, 2]
+   #+END_SRC
+3. =scatter= and gather:
+   - /Distributes/ data across engines:
+   #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+   #+BEGIN_SRC Python
+   view.scatter('a', [1] * 16)
+   sums = view.apply(lambda : sum(a))
+   print(sums) # Prints: [4, 4, 4, 4]
+   a = view.gather('a', block=True)
+   print(a) # Prints: [1, ..., 1]
+   #+END_SRC
+
+** Executing code on engines
+  1. =execute=:
+    - Executes code give as string
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+    #+BEGIN_SRC Python
+    view.execute('import numpy as np')
+    #+END_SRC
+
+  2. =apply=, =apply_async= and =apply_sync=:
+    - Executes function on engines
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+    #+BEGIN_SRC Python
+    def my_function(a, b):
+        return a + b
+    result = view.apply_sync(my_function, 1, 2)
+    print(result) # Prints: [3, 3, 3, 3]
+    #+END_SRC
+
+  3. =map=:
+    - Maps function to range of arguments across engines:
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+    #+BEGIN_SRC Python
+    @ipp.require('os')
+    def get_pid(dummy_argument):
+        return os.getpid()
+    result = view.map(get_pid, range(4), block=True)
+    print(result) # Prints: [10557, 10569, 10570, 10573]
+    #+END_SRC
+
+** Different views
+*** Direct view
+    - Provides /direct/ access to engines
+    - Created from =Client= object using either =direct_view= method
+      or list indexing:
+      #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+      #+BEGIN_SRC Python
+      view = client[::2]
+      result = view.map(get_pid, range(4), block=True)
+      print(result) # Prints: [10557, 10557, 10570, 10570]
+      #+END_SRC
+
+*** Load balanced view
+    - Tasks are distributed dynamically in order to balance load
+    - Can't target specific engines
+      
+** Exercise 4
+   - Exercise 4 in notebook
+   - Time 5 minutes
+
 
