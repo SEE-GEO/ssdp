@@ -132,7 +132,7 @@
     vector_gpu = cp.asarray(vector)
     
     result = np.dot(matrix, vector
-    result_gpu = cp.do(matrix_gpu, vector_gpu)
+    result_gpu = cp.dot(matrix_gpu, vector_gpu)
     #+END_SRC 
 
 ** GPU programming with CuPy
@@ -224,6 +224,24 @@
 ** Exercise 2
    - Exercise 2 from notebook.
    - Time: 20 minutes.
+
+** Summary
+   - Complexity of fast Fourier transform: $O(N_x \cdot N_y \log(N_x \cdot N_y))$
+   - Complexity of explicit solver: $O(N_x \cdot N_y \cdot N_t)$
+   - Hardware usually can't make up for the scaling of your
+     algorithm.
+   - There's no point optimizing your code if you use
+     the wrong algorithm
+
+\vspace{1.0cm}
+\begin{alertblock}{Remember}
+\begin{itemize}
+ \item Optimization should start at the outermost conceptual level.
+ \item Think before you optimize your code.
+ \item \textit{Premature optimization is the root of all evil.}
+\end{itemize}
+\end{alertblock}
+
 
 * Distributed computing with IPython Parallel
 
