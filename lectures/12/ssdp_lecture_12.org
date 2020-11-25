@@ -691,7 +691,7 @@
 
 *** Timing results
     
-    #+attr_latex: :options fontsize=\tiny, bgcolor=light
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=light
     #+BEGIN_SRC text
     numba (Serial):   6.05 ms
     numba (Parallel): 2.36 ms
