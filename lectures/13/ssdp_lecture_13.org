@@ -1,5 +1,5 @@
 #+TITLE: Scientific Software Development with Python
-#+SUBTITLE: High performance compuging and big data
+#+SUBTITLE: High performance computing and big data
 #+LaTeX_CLASS_OPTIONS: [10pt]
 #+AUTHOR: Simon Pfreundschuh
 #+OPTIONS: H:2 toc:nil
@@ -21,11 +21,17 @@
 #+LATEX_HEADER: \newcommand\blfootnote[1]{\begingroup \renewcommand\thefootnote{}\footnote{#1} \addtocounter{footnote}{-1} \endgroup}
 
 
-* Overview
-** Overview
-  \centering
-  \includegraphics[width=0.6\textwidth]{figures/dimensions_of_software_development_part_3}
+* Introduction
+** In this lecture
+   1. Solve heat equation on a GPU
+   2. Solve the heat equation in a smarter way
+   3. Distributed computing using IPython Parallel
 
+** Overview
+   - Need to go parallel to go faster
+  \centering
+  \includegraphics[width=0.9\textwidth]{figures/microprocessors}
+    \blfootnote{Image source: https://www.karlrupp.net}
 
 * Programming hardware accelerators
 ** Hardware accelerators
@@ -62,7 +68,7 @@
 *** GPU programming with Python
     - Python won't run directly on GPU.
     - GPUs used through some kind of special array or tensor type
-    - Wide range of packages that allow almost platform agnostic[fn:2]
+    - Wide range of packages that allow almost platform-agnostic[fn:2]
       computing across different hardware
     - Many of them are behind the recent consolidation of applicaitons
       of deep learning in science.
@@ -89,6 +95,11 @@
       #+BEGIN_SRC text
       pip install cupy
       #+END_SRC 
+      - Or depending on your CUDA version:
+      #+attr_latex: :options fontsize=\scriptsize, bgcolor=light
+      #+BEGIN_SRC text
+      pip install cupy-cudaXX
+      #+END_SRC 
 
 *** A block                                           :B_ignoreheading:BMCOL:
     :PROPERTIES:
@@ -102,6 +113,9 @@
 
 ** GPU programming with CuPy
 *** Matrix multiplication example
+    - Before it can be used on the GPU, data must be transferred
+      to the device.
+    - This is done by converting the =numpy.array= into a =cupy.array=
     
     #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
     #+BEGIN_SRC Python
@@ -120,6 +134,8 @@
 
 ** GPU programming with CuPy
 *** Platform agnostic matrix multiplication
+    - Use =cupy.get_array_module= to get module object (=np= or =cp=)
+      corresponding to array.
     
     #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
     #+BEGIN_SRC Python
@@ -145,7 +161,20 @@
 
 ** Exercise 1
 *** Exercise 1
+    - Exercise 1 from notebook
     - Time: 15 minutes
+
+** GPU programming with Python
+
+*** Summary
+    - If you have GPU and CUDA installed =cupy= can provide
+      an easy way to accelerate your computations.
+    - However, using your GPU through Python will be limited
+      by the functionality provided by the package you are using.[fn:5]
+    - Other packages that can be used to compute on GPUs:
+      - Theano, Numba, TensorFlow, PyTorch, ...
+
+[fn:5] But it is much simpler to do.
 
 * The heat equation revisited
 ** The heat equation revisited
@@ -178,18 +207,20 @@
      by:
 
      \begin{align}
-     u(t, x, y) = \sum_{m, n} A_{m, n} \ e^{i\frac{2 \pi m}{N}x} \ e^{i\frac{2 \pi n}{N}} \ e^{- \frac{4\pi^2(n^2 + m^2)}{N^2}}
+     u(t, x, y) = \sum_{m, n} A_{m, n} \ e^{i\frac{2 \pi m}{N}x} \ e^{i\frac{2 \pi n}{N}} \ e^{- \frac{4\pi^2(n^2 + m^2)}{N^2}t}
      \end{align}
 
    - We can thus also solve the heat equation as follows:
      1. Use a 2D Fourier transform to calculate the Fourier coefficients  $A_{m, n}(0)$ from the initial
         heat distribution $u(0, x, y)$.
 
-     2. Multiply coefficients $A_{m, n}(0)$ by $e^{-\frac{4 \pi^2(n^2 + m^2)}{N^2}}$ to
+     2. Multiply coefficients $A_{m, n}(0)$ by $e^{-\frac{4 \pi^2(n^2 + m^2)}{N^2}}t$ to
         obtain coefficients $A_{m, n}(t)$
-     3. Calculate $u(t, x, y)$ by calculating the inverse transform of $A_{m, n}(t)$
+     3. Calculate $u(t, x, y)$ by calculating the inverse Fourier transform of $A_{m, n}(t)$
         
 ** Exercise 2
+   - Exercise 2 from notebook.
+   - Time: 20 minutes.
 
 * Distributed computing with IPython Parallel
 
@@ -306,7 +337,7 @@
 
 ** Exercise 3
    - Complete exercise 3 from notebook
-   - Time: 15 minutes
+   - Time: 10 minutes
 
 ** IPython Parallel
 *** Blocking and non-blocking execution
@@ -489,6 +520,28 @@
       
 ** Exercise 4
    - Exercise 4 in notebook
-   - Time 5 minutes
+   - Time: 5 minutes
+** Magic commands
+*** =%px=
+    - Executes line of code on engines
+      
+      #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+      #+BEGIN_SRC Python
+      %px import numpy as np
+      %px a = np.random.rand(1)
+      print(view.scatter('a')) # Prints: [0.05926484 0.23279085 0.74808488 0.80716102]
+      #+END_SRC
 
 
+*** =%%px=
+    - This is cell magic, i.e. work only in notebooks
+    - Executes all cell content on engines
+    - =%%px --block= will display last result from each engine
+
+*** =%autopx=
+    - Will execute all subsequent commands on engines until
+      next occurrence of =autopx=
+      
+** Exercise 5
+   - Exercise 4 in notebook
+   - Time: 15 minutes
