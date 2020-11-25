@@ -119,6 +119,9 @@
     
     #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
     #+BEGIN_SRC Python
+    import numpy as np
+    import cupy as cp
+
     n = 2048
     # Create matrix and vector on host.
     matrix = np.random.rand(n, n)
@@ -207,14 +210,14 @@
      by:
 
      \begin{align}
-     u(t, x, y) = \sum_{m, n} A_{m, n} \ e^{i\frac{2 \pi m}{N}x} \ e^{i\frac{2 \pi n}{N}} \ e^{- \frac{4\pi^2(n^2 + m^2)}{N^2}t}
+     u(t, x, y) = \sum_{m, n} A_{m, n} \ e^{i\frac{2 \pi m}{N}x} \ e^{i\frac{2 \pi n}{N}y} \ e^{- \frac{4\pi^2(n^2 + m^2)}{N^2}t}
      \end{align}
 
    - We can thus also solve the heat equation as follows:
      1. Use a 2D Fourier transform to calculate the Fourier coefficients  $A_{m, n}(0)$ from the initial
         heat distribution $u(0, x, y)$.
 
-     2. Multiply coefficients $A_{m, n}(0)$ by $e^{-\frac{4 \pi^2(n^2 + m^2)}{N^2}}t$ to
+     2. Multiply coefficients $A_{m, n}(0)$ by $e^{-\frac{4 \pi^2(n^2 + m^2)}{N^2}t}$ to
         obtain coefficients $A_{m, n}(t)$
      3. Calculate $u(t, x, y)$ by calculating the inverse Fourier transform of $A_{m, n}(t)$
         
