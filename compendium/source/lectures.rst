@@ -74,7 +74,7 @@ the course lectures in PDF format.
   +------------+--------------------------------------------------+--------------------------------------------------------------------------+
   | 2020-11-18 | High-performance computing with Python           | ssdp_lecture_12_, ssdp_lecture_12_exercise_, ssdp_lecture_12_solution_   |
   +------------+--------------------------------------------------+--------------------------------------------------------------------------+
-  | 2020-11-25 | Big data processing with Python                  | ssdp_lecture_9                                                           | 
+  | 2020-11-25 | Parallel and distributed computing               | ssdp_lecture_13_, ssdp_lecture_13_exercise_                              | 
   +------------+--------------------------------------------------+--------------------------------------------------------------------------+
   | 2020-12-02 | Scientific visualization with Python             | ssdp_lecture_10                                                          |
   +------------+--------------------------------------------------+--------------------------------------------------------------------------+
@@ -107,3 +107,5 @@ the course lectures in PDF format.
 .. _ssdp_lecture_12:  https://github.com/SEE-MOF/ssdp/raw/main/lectures/12/ssdp_lecture_12.pdf
 .. _ssdp_lecture_12_exercise:  https://github.com/SEE-MOF/ssdp/blob/main/lectures/12/ssdp_lecture_12_exercise.ipynb
 .. _ssdp_lecture_12_solution:  https://github.com/SEE-MOF/ssdp/blob/main/lectures/12/ssdp_lecture_12_solution.ipynb
+.. _ssdp_lecture_13:  https://github.com/SEE-MOF/ssdp/raw/main/lectures/13/ssdp_lecture_13.pdf
+.. _ssdp_lecture_13_exercise:  https://github.com/SEE-MOF/ssdp/blob/main/lectures/13/ssdp_lecture_13_exercise.ipynb
