@@ -76,7 +76,7 @@ the course lectures in PDF format.
   +------------+--------------------------------------------------+--------------------------------------------------------------------------+
   | 2020-11-25 | Parallel and distributed computing               | ssdp_lecture_13_, ssdp_lecture_13_exercise_, ssdp_lecture_13_solution_   | 
   +------------+--------------------------------------------------+--------------------------------------------------------------------------+
-  | 2020-12-02 | Parallel and distributed computing with Dask     | ssdp_lecture_14_, ssdp_lecture_14_exercise_                              |                                                          
+  | 2020-12-02 | Parallel and distributed computing with Dask     | ssdp_lecture_14_, ssdp_lecture_14_exercise_, ssdp_lecture_14_solution_   |
   +------------+--------------------------------------------------+--------------------------------------------------------------------------+
   | 2020-12-09 | **3rd Retrospective**: Results from second sprint                                                                           | 
   +------------+--------------------------------------------------+--------------------------------------------------------------------------+
@@ -112,3 +112,4 @@ the course lectures in PDF format.
 .. _ssdp_lecture_13_solution:  https://github.com/SEE-MOF/ssdp/blob/main/lectures/13/ssdp_lecture_13_solution.ipynb
 .. _ssdp_lecture_14:  https://github.com/SEE-MOF/ssdp/raw/main/lectures/14/ssdp_lecture_14.pdf
 .. _ssdp_lecture_14_exercise:  https://github.com/SEE-MOF/ssdp/blob/main/lectures/14/ssdp_lecture_14_exercise.ipynb
+.. _ssdp_lecture_14_solution:  https://github.com/SEE-MOF/ssdp/blob/main/lectures/14/ssdp_lecture_14_solution.ipynb
