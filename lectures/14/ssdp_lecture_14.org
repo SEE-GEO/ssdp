@@ -1,0 +1,641 @@
+#+TITLE: Scientific Software Development with Python
+#+SUBTITLE: Parallel computing with Dask
+#+LaTeX_CLASS_OPTIONS: [9pt]
+#+AUTHOR: Simon Pfreundschuh
+#+OPTIONS: H:2 toc:nil
+#+LaTeX_HEADER: \institute{Department of Space, Earth and Environment}
+#+LaTeX_HEADER: \setbeamerfont{title}{family=\sffamily, series=\bfseries, size=\LARGE}
+#+LATEX_HEADER: \usepackage[style=authoryear]{biblatex}
+#+LATEX_HEADER: \usepackage{siunitx}
+#+LaTeX_HEADER: \usetheme{chalmers}
+#+LATEX_HEADER: \usepackage{subcaption}
+#+LATEX_HEADER: \usepackage{amssymb}
+#+LATEX_HEADER: \usepackage{dirtree}
+#+LATEX_HEADER: \usemintedstyle{monokai}
+#+LATEX_HEADER: \definecolor{light}{HTML}{CCCCCC}
+#+LATEX_HEADER: \definecolor{dark}{HTML}{353535}
+#+LATEX_HEADER: \definecolor{green}{HTML}{008800}
+#+LATEX_HEADER: \definecolor{source_file}{rgb}{0.82, 0.1, 0.26}
+#+LATEX_HEADER: \newmintinline[pyil]{Python}{style=default, bgcolor=light}
+#+BEAMER_HEADER: \AtBeginSection[]{\begin{frame}<beamer>\frametitle{Agenda}\tableofcontents[currentsection]\end{frame}}
+#+LATEX_HEADER: \newcommand\blfootnote[1]{\begingroup \renewcommand\thefootnote{}\footnote{#1} \addtocounter{footnote}{-1} \endgroup}
+
+* Introduction
+** In this lecture
+   1. Example: Processing SMHI radar images
+      - Parallelize task using IPython parallel and Dask
+   2. Package managers and compute environments
+      - Differences between Conda and pip
+      - Conda basiscs
+   3. Parallel computing with Dask
+      - Basic parallel computing with Dask
+      - Computational graphs
+      - Dask array computations
+
+* Example: Processing SMHI radar images
+** Example: Processing SMHI radar images
+
+*** A block                                           :B_ignoreheading:BMCOL:
+    :PROPERTIES:
+    :BEAMER_col: 0.6
+    :END:
+**** SMHI rain radar data
+    - SMHI provides access to composite radar images over Sweden
+    - Download of daily data (288 files, zipped)
+    - Pixel values $x$ can be converted to radar reflectivity:
+      \begin{align}
+      \text{dBZ} = 0.4x -30
+      \end{align}
+    - Radar reflectivity can be converted to rain rate:
+      \begin{align}
+      \text{rr} = (\frac{10^{\frac{\text{dBZ}}{10}}}{200})^{\frac{2}{3}} \ [\SI{}{mm\ h^{-1}}]
+      \end{align}
+
+
+*** A block                                           :B_ignoreheading:BMCOL:
+    :PROPERTIES:
+    :BEAMER_col: 0.5
+    :END:
+
+    \centering
+    \includegraphics[width=\textwidth]{figures/smhi_radar.png}
+
+** Example: Processing SMHI radar images
+
+*** A block                                           :B_ignoreheading:BMCOL:
+    :PROPERTIES:
+    :BEAMER_col: 0.7
+    :END:
+
+**** Task: Create GIF of monthly precipitation
+    - Size of single image $886 \times 471$.
+    - 14 GB of data for 1 month.
+    - Subsample spatial and temporal resolution:
+      - average to 8 images per day
+      - Subsample images by a factor of 2 along width and height
+
+**** Predefined code
+    #+attr_latex: :options fontsize=\tiny, bgcolor=dark
+    #+BEGIN_SRC Python
+  class SMHIRadarImages(collections.abc.Iterable):
+      """
+      Provides access to all SMHI radar images for a given day.
+
+      Iterating over an SMHIRadarImages object will yield the radar data converted
+      to rain rates.
+
+      Attributes:
+          file(``zipfile.ZipFile``): The zipfile object containing the images.
+          image_files: The list of filenames of the image files in the zipfile.
+          n_images(``int``): The number of images of the day.
+      """
+      def __init__(self, year, month, day):
+          """
+          Create SMHIRadarImages object for given date.
+          """
+      ...
+
+    #+END_SRC 
+
+
+*** A block                                           :B_ignoreheading:BMCOL:
+    :PROPERTIES:
+    :BEAMER_col: 0.3
+    :END:
+
+    \centering
+    \includegraphics[width=\textwidth]{figures/rain_rates.png}
+
+** Example: Processing SMHI radar images
+
+
+*** Predefined code
+    - Convert image data from one day to array:
+
+    #+attr_latex: :options fontsize=\tiny, bgcolor=dark
+    #+BEGIN_SRC Python
+  def average_images(smhi_images, n_frames=8):
+      """
+      Bins images from one day into n_frames temporal bins and calculates
+      the averages over each bin.
+
+      Args:
+          smhi_images(SMHIImages): SMHIImages object providing access to the
+              rain rates for a given day.
+          n_frames(int): Into how many frames to bin the data for the given day.
+      Returns:
+          3-dimensional numpy.ndarray containing the different frames along the
+          first axis and the radar composite along the following two.
+      """
+      ...
+
+      #+END_SRC
+
+    - Create animation from array:
+
+    #+attr_latex: :options fontsize=\tiny, bgcolor=dark
+    #+BEGIN_SRC Python
+    def create_animation(data):
+    """
+    Creates an animation from a 3D array of rain rate data.
+
+    Args:
+        data(numpy.ndarray): 3D array containing different images along the
+             first axis and the image dimensions alsong the second and third.
+    
+    Returns:
+        matplotlib.animation.ArtisAnimation object containing the animated radar
+        images.
+    """
+    ...
+    #+END_SRC
+
+** Exercise 1
+   - Exercise 1 from notebook
+   - Time: 10 minutes
+     
+* Package managers and compute environments
+** Package managers and compute environments
+*** The problem
+    - Manually installing packages is tedious and doesn't scale.
+    - The more packages you use, the harder it gets to satisfy all
+      their dependencies.
+*** The solution
+    - Use a program to install other programs (\textbf{package manager})
+    - Install dependencies separately for each project (\textbf{compute environment} or just \textbf{environment})
+
+** Popular package managers
+*** =pip=
+    - Official Python package manager
+    - Supports environments via the =venv= module [fn:1].
+    - Can only install Python packages[fn:2].
+
+*** =conda=
+    - Package and environment manager
+    - Not limited to Python packages
+[fn:1] =venv= the standard environment manager for Python 3.
+[fn:2] And thus cannot easily be used to install non-Python dependencies.
+
+** Conda
+
+*** Concepts
+    - =Conda= allows installing packages from different
+      channels (package indices), similar to =pip=
+    - Packages are distributed in binary format, so no compilation
+      necessary
+      
+
+*** Installation
+    - Follow instructions on [[https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html][https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html]]
+
+*** Installing packages
+    
+      #+attr_latex: :options fontsize=\scriptsize, bgcolor=light
+      #+BEGIN_SRC text
+      conda install numpy
+      #+END_SRC 
+    
+
+** Conda
+
+*** Managing environments
+    - Creating an environment:
+      
+      #+attr_latex: :options fontsize=\scriptsize, bgcolor=light
+      #+BEGIN_SRC text
+      conda create --name ssdp
+      #+END_SRC 
+    
+    - Activating an environment:
+    
+      #+attr_latex: :options fontsize=\scriptsize, bgcolor=light
+      #+BEGIN_SRC text
+      conda activate ssdp
+      #+END_SRC
+
+    - Deactivating an environment:
+
+      #+attr_latex: :options fontsize=\scriptsize, bgcolor=light
+      #+BEGIN_SRC text
+      conda deactivate ssdp
+      #+END_SRC
+
+** Conda
+
+*** Determining current environment
+    
+      #+attr_latex: :options fontsize=\footnotesize, bgcolor=light
+      #+BEGIN_SRC text
+      conda info --envs
+      #+END_SRC
+      - Shows defined environments with the currently active one
+        marked with =*=:
+
+      #+attr_latex: :options fontsize=\footnotesize, bgcolor=light
+      #+BEGIN_SRC text
+      base                     /home/simon/build/anaconda3
+      ssdp                  *  /home/simon/build/anaconda3/envs/ssdp
+      #+END_SRC
+
+
+** Conda
+
+*** Exporting and sharing environments
+    - Environments can be shared with others by exporting them into a
+      =.yml= file:
+
+      #+attr_latex: :options fontsize=\footnotesize, bgcolor=light
+      #+BEGIN_SRC text
+      conda env export > ssdp_conda.yml
+      #+END_SRC
+
+    - To create an environment from a =.yml= file shared with you use
+
+      #+attr_latex: :options fontsize=\footnotesize, bgcolor=light
+      #+BEGIN_SRC text
+      conda env create -f ssdp_conda.yml
+      #+END_SRC
+
+** Understanding Conda
+*** How Conda works
+    - Conda works through manipulating the system paths which are searched
+      for executable and libraries.
+    - These settings are handled through environment variables, which are process
+      specific
+    - Example:
+      #+attr_latex: :options fontsize=\footnotesize, bgcolor=light
+      #+BEGIN_SRC text
+      $ conda activate base # Activate base environment
+      $ which python
+      /home/simon/build/anaconda3/bin/python
+      $ conda activate ssdp # Activate ssdp environment
+      $ which python
+      /home/simon/build/anaconda3/envs/ssdp/bin/python
+      #+END_SRC
+
+** Understanding Conda
+*** Consequences
+    - Environments need to be activated for every command line window
+      you open.
+
+** Exercise 2
+   - Exercise 2 and 3 from notebook
+   - Time: 5 + 15 minutes
+
+* Parallel computing with Dask
+
+** Parallel computing with Dask
+
+*** A block                                           :B_ignoreheading:BMCOL:
+    :PROPERTIES:
+    :BEAMER_col: 0.6
+    :END:
+
+**** Dask
+     - High-level parallel computing library
+     - Features:
+       - Distributed container types (bags, arrays, DataFrames)
+       - Builds computational graphs before execution
+       - Can run on single host as well as on distributed systems
+
+**** Advantages
+     - Similar to IPython parallel Dask provides acts as abstraction layer between
+       computations to perform and the hardware where they are performed.
+     - This allows scaling you applications from 4 threads on your laptop
+       to 1000s of processes in the cloud.
+     - Allows processing of data that doesn't fit into memory.
+
+*** A block                                           :B_ignoreheading:BMCOL:
+    :PROPERTIES:
+    :BEAMER_col: 0.4
+    :END:
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/dask}
+
+** Parallel computing with Dask
+
+*** Creating a client
+    - Similar to IPyparallel a client object need to be created to connect
+      to a cluster.
+    - This simple example will create a client that connects to 4 worker
+      processes that run on your local computer:
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+    #+BEGIN_SRC Python
+    from dask.distributed import Client
+    client = Client(n_workers=4)
+    #+END_SRC 
+
+** Parallel computing with Dask
+*** Parallelizing calculations
+    - The =dask.delayed= function can be used to turn a function into a lazy function.
+    - Applying the delayed function returns a place-holder object representing
+      the calculation.
+    - Computing the result, requires calling =compute= method of place-holder
+      object.
+
+*** Serial version
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+    #+BEGIN_SRC Python
+    from time import sleep
+    def add(a, b):
+        sleep(1)
+        return a + b
+
+    % time add(add(1, 2), add(3, 4) # Wall time: 3s
+    #+END_SRC 
+
+
+** Parallel computing with Dask
+*** Parallelizing calculations
+    - The =dask.delayed= function can be used to turn a function into a lazy function.
+    - Applying the delayed function returns a place-holder object representing
+      the calculation.
+    - Computing the result, requires calling =compute= method of place-holder
+      object.
+
+*** Delayed version
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+    #+BEGIN_SRC Python
+    add_ = delayed(add)
+    % time add_(add_(1, 2), add(3, 4)) # Wall time:
+    % time add_(add_(1, 2), add_(3, 4) # Wall time: 2s
+    #+END_SRC 
+
+** Parallel computing with Dask
+
+*** A block                                           :B_ignoreheading:BMCOL:
+    :PROPERTIES:
+    :BEAMER_col: 0.6
+    :END:
+
+**** Visualizing the computational graph
+    
+  - In a notebook, the computational graph can be visualized
+    using the =visualize= method:
+
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+    #+BEGIN_SRC Python
+    result = add_(add_(1, 2), add_(3, 4))
+    result.visualize()
+    #+end_src 
+
+
+*** A block                                           :B_ignoreheading:BMCOL:
+    :PROPERTIES:
+    :BEAMER_col: 0.4
+    :END:
+
+    \centering
+    \includegraphics[width=0.4\textwidth]{figures/delayed_add}
+
+*** Parallelizing calculations
+
+    - Dask will automatically parallelize independent branches of the computational
+      graph
+    - This leads to the 1 second speed-up observed in the example.
+    
+** Parallel computing with Dask
+
+*** Building the computational graph
+
+    - You can use arbitrary python code to build the computational graph:
+
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+    #+BEGIN_SRC Python
+    doubles = []
+    for i in range(4):
+         doubles.append(add_(i, i))
+
+    # or
+    doubles = [add_(i, i) for i in range(4)]
+
+    result = delayed(sum)(doubles)
+    #+end_src 
+
+*** Computational graph
+
+    \centering
+    \includegraphics[width=0.2\textwidth]{figures/delayed_sum}
+
+** Parallel computing with Dask
+
+
+*** A block                                           :B_ignoreheading:BMCOL:
+    :PROPERTIES:
+    :BEAMER_col: 0.7
+    :END:
+**** Using =Delayed= objects
+    - Result of =delayed= functions are represented using =Delayed= objects.
+    - Accessing calling member functions or accessing attributes of these objects
+      are automatically delayed:
+
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+    #+BEGIN_SRC Python
+    double_sum = delayed(sum)(doubles)
+    # Call of __mul__ member function automatically delayed.
+    result = double_sum * double_sum
+    #+end_src 
+
+*** A block                                           :B_ignoreheading:BMCOL:
+    :PROPERTIES:
+    :BEAMER_col: 0.3
+    :END:
+
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/double_delayed_sum}
+
+** Parallel computing with Dask
+
+
+*** Combining computations
+
+    #+attr_latex: :options fontsize=\footnotesize, bgcolor=dark
+    #+BEGIN_SRC Python
+    double_sum = delayed(sum)(double)
+    result_1 = double_sum * double_sum
+    result_2 = double_sum + double_sum
+    #+end_src 
+
+    - Use the =dask.compute= function, when multiple expressions
+      depend on the same parts of a calculations:
+
+    #+attr_latex: :options fontsize=\footnotesize, bgcolor=dark
+    #+BEGIN_SRC Python
+    result_1.compute() # Wall time: 1s
+    result_2.compute() # Wall time: 1s
+    
+    a, b = compute(result_1, result_2) # Wall time: 1s
+    #+END_SRC
+
+** Parallel computing with Dask
+*** Dask bags
+    - Lazy distributed container
+    - Functions applied to elements are executed first when
+      =compute= method is called.
+
+*** Bag example
+    #+attr_latex: :options fontsize=\footnotesize, bgcolor=dark
+    #+BEGIN_SRC Python
+    import numpy as np
+    from dask.bag import from_sequence
+
+    bag = from_sequence([10_000] * 100)
+    random_numbers = bag.map(lambda x: [np.random.rand() for _ in range(x)])
+    sums = random_numbers.map(sum)
+    #+END_SRC
+    
+** Parallel computing with Dask
+*** Inspecting bag elements
+    - The =take= method can be used to inspect elements in the bag.
+    - The elements in the bag are calculated first when requested by the
+      user.
+    #+attr_latex: :options fontsize=\footnotesize, bgcolor=dark
+    #+BEGIN_SRC Python
+    print(sums.take(1)) # Prints: (4972.594906446981,)
+    print(sums.take(1)) # Prints: (4999.976401393778,)
+    #+END_SRC
+*** Evaluating the list
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+    #+BEGIN_SRC Python
+    print(sums.compute()) # Prints: [4963.630956357142,
+                          #          ...,
+                          #          5088.819425189678]
+    #+END_SRC
+
+** Exercise 3    
+
+   - Exercise 3 from notebook
+   - Time 15 minutes
+    
+** Parallel computing with Dask
+
+**** The real power of Dask: arrays
+    - Dask arrays let automatically parallelize calculations on
+      large arrays by /blocking/[fn:3].
+    - This allows you to process data that otherwise wouldn't fit
+      your main memory.
+
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+    #+BEGIN_SRC Python
+    import numpy as np
+    import dask.array as da
+    x = da.random.rand(size=(10000, 10000),
+                       chunks=(1000, 1000))
+    y = x.mean(axis=0)
+    #+END_SRC
+
+[fn:3] i.e. split data up into chunks and process separately.
+
+** Parallel computing with Dask
+
+   - Calculations are delayed until the =compute= method is called:
+
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+    #+BEGIN_SRC Python
+    y.compute()
+    #+END_SRC
+
+     - In a Jupyter notebook Dask will even visualize the arrays
+       for you:
+
+*** A block                                           :B_ignoreheading:BMCOL:
+    :PROPERTIES:
+    :BEAMER_col: 0.5
+    :END:
+
+**** x
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/dask_array}
+
+*** A block                                           :B_ignoreheading:BMCOL:
+    :PROPERTIES:
+    :BEAMER_col: 0.5
+    :END:
+
+**** y
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/dask_array_2}
+
+** Parallel computing with Dask
+*** Lazily loading data into array
+    - Let's assume that we can load 288 images from each day:
+
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+    #+BEGIN_SRC Python
+class SMHIRadarImages(collections.abc.Iterable):
+    """
+    def __init__(self, year, month, day):
+        ...
+
+    def __getitem__(self, i):
+        i = min(len(self.image_files) - 1, i)
+        filename = self.image_files[i]
+        data = io.BytesIO(self.file.read(filename))
+        image = PIL.Image.open(data)
+        return tif_to_rain_rate(image)
+    """
+    #+END_SRC
+   - The =__getitem__= function allow us to images via indexing the
+     array:
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+    #+BEGIN_SRC Python
+    images = SMHIRadarImages(2020, 11, 1)
+    rain_rates = images[0]
+    #+END_SRC
+
+** Parallel computing with Dask
+*** Lazily loading data into array
+    - Let's use Dask to create a list of lazily loaded images:
+
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+    #+BEGIN_SRC Python
+    images = map(lambda x: delayed(SMHIRadarImages)(*x), days)
+    #+END_SRC
+
+    - We can then turn this list into a dask array using
+      =from_delayed= and =da.stack=:
+
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+    #+BEGIN_SRC Python
+    for image in images:
+      for i in range(288):
+        slices.append(da.from_delayed(image[i], shape=(443, 235), dtype=np.float32))
+    data_array = da.stack(slices, axis=0)
+    #+END_SRC
+
+** Parallel computing with Dask
+*** Lazily loading data into array
+    - This gives us the following data array[fn:4]:
+      
+    \centering
+    \includegraphics[width=0.4\textwidth]{figures/dask_array_3}
+    
+    - We can then compute statistics of the array[fn:5]:
+
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+    #+BEGIN_SRC Python
+    statistics = [da.nanmin(data_array, axis=0),
+                  da.nanmax(data_array, axis=0),
+                  da.nanmean(data_array, axis=0),
+                  da.nanstd(data_array, axis=0)]
+    #+END_SRC
+
+    - And the combine all computations into one:
+
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+    #+BEGIN_SRC Python
+    rr_min, rr_max, rr_mean, rr_std = compute(*statistics)
+    #+END_SRC
+
+[fn:4] Note that we have not downloaded any data, yet.
+[fn:5] Without actually computing them, of course.
+
+** Summary
+*** Parallel computation with Dask
+    - Dask provides a more high-level interface for parallel computations
+      than IPythonParallel
+    - Working with lazy operations may need some time to get used to
+      but is extremely powerful.
+    - This was only a very brief introduction, there's of course a
+      lot more to learn.
+

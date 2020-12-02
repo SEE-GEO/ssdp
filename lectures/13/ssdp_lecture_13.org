@@ -91,7 +91,7 @@
     :BEAMER_col: 0.6
     :END:
 **** Installation
-      #+attr_latex: :options fontsize=\scriptsize, bgcolor=light
+      #+attr_ltex: :options fontsize=\scriptsize, bgcolor=light
       #+BEGIN_SRC text
       pip install cupy
       #+END_SRC 
