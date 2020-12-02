@@ -564,5 +564,6 @@
       next occurrence of =autopx=
       
 ** Exercise 5
-   - Exercise 4 in notebook
+   - Exercise 5 in notebook
    - Time: 15 minutes
+     

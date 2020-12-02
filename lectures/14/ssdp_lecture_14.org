@@ -21,6 +21,11 @@
 #+LATEX_HEADER: \newcommand\blfootnote[1]{\begingroup \renewcommand\thefootnote{}\footnote{#1} \addtocounter{footnote}{-1} \endgroup}
 
 * Introduction
+** Schedule changes
+   - No retrospective next time
+   - Instead I will finish course content
+   - Instead final presentations in January
+
 ** In this lecture
    1. Example: Processing SMHI radar images
       - Parallelize task using IPython parallel and Dask
