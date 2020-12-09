@@ -625,7 +625,7 @@ class SMHIRadarImages(collections.abc.Iterable):
                   da.nanstd(data_array, axis=0)]
     #+END_SRC
 
-    - And the combine all computations into one:
+    - And then combine all computations into one:
 
     #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
     #+BEGIN_SRC Python
