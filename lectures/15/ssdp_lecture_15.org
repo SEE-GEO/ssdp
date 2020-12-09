@@ -1,0 +1,466 @@
+#+TITLE: Scientific Software Development with Python
+#+SUBTITLE: Visualizing scientific data
+#+LaTeX_CLASS_OPTIONS: [9pt]
+#+AUTHOR: Simon Pfreundschuh
+#+OPTIONS: H:2 toc:nil
+#+LaTeX_HEADER: \institute{Department of Space, Earth and Environment}
+#+LaTeX_HEADER: \setbeamerfont{title}{family=\sffamily, series=\bfseries, size=\LARGE}
+#+LATEX_HEADER: \usepackage[style=authoryear]{biblatex}
+#+LATEX_HEADER: \usepackage{siunitx}
+#+LaTeX_HEADER: \usetheme{chalmers}
+#+LATEX_HEADER: \usepackage{subcaption}
+#+LATEX_HEADER: \usepackage{amssymb}
+#+LATEX_HEADER: \usepackage{dirtree}
+#+LATEX_HEADER: \usemintedstyle{monokai}
+#+LATEX_HEADER: \definecolor{light}{HTML}{CCCCCC}
+#+LATEX_HEADER: \definecolor{dark}{HTML}{353535}
+#+LATEX_HEADER: \definecolor{green}{HTML}{008800}
+#+LATEX_HEADER: \definecolor{source_file}{rgb}{0.82, 0.1, 0.26}
+#+LATEX_HEADER: \newmintinline[pyil]{Python}{style=default, bgcolor=light}
+#+BEAMER_HEADER: \AtBeginSection[]{\begin{frame}<beamer>\frametitle{Agenda}\tableofcontents[currentsection]\end{frame}}
+#+LATEX_HEADER: \newcommand\blfootnote[1]{\begingroup \renewcommand\thefootnote{}\footnote{#1} \addtocounter{footnote}{-1} \endgroup}
+
+* Introduction
+
+** Data visualization in Python
+
+
+     
+*** 2D
+
+**** A block                                          :B_ignoreheading:BMCOL:
+    :PROPERTIES:
+    :BEAMER_col: 0.5
+    :END:
+
+    - Matplotlib
+      - Arguably one of the most popular scientific Python packages
+      - Limited 3D capability
+    - plotly, bokeh
+      - Web-based, interactive plotting
+
+**** A block                                          :B_ignoreheading:BMCOL:
+    :PROPERTIES:
+    :BEAMER_col: 0.5
+    :END:
+
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/quantiles}
+
+*** 3D
+
+**** A block                                          :B_ignoreheading:BMCOL:
+    :PROPERTIES:
+    :BEAMER_col: 0.5
+    :END:
+
+    - VTK
+      - Powerful but complex
+    - MayaVi, PyVista
+      - High-level interfaces to VTK
+
+**** A block                                          :B_ignoreheading:BMCOL:
+    :PROPERTIES:
+    :BEAMER_col: 0.5
+    :END:
+
+
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/precip}
+    
+* Visualizing 3D data with PyVista
+
+** Primitives
+   - Complex visualizations are typically built from basic,
+     visual primitives.
+   - In 3D we have the following primitives:
+     - points
+     - lines
+     - surfaces
+     - volumes
+
+** Geometric primitives in PyVista
+   - =PolyData=: Represent surfaces points, lines and surfaces
+   - =UnstructuredGrid=:
+     - Can represent surfaces and volumes
+     - Connections between grid points must be added explicitly
+     - Therefore seldomly used directly
+   - =StructuredGrid=:
+     - Cells between neighboring points are implicitly assumed
+     - Easiest way to represent gridded surfaces and volumes
+
+** Points
+*** Points
+    - The =PolyData= class allows us to build 3D shapes
+      from these primitives
+    - To begin, we add a dataset with eight points.
+
+
+*** Example
+**** A block                                          :B_ignoreheading:BMCOL:
+    :PROPERTIES:
+    :BEAMER_col: 0.5
+    :END:
+
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+    #+BEGIN_SRC Python
+    import numpy as np
+    import pyvista as pv
+
+    points = np.array([0.0, 1.0, 2.0])
+    x, y, z = np.meshgrid(points, points, points)
+    point_coords = np.hstack([x.reshape(-1, 1),
+                              y.reshape(-1, 1),
+                              z.reshape(-1, 1)])
+    # Dataset has eight points.
+    points = pv.PolyData(point_coords)
+    points.plot()
+    #+END_SRC 
+
+**** A block                                          :B_ignoreheading:BMCOL:
+    :PROPERTIES:
+    :BEAMER_col: 0.5
+    :END:
+
+    \centering
+    \includegraphics[width=0.6\textwidth]{figures/points}
+
+** Lines
+*** Adding lines
+    - Lines are described by arrays of the form:
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=light
+    #+BEGIN_SRC text
+      [n, point_index_0, ..., point_index_n-1]
+    #+END_SRC
+    
+*** Example
+
+**** A block                                          :B_ignoreheading:BMCOL:
+    :PROPERTIES:
+    :BEAMER_col: 0.5
+    :END:
+
+
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+    #+BEGIN_SRC Python
+    # Line consists of 8 points.
+    lines = np.array([8] + list(range(8)))
+    points_and_lines = pv.PolyData(point_coords)
+    points_and_lines.lines = lines
+    #+END_SRC 
+
+**** A block                                          :B_ignoreheading:BMCOL:
+    :PROPERTIES:
+    :BEAMER_col: 0.5
+    :END:
+
+    \centering
+    \includegraphics[width=0.6\textwidth]{figures/lines}
+
+** Faces
+
+*** Adding faces
+    - Similar to lines, faces are described by arrays of the form:
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=light
+    #+BEGIN_SRC text
+      [[n, point_index_0, ..., point_index_n-1], # First face
+       [...],                                    # Second face
+       ...
+    #+END_SRC
+    
+*** Example
+
+**** A block                                          :B_ignoreheading:BMCOL:
+    :PROPERTIES:
+    :BEAMER_col: 0.7
+    :END:
+
+
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+    #+BEGIN_SRC Python
+    faces = np.hstack([[4, 0, 1, 3, 2], # A rectangle
+                      [3, 4, 5, 7]],)   # A triangle
+    # Faces can be passed directly to the constructor.
+    points_with_faces = pv.PolyData(point_coords, faces)
+    #+END_SRC 
+
+**** A block                                          :B_ignoreheading:BMCOL:
+    :PROPERTIES:
+    :BEAMER_col: 0.3
+    :END:
+
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/faces}
+
+** Gridded surfaces
+   - We could use =PolyData= to represent gridded surfaces, but
+     that is typically too complicated.
+   - To create a gridded surface it is easier to use the =StructuredGrid=
+     class:
+*** Example 
+     
+**** A block                                          :B_ignoreheading:BMCOL:
+    :PROPERTIES:
+    :BEAMER_col: 0.7
+    :END:
+
+     #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+     #+BEGIN_SRC Python
+    x = np.arange(10)
+    y = np.arange(10)
+
+    x_coords, y_coords = np.meshgrid(x, y)
+    z_coords = np.zeros(x_coords.shape) 
+    surface = pv.StructuredGrid(x_coords, # 10 x 10 array
+                                y_coords, # 10 x 10 array
+                                z_coords) # 10 x 10 array
+
+    plotter = pvqt.BackgroundPlotter()
+    plotter.add_mesh(surface, show_edges=True)
+     #+END_SRC 
+
+**** A block                                          :B_ignoreheading:BMCOL:
+    :PROPERTIES:
+    :BEAMER_col: 0.3
+    :END:
+
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/surface}
+
+** Gridded volumes
+
+   - Similarly,  we can use the =StructuredGrid= to represent volumes:
+
+**** A block                                          :B_ignoreheading:BMCOL:
+    :PROPERTIES:
+    :BEAMER_col: 0.7
+    :END:
+
+     #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+     #+BEGIN_SRC Python
+    x = np.arange(10)
+    y = np.arange(10)
+    z = np.arange(10)
+
+    x_coords, y_coords, z_coords = np.meshgrid(x, y, z)
+    volume = pv.StructuredGrid(x_coords, # 10 x 10 x 10 array
+                               y_coords, # 10 x 10 x 10 array
+                               z_coords) # 10 x 10 x 10 array
+    plotter = pvqt.BackgroundPlotter()
+    plotter.add_mesh(volume, show_edges=True)
+     #+END_SRC 
+     
+**** A block                                          :B_ignoreheading:BMCOL:
+    :PROPERTIES:
+    :BEAMER_col: 0.3
+    :END:
+
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/volume}
+
+** Adding information
+   - So far we can represent geometries
+   - Next we will see how to associate these 
+     geometries with data
+     
+** Adding information
+*** =PolyData=
+    - To display information we need to add data arrays to
+      our mesh
+    - We can do this for each point
+
+*** Example
+
+**** A block                                          :B_ignoreheading:BMCOL:
+    :PROPERTIES:
+    :BEAMER_col: 0.7
+    :END:
+
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+    #+BEGIN_SRC Python
+    points = pv.PolyData(point_coords)
+    points.point_arrays["indices"] = np.arange(8)
+    points.plot(scalars="indices")
+    #+END_SRC 
+
+**** A block                                          :B_ignoreheading:BMCOL:
+    :PROPERTIES:
+    :BEAMER_col: 0.3
+    :END:
+
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/points_data}
+
+** Adding information
+*** =PolyData=
+    - Or for each cell
+
+*** Example
+
+**** A block                                          :B_ignoreheading:BMCOL:
+    :PROPERTIES:
+    :BEAMER_col: 0.7
+    :END:
+
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+    #+BEGIN_SRC Python
+    faces = np.hstack([[4, 0, 1, 3, 2],
+                      [3, 4, 5, 7]],)
+    points_with_faces = pv.PolyData(point_coords, faces)
+    points_with_faces.cell_arrays["indices"] = [0, 1]
+
+    plotter = pvqt.BackgroundPlotter()
+    plotter.add_mesh(points_with_faces, scalars="indices")
+    #+END_SRC 
+
+**** A block                                          :B_ignoreheading:BMCOL:
+    :PROPERTIES:
+    :BEAMER_col: 0.3
+    :END:
+
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/faces_data}
+
+
+** Example
+
+   - We can use this to display surface elevation:
+     
+     #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+     #+BEGIN_SRC Python
+    from typhon.topography import SRTM30
+    lats, lons, z = SRTM30.elevation(57.0, 11.5, 58.0, 12.5)
+    x, y = np.meshgrid(lats, lons)
+    surface = pv.StructuredGrid(x, y, z * 2e-4) # 10 x 10 x 10 array
+    surface.plot()
+     #+END_SRC 
+
+** Adding information
+*** =StructuredGrid=
+    - Adding data to a structured grid works in the same way
+
+**** A block                                          :B_ignoreheading:BMCOL:
+    :PROPERTIES:
+    :BEAMER_col: 0.7
+    :END:
+
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+    #+BEGIN_SRC Python
+    x = np.arange(10)
+    y = np.arange(10)
+
+    x_coords, y_coords = np.meshgrid(x, y)
+    z_coords = np.zeros(x_coords.shape) 
+    surface = pv.StructuredGrid(x_coords, # 10 x 10 array
+                                y_coords, # 10 x 10 array
+                                z_coords) # 10 x 10 array
+
+    surface.cell_arrays["indices"] = np.arange(81)
+    plotter = pvqt.BackgroundPlotter()
+    plotter.add_mesh(surface, show_edges=True)
+    #+END_SRC 
+
+**** A block                                          :B_ignoreheading:BMCOL:
+    :PROPERTIES:
+    :BEAMER_col: 0.3
+    :END:
+
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/surface_data}
+
+** Adding information
+*** =StructuredGrid=
+    - Adding data to a structured grid works in the same way
+
+**** A block                                          :B_ignoreheading:BMCOL:
+    :PROPERTIES:
+    :BEAMER_col: 0.7
+    :END:
+
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+    #+BEGIN_SRC Python
+    x = np.arange(10)
+    y = np.arange(10)
+
+    x_coords, y_coords = np.meshgrid(x, y)
+    z_coords = np.zeros(x_coords.shape) 
+    surface = pv.StructuredGrid(x_coords, # 10 x 10 array
+                                y_coords, # 10 x 10 array
+                                z_coords) # 10 x 10 array
+
+    surface.cell_arrays["indices"] = np.arange(81)
+    plotter = pvqt.BackgroundPlotter()
+    plotter.add_mesh(surface, show_edges=True)
+    #+END_SRC 
+
+**** A block                                          :B_ignoreheading:BMCOL:
+    :PROPERTIES:
+    :BEAMER_col: 0.3
+    :END:
+
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/surface_data_cells}
+
+** Adding information
+*** =StructuredGrid=
+    - Adding data to a 3D =StructuredGrid= works in the same way.
+
+**** A block                                          :B_ignoreheading:BMCOL:
+    :PROPERTIES:
+    :BEAMER_col: 0.7
+    :END:
+
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+    #+BEGIN_SRC Python
+    x = np.arange(10)
+    y = np.arange(10)
+    z = np.arange(10)
+
+    x_coords, y_coords, z_coords = np.meshgrid(x, y, z)
+    volume = pv.StructuredGrid(x_coords,  # 10 x 10 x 10 array
+                              y_coords, # 10 x 10 x 10 array
+                              z_coords) # 10 x 10 x 10 array
+
+    volume.point_arrays["indices"] = np.arange(10 * 10 * 10)
+    plotter = pvqt.BackgroundPlotter()
+    plotter.add_mesh(volume, show_edges=True)
+    #+END_SRC 
+
+**** A block                                          :B_ignoreheading:BMCOL:
+    :PROPERTIES:
+    :BEAMER_col: 0.3
+    :END:
+
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/volume_data_cells}
+
+
+** Display 3D data
+*** Volume rendering
+   - Typically refers to displaying volumetric scalar data using
+     transparency.
+   - In =pyvista= only works with a =UniformGrid=
+
+**** A block                                          :B_ignoreheading:BMCOL:
+    :PROPERTIES:
+    :BEAMER_col: 0.7
+    :END:
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+    #+BEGIN_SRC Python
+    volume = pv.UniformGrid((21, 21, 21), spacing=(1, 1, 1))
+    volume.cell_arrays["indices"] = np.arange(20 ** 3)
+    volume.plot(volume=True)
+    #+END_SRC
+
+**** A block                                          :B_ignoreheading:BMCOL:
+    :PROPERTIES:
+    :BEAMER_col: 0.3
+    :END:
+
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/volume_rendering}
+
+
+** Exercise 1
+   - Exercise 1
+   - Time 30 minutes
