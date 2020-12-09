@@ -70,6 +70,45 @@
     
 * Visualizing 3D data with PyVista
 
+** PyVista
+*** Installation
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=light
+    #+BEGIN_SRC Text
+    pip install pyvista
+    #+END_SRC
+
+*** Basic workflow
+    - Create a mesh[fn:1] and plot directly:
+**** A block                                          :B_ignoreheading:BMCOL:
+    :PROPERTIES:
+    :BEAMER_col: 0.7
+    :END:
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+    #+BEGIN_SRC Python
+    import pyvista as pv
+    
+    # Create a mesh
+    mesh = pv.Sphere()
+    mesh.plot()
+    #+END_SRC 
+
+    - Or explicitly create a plotter:
+
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+    #+BEGIN_SRC Python
+    plotter = pv.Plotter()
+    plotter.add_mesh(mesh)
+    plotter.show()
+    #+END_SRC 
+**** A block                                          :B_ignoreheading:BMCOL:
+    :PROPERTIES:
+    :BEAMER_col: 0.3
+    :END:
+    \centering
+    \includegraphics[width=0.6\textwidth]{figures/sphere}
+
+[fn:1] We use the term mesh to designate any object we create and visualize in PyVista
+
 ** Primitives
    - Complex visualizations are typically built from basic,
      visual primitives.
@@ -289,7 +328,7 @@
     :END:
 
     \centering
-    \includegraphics[width=0.8\textwidth]{figures/points_data}
+    \includegraphics[width=\textwidth]{figures/points_data}
 
 ** Adding information
 *** =PolyData=
@@ -319,21 +358,9 @@
     :END:
 
     \centering
-    \includegraphics[width=0.8\textwidth]{figures/faces_data}
+    \includegraphics[width=\textwidth]{figures/faces_data}
 
 
-** Example
-
-   - We can use this to display surface elevation:
-     
-     #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
-     #+BEGIN_SRC Python
-    from typhon.topography import SRTM30
-    lats, lons, z = SRTM30.elevation(57.0, 11.5, 58.0, 12.5)
-    x, y = np.meshgrid(lats, lons)
-    surface = pv.StructuredGrid(x, y, z * 2e-4) # 10 x 10 x 10 array
-    surface.plot()
-     #+END_SRC 
 
 ** Adding information
 *** =StructuredGrid=
@@ -458,9 +485,147 @@
     :END:
 
     \centering
-    \includegraphics[width=0.8\textwidth]{figures/volume_rendering}
+    \includegraphics[width=\textwidth]{figures/volume_rendering}
+
+** Example: Elevation data
+
+   - We can use a 2D mesh to visualize surface elevation:
 
 
-** Exercise 1
-   - Exercise 1
-   - Time 30 minutes
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+    #+BEGIN_SRC Python
+    import numpy as np
+    import matplotlib.pyplot as plt
+    import pyvista as pv
+
+    # Dimensions of the grid data.
+    dx = 5e3
+    dy = 5e3
+    dz = 250
+
+    x = dx * np.arange(lats.shape[0])
+    y = dy * np.arange(lats.shape[1])
+    x_coords, y_coords = np.meshgrid(x, y, indexing="ij")
+    elevation = np.load("elevation.npy")
+
+    # We scale the z dimensions because surface elevation
+    # would hardly be visible, otherwise.
+    z_scaling = 10.0
+    z_coords = z_scaling * elevation 
+
+    surface = pv.StructuredGrid(x_coords, # 10 x 10 array
+                                y_coords, # 10 x 10 array
+                                z_coords) # 10 x 10 array
+    #+END_SRC
+
+** Example: Elevation data
+
+   - We can use a 2D mesh to visualize surface elevation:
+
+   \centering
+   \includegraphics[width=0.8\textwidth]{figures/elevation}
+
+** Example: Elevation data
+   - Anohter way to achieve this is to start with a flat
+     grid and warp it.
+
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+    #+BEGIN_SRC Python
+    nx, ny = lats.shape
+    surface = pv.UniformGrid((nx, ny, 1),
+                             (dx, dy, 1.0))
+    
+    z_scaling = 10.0
+    surface.point_arrays["elevation"] = elevation.ravel(order="F")
+    surface_warped = surface.warp_by_scalar(z_factor * elevation)
+
+    #+END_SRC
+
+** Example: Elevation data
+
+   \centering
+   \includegraphics[width=0.8\textwidth]{figures/elevation_warped}
+
+** Textures
+*** Textures   
+    - Textures allow displaying image data on a 3-dimensional
+      surface
+    - For example, we may want to combine the elevation data with
+      realistic surface texture
+
+   \vspace{1cm}
+   \centering
+   \includegraphics[width=0.8\textwidth]{figures/elevation_and_texture}
+   
+
+** Textures
+*** Mapping a texture to a mesh
+      1. Load texture (typically RGB image)
+         - Note that we need to flip the data along the first axis before
+           converting it.
+      2. Add texture coordinates to mesh.
+         - Usually done using =texture_map_to_plane= or =texture_map_to_sphere=
+         - Complex geometries may require setting =mesh.t_coords= explicitly
+      3. Plot mesh with texture.
+         - Need to provide =texture= argument to =plot= or =add_mesh=
+
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+    #+BEGIN_SRC Python
+    # Step 1: Load texture
+    texture_image = np.load("texture.npy")
+    texture = pv.numpy_to_texture(np.flipud(texture_image))
+    
+    # Step 2: Add texture coordinates to surface.
+    surface_warped.texture_map_to_plane(inplace=True)
+    
+    # Step 3: Add texture to mesh
+    surface_warped.plot(texture=texture)
+    #+END_SRC
+
+** Textures
+*** Texture   
+
+   \vspace{1cm}
+   \centering
+   \includegraphics[width=0.8\textwidth]{figures/elevation_with_texture}
+
+
+** Combining surface and volume plots
+  - To render 3D data above the surface, we need to add a new mesh:
+    
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+    #+BEGIN_SRC Python
+    precipitation = np.load("precipitation.npy")[:, :, :]
+    nx, ny, nz = precipitation.shape
+    volume = pv.UniformGrid((nx + 1, ny + 1, nz + 1),
+                            (dx, dy, dz * z_scaling))
+    volume.cell_arrays["Rain rate [mm/h]"] = np.minimum(precipitation.ravel("F"), 8.0)
+    #+END_SRC
+
+** Combining surface and volume plots
+  - We can then combine surface and volume in one plot:
+    
+    #+attr_latex: :options fontsize=\scriptsize, bgcolor=dark
+    #+BEGIN_SRC Python
+    plotter = pv.Plotter()
+    plotter.add_volume(volume)
+    plotter.add_mesh(surface_warped, texture=texture, specular=1)
+    plotter.show()
+    #+END_SRC
+
+
+** Combining surface and volume plots
+*** Result
+  
+   \vspace{1cm}
+   \centering
+   \includegraphics[width=0.8\textwidth]{figures/precipitation_result}
+
+** Summary
+   - PyVista allows creating advanced 3D visualization in a fairly
+     simple way
+   - The package is still relatively new and a few things still under
+     development
+   - For the future: Further integration with web-based viewers will
+     likely make it easier to distribute 3D graphics and animations.
+

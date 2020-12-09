@@ -1,0 +1,32 @@
+#+TITLE:       Visualizing 3D data
+#+AUTHOR:      Simon Pfreunschuh
+#+EMAIL:       simon.pfreundschuh@chalmers.se
+#+OPTIONS: toc:nil
+#+LaTeX_HEADER: \usepackage{natbib}
+#+LaTeX_HEADER: \usepackage{siunitx}
+#+LaTeX_HEADER: \usepackage{subcaption}
+#+LaTeX_HEADER: \usepackage{todonotes}
+#+LATEX_HEADER: \usepackage{dirtree}
+#+LATEX_HEADER: \usemintedstyle{monokai}
+#+LaTeX_HEADER: \DeclareMathOperator\arctanh{arctanh}
+#+LATEX_HEADER: \definecolor{light}{HTML}{CCCCCC}
+#+LATEX_HEADER: \definecolor{dark}{HTML}{353535}
+
+* Visualizing GPM radar data
+
+Your task is to visualize the 3D precipitation data from GPM dual-frequency
+precipitation radar (DPR). This satellite mission measures precipitations 
+(rain, snow, graupel, hail) in three-dimensions.
+
+The data has been pre-processed for you and is contained in the following files:
+
+ - precipitation.npy :: A 3D array containing the precipitation data. The first two
+      axees of the array correspond to the Earth surface, while the third corresponds
+      to altitude.
+ - elevation.npy :: A 2D array containing the surface elevation corresponding
+                    to the first two-dimensions in the precipitation data.
+ -  texture.npy :: A 3D array containing the surface image in RGB format. As is common
+                  in numpy the third axis corresponds to the color channels.
+                 
+Following the instructions in the lecture slides, you should now be able to recreate
+the figure shown on the second-to-last slide.
