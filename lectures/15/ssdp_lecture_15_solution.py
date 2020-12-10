@@ -12,12 +12,10 @@ z_scaling = 5
 ################################################################################
 
 # Loading the data.
-lats = np.load("latitudes_high_resolution.npy")
-lons = np.load("longitudes_high_resolution.npy")
 elevation = np.load("elevation.npy")
 
 # Create a mesh.
-surface = pv.UniformGrid((lats.shape[0], lats.shape[1], 1),
+surface = pv.UniformGrid((elevation.shape[0], elevation.shape[1], 1),
                          (dx / 2.0, dy / 2.0, dz))
 surface.point_arrays["elevation_scaled"] = z_scaling * elevation.ravel("F")
 surface.point_arrays["elevation"] = elevation.ravel("F")
